@@ -140,3 +140,19 @@ pre.md { white-space: pre-wrap; font-size: 12px; background: var(--surface-2); p
 .yn button, .deck .three button, .special button { border-radius: 16px; }
 
 .swipe-hint, .kbd { display: none; }
+
+/* design-os: Calm Trust（artifacts/design_systems/wds/calm-trust/project/tokens.json）の値を適用 */
+:root {
+  --bg: #fbfaf7; --surface: #FFFCF8; --surface-2: #f2efe8; --ink: #1e2422; --ink-2: #525b58; --line: #e3ded4;
+  --accent: #1d5c56; --accent-ink: #FBF4EF; --go: #1d5c56; --go-ink: #FBF4EF; --yes: #2e7d4f; --no: #b3261e; --warn: #94570f; --focus: #1d5c56;
+  --radius: 14px; --shadow: 0 6px 20px #1E34321F;
+}
+body { line-height: 1.8; letter-spacing: .02em; }
+.card { padding: 28px 24px; }
+.card h1 { font-size: 22px; line-height: 1.55; }
+.card .stage { color: #94570f; font-size: 12px; font-weight: 600; letter-spacing: .12em; }
+.opt, .chip, .yn button, .nav button, .special button, .deck .three button { border-radius: 8px; transition: all 150ms cubic-bezier(.2,0,0,1); }
+.opt[aria-pressed="true"], .opt.sel { background: #e3eeeb; border-color: #1d5c56; }
+.nav .go, .primary { border-radius: 8px; font-weight: 700; letter-spacing: .04em; }
+.nav .go:hover, .primary:hover { background: #154843; }
+.progress > i { background: #1d5c56; }
