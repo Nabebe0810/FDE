@@ -2,24 +2,24 @@
  "_doc": "設計要素の根拠の登録簿。質問・ルールの sources は 接頭辞:場所 で書く。確認日はすべて 2026-11-13。",
  "A": {
   "title": "企画・新規事業構想ワークブック",
-  "url": "https://docs.google.com/spreadsheets/d/1rNyRaDfl6sDPoDlz33Rzbxs1LRopATIGkg_W3euus9Y/edit",
+  "url": "（非公開資料・URL非掲載）",
   "ref": "シート名",
   "checked": "2026-11-13"
  },
  "B": {
   "title": "LMS機能・仕様要件定義書",
-  "url": "https://drive.google.com/file/d/1g9uERCeI3oRt_r8y6Df7k8B6cGG8xDTZ/view",
+  "url": "（非公開資料・URL非掲載）",
   "ref": "B:§n は docs/00_資料分析.md §B の観点番号（1=目的と要件の対応 … 9=トレーサビリティ）。原文の章番号との対応は §B の表を参照",
   "checked": "2026-11-13"
  },
  "C": {
   "title": "カリキュラム要件定義書（VS0〜VS7）",
-  "url": "https://drive.google.com/file/d/1m8L9KHbeRT1Sf_BiN3KBb3BtbrK3049_/view",
+  "url": "（非公開資料・URL非掲載）",
   "ref": "VS番号・章番号・原則番号（docs/00 §C の対応表）",
   "checked": "2026-11-13"
  },
  "D": {
-  "title": "実案件の分析（ふるさとPJ・データアナリストPJ・ローカルアンバサダー・self-understand と修正依頼28件）",
+  "title": "実案件の分析（案件A・案件B・案件C・参考ツール（自己理解） と修正依頼28件）",
   "url": "docs/00_資料分析.md §D",
   "ref": "D:§n は実案件分析の節番号、D:依頼nn と D:§n #nn は修正依頼文の通し番号（01〜28）",
   "checked": "2026-11-13"
