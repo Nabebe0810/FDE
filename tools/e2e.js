@@ -14,6 +14,7 @@ fs.mkdirSync(OUT, { recursive: true });
 async function kindOf(page) {
   return page.evaluate(() => {
     const c = document.querySelector('.card'); if (!c) return 'none';
+    if (document.querySelector('.nav.three')) return 'confirm';
     if (c.querySelector('.tiles')) return 'cards';
     if (c.querySelector('.yn')) return 'yesno';
     if (c.querySelector('.matrix')) return 'matrix';
@@ -39,7 +40,8 @@ async function kindOf(page) {
   page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
   page.on('console', (m) => { if (m.type() === 'error') errors.push('console: ' + m.text()); });
   page.on('request', (r) => { if (!r.url().startsWith('file:') && !r.url().startsWith('blob:') && !r.url().startsWith('data:') && !r.url().startsWith('https://script.google.com/')) requests.push(r.url()); });
-  await page.goto('file://' + path.join(__dirname, '..', 'dist', 'fde-hearing.html'));
+  await page.goto(process.env.PAGE_URL || ('file://' + path.join(__dirname, '..', 'dist', 'fde-hearing.html')));
+  await page.waitForTimeout(500);
   await page.fill('#f-title', 'E2E 架空案件');
   await page.click('text=始める');
   const seen = {};
@@ -56,6 +58,7 @@ async function kindOf(page) {
     const card = page.locator('.card');
     switch (kind) {
       case 'cards': await page.locator('.tile').nth(0).click(); await page.locator('.tile').nth(1).click(); await page.click('.nav .go'); break;
+      case 'confirm': await page.click('.nav .go'); break;
       case 'yesno': await page.click('.yn .y'); break;
       case 'matrix': {
         const rows = await page.$$('.matrix tbody tr');
@@ -66,7 +69,7 @@ async function kindOf(page) {
         await page.locator('.pts input[type=range]').nth(0).fill('6');
         await page.locator('.pts input[type=range]').nth(1).fill('4');
         await page.click('.nav .go'); break;
-      case 'rank': await page.locator('.rank .opt').nth(0).click(); await page.locator('.rank .opt').nth(1).click(); await page.click('.nav .go'); break;
+      case 'rank': await page.locator('.rank .chip').nth(0).click(); await page.locator('.rank .chip').nth(0).click(); await page.locator('.rank-item .mv').nth(1).click(); await page.click('.nav .go'); break;
       case 'slider': await page.locator('.ticks button').nth(1).click(); await page.click('.nav .go'); break;
       case 'multi': await page.locator('.chips .chip').first().click(); await page.click('.nav .go'); break;
       case 'steps': {
@@ -86,6 +89,7 @@ async function kindOf(page) {
     }
     if (i === 4) { await page.click('text=← 戻る'); await page.click('text=最新へ'); }
   }
+  await page.waitForTimeout(4000);
   await page.screenshot({ path: path.join(OUT, '90_done.png') });
   await page.click('text=答えを見直す');
   page.once('dialog', (d) => d.accept('2407')); await page.click('text=担当者用');

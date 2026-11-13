@@ -210,7 +210,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--a
 .special button { border: none; background: var(--surface-2); color: var(--ink-2); border-radius: 999px; font-size: 13px; padding: 9px 12px; }
 .decides { font-size: 12px; border-top: 1px solid var(--line); margin-top: 18px; padding-top: 12px; }
 .nav { position: fixed; left: 0; right: 0; bottom: 0; margin: 0; padding: 12px 20px calc(12px + env(safe-area-inset-bottom)); background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-top: 1px solid var(--line); grid-template-columns: 1fr 2.2fr; z-index: 5; }
-@media (min-width: 640px) { .nav { position: static; background: none; border: none; padding: 0; margin-top: 18px; backdrop-filter: none; } .wrap { padding-bottom: 40px; } }
+
 .nav button { min-height: 54px; border-radius: 14px; font-size: 16px; }
 .nav .go { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 6px 16px rgba(79,91,213,.28); }
 .nav .go:hover, .primary:hover { background: #3f4ac2; }
@@ -223,3 +223,34 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--a
 .card h1, .card .help, .opt, .tile-t, .tile-h, .chip, .panel p, .decides { word-break: auto-phrase; text-wrap: pretty; line-break: strict; }
 .card h1 { text-wrap: balance; }
 @media (max-width: 480px) { .card h1 { font-size: 19px; line-height: 1.55; } .card .help { font-size: 13px; } .opt { font-size: 15px; min-height: 52px; padding: 12px 16px; } }
+
+/* PC は横幅を広く、フッター（戻る・次へ）は常に固定 */
+.nav > * { max-width: 100%; }
+@media (min-width: 900px) {
+  .wrap { max-width: 960px; padding: 28px 32px 130px; }
+  .card { padding: 36px 40px 32px; }
+  .card h1 { font-size: 26px; }
+  .opts { grid-template-columns: 1fr 1fr; }
+  .tiles { grid-template-columns: repeat(3, 1fr); }
+  .nav { padding-left: calc(50% - 448px); padding-right: calc(50% - 448px); }
+}
+.nav.three { grid-template-columns: 1fr 1fr 1.6fr; }
+/* 並べ替え */
+.rank-list { list-style: none; padding: 0; margin: 0 0 14px; display: grid; gap: 8px; }
+.rank-item { display: flex; align-items: center; gap: 10px; background: var(--accent-soft); border: 1.5px solid var(--accent); border-radius: 12px; padding: 10px 12px; cursor: grab; }
+.rank-item.dragging { opacity: .5; }
+.rank-item .grip { color: var(--ink-2); touch-action: none; cursor: grab; padding: 4px; letter-spacing: -2px; }
+.rank-item .no { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; display: grid; place-items: center; font-size: 13px; font-weight: 700; flex: none; }
+.rank-item .lab { flex: 1; font-weight: 600; }
+.rank-item .mv { border: none; background: #fff; border-radius: 8px; width: 32px; height: 32px; color: var(--ink-2); }
+/* 回答のまとめ */
+.summary h2 { margin-top: 0; } .summary h3 { font-size: 14px; color: var(--accent); margin: 18px 0 8px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+.kpi { background: var(--accent-soft); border-radius: 12px; padding: 10px 12px; } .kpi b { display: block; font-size: 22px; color: var(--accent); } .kpi span { font-size: 12px; color: var(--ink-2); }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; } .flow .step { background: #fff; border: 1.5px solid var(--line); border-radius: 10px; padding: 6px 10px; font-size: 14px; } .flow .arrow { color: var(--accent); font-weight: 700; }
+.bars { display: grid; gap: 6px; } .bar { display: grid; grid-template-columns: minmax(120px, 38%) 1fr 44px; align-items: center; gap: 8px; font-size: 13px; }
+.bt { height: 10px; background: var(--surface-2); border-radius: 99px; overflow: hidden; } .bt i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.bar.excluded { opacity: .45; } .bar.check .bt i { background: #9aa3e8; }
+.sgrid { display: grid; gap: 12px; margin-top: 16px; } @media (min-width: 900px) { .sgrid { grid-template-columns: 1fr 1fr; } }
+.sbox { border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; } .sbox h3 { margin-top: 0; }
+.sbox dl { margin: 0; } .sbox dt { font-size: 12px; color: var(--ink-2); margin-top: 8px; } .sbox dd { margin: 2px 0 0; font-weight: 600; font-size: 14px; } .sbox dd.sp { color: #94570f; }

@@ -10,7 +10,7 @@ function doPost(e) {
 }
 function write_(d) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var names = { answers: '回答', requirements: '要件', openIssues: '未決定' };
+  var names = { cases: '案件一覧', answers: '回答', requirements: '要件', openIssues: '未決定' };
   Object.keys(names).forEach(function (k) {
     var sh = ss.getSheetByName(names[k]) || ss.insertSheet(names[k]);
     var rows = String(d[k] || '').split('\n').map(function (r) { return r.split('\t'); });

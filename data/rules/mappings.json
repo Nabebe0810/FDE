@@ -1641,5 +1641,148 @@
    "zip:15_変更要求"
   ],
   "forEach": "CR.kind"
+ },
+ {
+  "id": "M-DEL-01",
+  "when": {
+   "slot": "DEL.form",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "ADR",
+    "key": "ADR-FORM",
+    "title": "作るものの形：{{DEL.form}}",
+    "plain": "作るのは「{{DEL.form}}」",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "D:§4"
+  ]
+ },
+ {
+  "id": "M-DEL-02",
+  "when": {
+   "slot": "DEL.run",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "ADR",
+    "key": "ADR-RUN",
+    "title": "動かし方：{{DEL.run}}",
+    "plain": "できあがったものは「{{DEL.run}}」",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "D:§4 #1"
+  ]
+ },
+ {
+  "id": "M-DEL-03",
+  "when": {
+   "slot": "DEL.save",
+   "in": [
+    "みんなの入力を1か所に集めたい",
+    "今あるシートやサービスに入れたい"
+   ]
+  },
+  "emit": [
+   {
+    "type": "ADR",
+    "key": "ADR-DB",
+    "title": "入力を1か所に保存する（データベースまたはスプレッドシートが必要）",
+    "plain": "入力された内容は1か所に集めて残す",
+    "origin": "rule",
+    "confirm": true,
+    "moscow": "Must"
+   }
+  ],
+  "sources": [
+   "zip:04 K-06"
+  ]
+ },
+ {
+  "id": "M-DEL-04",
+  "when": {
+   "slot": "DEL.save",
+   "in": [
+    "保存しなくてよい",
+    "使う人の端末に残ればよい"
+   ]
+  },
+  "emit": [
+   {
+    "type": "ADR",
+    "key": "ADR-NODB",
+    "title": "サーバー側の保存は不要（{{DEL.save}}）",
+    "plain": "入力内容をサーバーに集める必要はない",
+    "origin": "rule",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "D:§2"
+  ]
+ },
+ {
+  "id": "M-DEL-05",
+  "when": {
+   "slot": "DEL.github",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "CON",
+    "key": "CON-GITHUB",
+    "title": "GitHub：{{DEL.github}}",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "D:§4"
+  ]
+ },
+ {
+  "id": "M-DEL-06",
+  "when": {
+   "slot": "DEL.effort",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "CON",
+    "key": "CON-EFFORT",
+    "title": "最初の版の期間（想定工数）：{{DEL.effort}}",
+    "plain": "最初の版は「{{DEL.effort}}」で作る",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "B:§9.1 MVP"
+  ]
+ },
+ {
+  "id": "M-DEL-07",
+  "when": {
+   "slot": "DEL.refs",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "CON",
+    "key": "CON-REFS",
+    "title": "参考資料：{{DEL.refs}}",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "D:§4 #7"
+  ]
  }
 ]

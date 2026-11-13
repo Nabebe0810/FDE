@@ -1170,5 +1170,53 @@
   "critical": false,
   "weight": 3,
   "req": "PERM"
+ },
+ "DEL.form": {
+  "label": "作るものの形",
+  "type": "multi",
+  "topic": "output",
+  "critical": true,
+  "weight": 3,
+  "req": "ADR"
+ },
+ "DEL.run": {
+  "label": "どこで動かすか（自分のPC・URL共有）",
+  "type": "enum",
+  "topic": "output",
+  "critical": true,
+  "weight": 3,
+  "req": "ADR"
+ },
+ "DEL.save": {
+  "label": "入力を保存・集める必要（DBの要否）",
+  "type": "enum",
+  "topic": "output",
+  "critical": true,
+  "weight": 3,
+  "req": "ADR"
+ },
+ "DEL.github": {
+  "label": "GitHub（作ったものの置き場）の準備",
+  "type": "enum",
+  "topic": "output",
+  "critical": false,
+  "weight": 2,
+  "req": "CON"
+ },
+ "DEL.effort": {
+  "label": "最初の版までにかけたい期間（想定工数）",
+  "type": "enum",
+  "topic": "output",
+  "critical": true,
+  "weight": 2,
+  "req": "CON"
+ },
+ "DEL.refs": {
+  "label": "参考資料・参考サイトのリンク",
+  "type": "text",
+  "topic": "output",
+  "critical": false,
+  "weight": 2,
+  "req": "CON"
  }
 }
