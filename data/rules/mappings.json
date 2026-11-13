@@ -1,0 +1,1645 @@
+[
+ {
+  "id": "M-VIS-01",
+  "when": {
+   "slot": "VIS.mission",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "VIS",
+    "key": "VIS-MISSION",
+    "title": "事業の使命：{{VIS.mission}}",
+    "plain": "この事業は「{{VIS.mission}}」を目指している",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "C:VS7",
+   "A:09_コンセプト"
+  ]
+ },
+ {
+  "id": "M-VIS-02",
+  "when": {
+   "slot": "VIS.not_do",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "CON",
+    "key": "CON-NOTDO",
+    "title": "やらないこと：{{VIS.not_do}}",
+    "plain": "「{{VIS.not_do}}」はやらない（作るものにも入れない）",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "C:VS7 採否テスト",
+   "B:§1.2 スコープ外"
+  ]
+ },
+ {
+  "id": "M-BR-01",
+  "when": {
+   "slot": "BR.problem",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "BR",
+    "key": "BR-01",
+    "title": "困りごとの解消：{{BR.problem}}",
+    "plain": "いちばんの困りごとは「{{BR.problem}}」で、主に{{BR.who_suffers}}が困っている",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "C:VS1",
+   "A:08_顧客課題"
+  ]
+ },
+ {
+  "id": "M-BR-02",
+  "when": {
+   "slot": "BR.goal_type",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "BR",
+    "key": "BR-GOAL",
+    "title": "得たい成果：{{BR.goal_type}}",
+    "plain": "この仕組みでいちばん得たい成果は「{{BR.goal_type}}」",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-01"
+   }
+  ],
+  "sources": [
+   "A:09_コンセプト",
+   "B:§1"
+  ]
+ },
+ {
+  "id": "M-BR-03",
+  "when": {
+   "slot": "BR.kpi_metric",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "BR",
+    "key": "BR-KPI",
+    "title": "成果の指標：{{BR.kpi_metric}}（現状 {{BR.kpi_baseline}} → 目標 {{BR.kpi_target}}、{{BR.kpi_when}}）",
+    "plain": "成果は「{{BR.kpi_metric}}」で測る（今 {{BR.kpi_baseline}} → 目標 {{BR.kpi_target}}、期限 {{BR.kpi_when}}）",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "ac": "{{BR.kpi_when}}に{{BR.kpi_metric}}が{{BR.kpi_target}}になっている（測り方：{{BR.kpi_measurable}}）"
+   }
+  ],
+  "sources": [
+   "A:20_KPI",
+   "A:13_検証"
+  ]
+ },
+ {
+  "id": "M-BR-04",
+  "when": {
+   "slot": "BR.roi_hours",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "BR",
+    "key": "BR-ROI",
+    "title": "費用対効果の材料：作業時間 {{BR.roi_hours}}・関わる人 {{BR.roi_people}}",
+    "plain": "今その作業に{{BR.roi_hours}}・{{BR.roi_people}}がかかっている",
+    "origin": "customer",
+    "confirm": false,
+    "parent": "BR-GOAL"
+   }
+  ],
+  "sources": [
+   "zip:BR.roi_*",
+   "zip:BR.roi_*"
+  ]
+ },
+ {
+  "id": "M-BR-05",
+  "when": {
+   "slot": "BR.success_check",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "AC",
+    "key": "AC-BR",
+    "title": "うまくいったと判断する場面：{{BR.success_check}}",
+    "plain": "「{{BR.success_check}}」となれば、うまくいったと判断する",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL"
+   }
+  ],
+  "sources": [
+   "A:13_検証",
+   "B:§7 受け入れ基準"
+  ]
+ },
+ {
+  "id": "M-ADR-00",
+  "when": {
+   "any": [
+    {
+     "hyp": "HS-RULE",
+     "status": "supported"
+    },
+    {
+     "hyp": "HS-CONFIG",
+     "status": "supported"
+    },
+    {
+     "hyp": "HS-SAAS",
+     "status": "alive"
+    }
+   ]
+  },
+  "emit": [
+   {
+    "type": "ADR",
+    "key": "ADR-000",
+    "title": "作るか・作らないか：ルール変更・設定変更・既製サービスの案を比較する",
+    "plain": "作る前に、仕事のルールや今の道具の設定を変える案・既製サービスの案とも比べる",
+    "origin": "rule",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "C:原則4",
+   "A:14_比較評価",
+   "zip:04 H類型"
+  ]
+ },
+ {
+  "id": "M-CON-01",
+  "when": {
+   "slot": "PRJ.deadline",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "CON",
+    "key": "CON-DEADLINE",
+    "title": "使い始めたい時期：{{PRJ.deadline}}（理由：{{PRJ.deadline_reason}}）",
+    "plain": "{{PRJ.deadline}}に使い始めたい（理由：{{PRJ.deadline_reason}}）",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "zip:Q-PRJ-005",
+   "D:§4 #13"
+  ]
+ },
+ {
+  "id": "M-CON-02",
+  "when": {
+   "slot": "CON.budget_monthly",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "CON",
+    "key": "CON-BUDGET",
+    "title": "毎月の費用の上限：{{CON.budget_monthly}}（初期 {{CON.budget_initial}}）",
+    "plain": "毎月の費用は{{CON.budget_monthly}}までにする",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "zip:04 判断軸"
+  ]
+ },
+ {
+  "id": "M-CON-03",
+  "when": {
+   "slot": "CON.maintainer",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "CON",
+    "key": "CON-MAINT",
+    "title": "保守体制：{{CON.maintainer}}",
+    "plain": "作った後の手直しは「{{CON.maintainer}}」体制で行う",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "zip:04 判断軸"
+  ]
+ },
+ {
+  "id": "M-CON-04",
+  "when": {
+   "slot": "PRJ.conformance_docs",
+   "eq": "ある"
+  },
+  "emit": [
+   {
+    "type": "CON",
+    "key": "CON-CONFORM",
+    "title": "準拠する資料あり（合わせる度合い：{{PRJ.conformance_level}}）",
+    "plain": "決められた資料に合わせて作る（度合い：{{PRJ.conformance_level}}）。資料の一覧を最初にもらう",
+    "origin": "rule",
+    "confirm": true,
+    "ac": "画面の項目名・順番が資料と一致している"
+   }
+  ],
+  "sources": [
+   "D:§4 #7",
+   "D:依頼22"
+  ]
+ },
+ {
+  "id": "M-CON-05",
+  "when": {
+   "slot": "OUT.words_rule",
+   "in": [
+    "ある",
+    "これから決める"
+   ]
+  },
+  "emit": [
+   {
+    "type": "CON",
+    "key": "CON-WORDS",
+    "title": "画面で使う言葉・使わない言葉の一覧を作り、全画面・出力物で守る",
+    "plain": "画面やPDFで使わない言葉の決まりを一覧にして守る",
+    "origin": "rule",
+    "confirm": true,
+    "ac": "禁止語の一覧で全画面・出力物を検索し、0件である"
+   }
+  ],
+  "sources": [
+   "D:§4 #6",
+   "D:依頼25"
+  ]
+ },
+ {
+  "id": "M-CON-06",
+  "when": {
+   "slot": "CON.workspace",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "CON",
+    "key": "CON-PLATFORM",
+    "title": "契約中のサービス：{{CON.workspace}}",
+    "plain": "会社では{{CON.workspace}}を使っている",
+    "origin": "customer",
+    "confirm": false
+   }
+  ],
+  "sources": [
+   "zip:04"
+  ]
+ },
+ {
+  "id": "M-FR-LIST",
+  "when": {
+   "slot": "OUT.outputs",
+   "has": "一覧表"
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-LIST",
+    "title": "情報を一覧で見て、絞り込み・並べ替えができる",
+    "plain": "一覧で見て、探せるようにする",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "output"
+   }
+  ],
+  "sources": [
+   "B:§4 画面と機能",
+   "D:§4 #5"
+  ]
+ },
+ {
+  "id": "M-FR-AGG",
+  "when": {
+   "slot": "OUT.outputs",
+   "has": "集計・グラフ"
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-AGG",
+    "title": "件数・金額などを集計してグラフで見られる",
+    "plain": "数字をまとめてグラフで見られるようにする",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "output"
+   }
+  ],
+  "sources": [
+   "B:§4 画面と機能",
+   "D:§4 #5"
+  ]
+ },
+ {
+  "id": "M-FR-PDF",
+  "when": {
+   "slot": "OUT.outputs",
+   "has": "PDF・印刷物"
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-PDF",
+    "title": "決められた形のPDFを作れる",
+    "plain": "PDFを作れるようにする",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "output",
+    "ac": "PDFは「{{OUT.pdf_limit}}」の決まりに収まり、余計な文字が出ない"
+   }
+  ],
+  "sources": [
+   "B:§4 画面と機能",
+   "D:§4 #5"
+  ]
+ },
+ {
+  "id": "M-FR-MAIL",
+  "when": {
+   "slot": "OUT.outputs",
+   "has": "メールのお知らせ"
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-MAIL",
+    "title": "決まったときにメールでお知らせする",
+    "plain": "メールでお知らせが届くようにする",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "output"
+   }
+  ],
+  "sources": [
+   "B:§4 画面と機能",
+   "D:§4 #5"
+  ]
+ },
+ {
+  "id": "M-FR-LINE",
+  "when": {
+   "slot": "OUT.outputs",
+   "has": "LINEのお知らせ"
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-LINE",
+    "title": "決まったときにLINEでお知らせする",
+    "plain": "LINEでお知らせが届くようにする",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "output"
+   }
+  ],
+  "sources": [
+   "B:§4 画面と機能",
+   "D:§4 #5"
+  ]
+ },
+ {
+  "id": "M-FR-CSV",
+  "when": {
+   "slot": "OUT.outputs",
+   "has": "CSV・Excel出力"
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-CSV",
+    "title": "一覧をCSV・Excelで書き出せる",
+    "plain": "表計算ソフトに書き出せるようにする",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "output"
+   }
+  ],
+  "sources": [
+   "B:§4 画面と機能",
+   "D:§4 #5"
+  ]
+ },
+ {
+  "id": "M-FR-LOGIN",
+  "when": {
+   "slot": "ROLE.login",
+   "eq": "必要"
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-LOGIN",
+    "title": "使う人がログインして使う",
+    "plain": "使う人はログインしてから使う",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "roles"
+   },
+   {
+    "type": "NFR",
+    "key": "NFR-AUTH",
+    "title": "本人確認の方式を決める（アカウント状況：{{ROLE.google_accounts}}）",
+    "origin": "rule",
+    "topic": "nfr"
+   }
+  ],
+  "sources": [
+   "B:§3",
+   "zip:Q-ROL-004"
+  ]
+ },
+ {
+  "id": "M-FR-NOLOGIN",
+  "when": {
+   "slot": "ROLE.login",
+   "eq": "URLを開くだけで使いたい"
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-NOLOGIN",
+    "title": "URLを開くだけで使える（ログインなし）",
+    "plain": "URLを開くだけで、登録なしで使える",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "roles"
+   }
+  ],
+  "sources": [
+   "D:依頼08",
+   "D:§4 #2"
+  ]
+ },
+ {
+  "id": "M-FR-APPROVAL",
+  "when": {
+   "slot": "RULE.approval",
+   "eq": true
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-APPROVAL",
+    "title": "申請と承認（段数：{{RULE.approval_levels}}、差し戻し：{{RULE.reject_flow}}）",
+    "plain": "申請して、決まった人が許可・差し戻しをできるようにする（{{RULE.approval_levels}}）",
+    "origin": "rule",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "rules"
+   },
+   {
+    "type": "STATE",
+    "key": "STATE-APPROVAL",
+    "title": "申請の状態：下書き → 申請中 → 承認／差し戻し → 完了",
+    "origin": "rule"
+   },
+   {
+    "type": "ROLE",
+    "key": "ROLE-APPROVER",
+    "title": "承認する人",
+    "origin": "rule"
+   },
+   {
+    "type": "AC",
+    "key": "AC-APPROVAL",
+    "title": "承認されるまで「完了」にならない／差し戻すと申請者に戻る",
+    "origin": "rule",
+    "parent": "FR-APPROVAL"
+   }
+  ],
+  "sources": [
+   "B:§5 状態遷移",
+   "zip:RULE.*"
+  ]
+ },
+ {
+  "id": "M-FR-CARRY",
+  "when": {
+   "slot": "DAT.carry_over",
+   "in": [
+    "別の端末へ",
+    "無料版から本番へ",
+    "次の版へ"
+   ]
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-CARRY",
+    "title": "入力した内容を{{DAT.carry_over}}引き継げる（書き出し・読み込み）",
+    "plain": "書いた内容を{{DAT.carry_over}}引き継げるようにする",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "data",
+    "ac": "引き継いだ先で、同じ内容がそのまま表示される"
+   }
+  ],
+  "sources": [
+   "D:依頼08",
+   "D:依頼13",
+   "D:§2 つづきコード"
+  ]
+ },
+ {
+  "id": "M-FR-RESUME",
+  "when": {
+   "slot": "TOC.resume",
+   "in": [
+    "必要",
+    "あると良い"
+   ]
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-RESUME",
+    "title": "途中で保存し、あとで続きから再開できる",
+    "plain": "途中でやめても、あとで続きから始められる",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "toc"
+   }
+  ],
+  "sources": [
+   "D:§2",
+   "D:§4 #3"
+  ]
+ },
+ {
+  "id": "M-FR-REQUIRED",
+  "when": {
+   "slot": "OUT.required_input",
+   "eq": "全部書かないと進めない"
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-REQUIRED",
+    "title": "必須の欄が空のままでは次へ進めない",
+    "plain": "必須の欄を書かないと次へ進めないようにする",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "output",
+    "ac": "空欄や仮の文字（…など）のままでは完了にならない"
+   }
+  ],
+  "sources": [
+   "D:依頼16",
+   "D:依頼26"
+  ]
+ },
+ {
+  "id": "M-FR-PROGRESS",
+  "when": {
+   "slot": "OUT.progress_guide",
+   "eq": true
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-PROGRESS",
+    "title": "進み具合に合わせて、次にやることを案内する",
+    "plain": "進み具合に合わせて「次はこれ」と案内する",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "output",
+    "ac": "まだ終えていない段階の案内が、終えた後に出ない"
+   }
+  ],
+  "sources": [
+   "D:依頼28"
+  ]
+ },
+ {
+  "id": "M-FR-FILES",
+  "when": {
+   "slot": "DAT.files",
+   "eq": true
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-FILES",
+    "title": "写真・ファイルを添付して保存できる",
+    "plain": "写真やファイルを付けて残せる",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "data"
+   }
+  ],
+  "sources": [
+   "zip:Q-DAT"
+  ]
+ },
+ {
+  "id": "M-FR-TOCNEXT",
+  "when": {
+   "slot": "TOC.next_action",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-NEXT",
+    "title": "使い終わった人を「{{TOC.next_action}}」へ案内する",
+    "plain": "使い終わった人に「{{TOC.next_action}}」をすすめる画面を出す",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "toc",
+    "ac": "最後の画面を閉じても、案内を見逃さない"
+   }
+  ],
+  "sources": [
+   "D:依頼11",
+   "D:依頼14"
+  ]
+ },
+ {
+  "id": "M-FR-FREE",
+  "when": {
+   "slot": "TOC.free_paid",
+   "eq": "無料版を別に作る"
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-TRIAL",
+    "title": "無料の体験版を別に用意する（本番へ引き継げる）",
+    "plain": "無料で試せる体験版を別に作り、書いた内容は本番へ引き継げる",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "toc"
+   }
+  ],
+  "sources": [
+   "D:依頼08"
+  ]
+ },
+ {
+  "id": "M-FR-ADMIN",
+  "when": {
+   "slot": "ROLE.admin_ops",
+   "has": "$param"
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-ADMIN-{{param}}",
+    "title": "管理する人が「{{param}}」をできる",
+    "plain": "管理する人が「{{param}}」をできるようにする",
+    "origin": "customer",
+    "confirm": false,
+    "parent": "BR-GOAL",
+    "topic": "roles"
+   }
+  ],
+  "sources": [
+   "B:§3"
+  ],
+  "forEach": "ROLE.admin_ops"
+ },
+ {
+  "id": "M-FR-OPVIEW",
+  "when": {
+   "slot": "ROLE.operator_view",
+   "in": [
+    "見る必要がある",
+    "まとめた数字だけ見たい"
+   ]
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-OPVIEW",
+    "title": "運営側が利用者の入力を{{ROLE.operator_view}}",
+    "plain": "運営側が、利用者が入力した内容を{{ROLE.operator_view}}",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "roles"
+   }
+  ],
+  "sources": [
+   "zip:04 K-06"
+  ]
+ },
+ {
+  "id": "M-FR-AI",
+  "when": {
+   "all": [
+    {
+     "slot": "AI.want",
+     "has": "$param"
+    },
+    {
+     "not": {
+      "slot": "AI.want",
+      "has": "AIは使わない"
+     }
+    }
+   ]
+  },
+  "emit": [
+   {
+    "type": "FR",
+    "key": "FR-AI-{{param}}",
+    "title": "AIによる「{{param}}」（確認する人：{{AI.checker}}）",
+    "plain": "「{{param}}」をAIに任せ、結果は{{AI.checker}}が確かめる",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "ai",
+    "ac": "良い例・悪い例（{{AI.quality_example}}）に照らして合格の出力になる"
+   }
+  ],
+  "sources": [
+   "D:依頼01",
+   "D:§4 #10 #11"
+  ],
+  "forEach": "AI.want"
+ },
+ {
+  "id": "M-INT",
+  "when": {
+   "all": [
+    {
+     "slot": "INT.systems",
+     "has": "$param"
+    },
+    {
+     "not": {
+      "slot": "INT.systems",
+      "has": "なし"
+     }
+    }
+   ]
+  },
+  "emit": [
+   {
+    "type": "INT",
+    "key": "INT-{{param}}",
+    "title": "「{{param}}」とつなぐ（向き：{{INT.direction}}、タイミング：{{INT.timing}}）",
+    "plain": "「{{param}}」と情報をやり取りする（{{INT.direction}}）",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-GOAL",
+    "topic": "integration"
+   }
+  ],
+  "sources": [
+   "B:§9",
+   "zip:INT.*"
+  ],
+  "forEach": "INT.systems"
+ },
+ {
+  "id": "M-MIG",
+  "when": {
+   "slot": "MIG.existing_data",
+   "in": [
+    "移す",
+    "一部だけ移す"
+   ]
+  },
+  "emit": [
+   {
+    "type": "MIG",
+    "key": "MIG-01",
+    "title": "今ある情報を新しい仕組みへ移す（{{MIG.existing_data}}、整い具合：{{MIG.data_quality}}）",
+    "plain": "今ある情報を新しい仕組みへ{{MIG.existing_data}}",
+    "origin": "customer",
+    "confirm": true,
+    "topic": "migration",
+    "ac": "移した件数と元の件数が一致する"
+   }
+  ],
+  "sources": [
+   "zip:13_移行導入"
+  ]
+ },
+ {
+  "id": "M-BP-01",
+  "when": {
+   "slot": "ASIS.steps",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "BP",
+    "key": "BP-ASIS",
+    "title": "今の流れ（実際の一件）：{{ASIS.steps}}",
+    "plain": "今の流れは「{{ASIS.steps}}」の順になっている",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "STD:BABOK",
+   "B:§4"
+  ]
+ },
+ {
+  "id": "M-BP-02",
+  "when": {
+   "slot": "TOBE.change",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "BP",
+    "key": "BP-TOBE",
+    "title": "変えたい段階：{{TOBE.change}}（変えたくないこと：{{TOBE.keep}}）",
+    "plain": "「{{TOBE.change}}」を変えたい",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "BR-01"
+   }
+  ],
+  "sources": [
+   "STD:As-Is/To-Be"
+  ]
+ },
+ {
+  "id": "M-RULE-01",
+  "when": {
+   "slot": "RULE.calc_detail",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "RULE",
+    "key": "RULE-CALC",
+    "title": "計算・判定のルール：{{RULE.calc_detail}}",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "zip:RULE.*"
+  ]
+ },
+ {
+  "id": "M-RULE-02",
+  "when": {
+   "slot": "RULE.exceptions",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "RULE",
+    "key": "RULE-EXC",
+    "title": "例外の対応：{{RULE.exceptions}}（頻度：{{RULE.exception_freq}}）",
+    "plain": "いつもと違う対応として「{{RULE.exceptions}}」がある",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "C:原則10 例外を削らない",
+   "zip:06_ルール例外"
+  ]
+ },
+ {
+  "id": "M-RULE-03",
+  "when": {
+   "slot": "RULE.deadlines",
+   "eq": true
+  },
+  "emit": [
+   {
+    "type": "RULE",
+    "key": "RULE-DEADLINE",
+    "title": "期限・締め日のルールがある（中身はFDEが確認）",
+    "origin": "rule"
+   }
+  ],
+  "sources": [
+   "zip:RULE.*"
+  ]
+ },
+ {
+  "id": "M-ENT",
+  "when": {
+   "slot": "DAT.things",
+   "has": "$param"
+  },
+  "emit": [
+   {
+    "type": "ENT",
+    "key": "ENT-{{param}}",
+    "title": "{{paramLabel}}（件数 {{P.count}}・増え方 {{P.growth}}・見分け方 {{P.id}}・正本 {{P.master}}）",
+    "plain": "「{{paramLabel}}」の情報を扱う（全部で{{P.count}}）",
+    "origin": "customer",
+    "confirm": true,
+    "topic": "data",
+    "trace": [
+     "DAT.things",
+     "DAT.{param}.count",
+     "DAT.{param}.id",
+     "DAT.{param}.growth"
+    ]
+   }
+  ],
+  "sources": [
+   "B:§5",
+   "zip:03 第2部"
+  ],
+  "forEach": "DAT.things"
+ },
+ {
+  "id": "M-ATTR",
+  "when": {
+   "slot": "DAT.{param}.attrs",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "ATTR",
+    "key": "ATTR-{{param}}",
+    "title": "{{paramLabel}}の項目：{{P.attrs}}",
+    "origin": "customer",
+    "parent": "ENT-{{param}}"
+   }
+  ],
+  "sources": [
+   "B:§5"
+  ],
+  "forEach": "DAT.things"
+ },
+ {
+  "id": "M-ID-NONE",
+  "when": {
+   "slot": "DAT.{param}.id",
+   "eq": "見分ける方法がない"
+  },
+  "emit": [
+   {
+    "type": "ATTR",
+    "key": "ATTR-ID-{{param}}",
+    "title": "{{paramLabel}}に番号を新しく付ける（提案・未確認）",
+    "plain": "「{{paramLabel}}」に、見分けるための番号を新しく付ける",
+    "origin": "rule",
+    "confirm": true,
+    "parent": "ENT-{{param}}"
+   }
+  ],
+  "sources": [
+   "zip:03 推定ルール"
+  ],
+  "forEach": "DAT.things"
+ },
+ {
+  "id": "M-STATE",
+  "when": {
+   "slot": "DAT.{param}.status",
+   "eq": true
+  },
+  "emit": [
+   {
+    "type": "STATE",
+    "key": "STATE-{{param}}",
+    "title": "{{paramLabel}}に状態を持たせる（例：受付 → 対応中 → 完了。状態の一覧はFDEが確認）",
+    "origin": "rule",
+    "parent": "ENT-{{param}}"
+   }
+  ],
+  "sources": [
+   "B:§5 状態遷移"
+  ],
+  "forEach": "DAT.things"
+ },
+ {
+  "id": "M-REL-customer_order",
+  "when": {
+   "slot": "REL.customer_order",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "REL",
+    "key": "REL-customer-order",
+    "title": "お客様・会員 と 注文・申込：{{REL.customer_order}}（想定の対応：1:N。回答により確定）",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "B:§5",
+   "zip:03 第2部"
+  ]
+ },
+ {
+  "id": "M-REL-order_product",
+  "when": {
+   "slot": "REL.order_product",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "REL",
+    "key": "REL-order-product",
+    "title": "注文・申込 と 商品・サービス：{{REL.order_product}}（想定の対応：N:M（明細）。回答により確定）",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "B:§5",
+   "zip:03 第2部"
+  ]
+ },
+ {
+  "id": "M-REL-customer_reservation",
+  "when": {
+   "slot": "REL.customer_reservation",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "REL",
+    "key": "REL-customer-reservation",
+    "title": "お客様・会員 と 予約：{{REL.customer_reservation}}（想定の対応：1:N。回答により確定）",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "B:§5",
+   "zip:03 第2部"
+  ]
+ },
+ {
+  "id": "M-REL-staff_task",
+  "when": {
+   "slot": "REL.staff_task",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "REL",
+    "key": "REL-staff-task",
+    "title": "社員・スタッフ と 作業・案件：{{REL.staff_task}}（想定の対応：N:M（担当割当）。回答により確定）",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "B:§5",
+   "zip:03 第2部"
+  ]
+ },
+ {
+  "id": "M-REL-customer_staff",
+  "when": {
+   "slot": "REL.customer_staff",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "REL",
+    "key": "REL-customer-staff",
+    "title": "お客様・会員 と 社員・スタッフ：{{REL.customer_staff}}（想定の対応：N:1 / N:M。回答により確定）",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "B:§5",
+   "zip:03 第2部"
+  ]
+ },
+ {
+  "id": "M-REL-order_payment",
+  "when": {
+   "slot": "REL.order_payment",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "REL",
+    "key": "REL-order-payment",
+    "title": "注文・申込 と お金・請求：{{REL.order_payment}}（想定の対応：1:N。回答により確定）",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "B:§5",
+   "zip:03 第2部"
+  ]
+ },
+ {
+  "id": "M-REL-customer_inquiry",
+  "when": {
+   "slot": "REL.customer_inquiry",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "REL",
+    "key": "REL-customer-inquiry",
+    "title": "お客様・会員 と 問い合わせ：{{REL.customer_inquiry}}（想定の対応：1:N（任意）。回答により確定）",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "B:§5",
+   "zip:03 第2部"
+  ]
+ },
+ {
+  "id": "M-REL-member_content",
+  "when": {
+   "slot": "REL.member_content",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "REL",
+    "key": "REL-customer-content",
+    "title": "お客様・会員 と 教材・コンテンツ：{{REL.member_content}}（想定の対応：N:M（進捗）。回答により確定）",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "B:§5",
+   "zip:03 第2部"
+  ]
+ },
+ {
+  "id": "M-PII",
+  "when": {
+   "slot": "DAT.pii",
+   "hasAny": [
+    "名前",
+    "連絡先",
+    "住所",
+    "生年月日",
+    "お金・口座",
+    "健康・病歴",
+    "本人の考え・悩み"
+   ]
+  },
+  "emit": [
+   {
+    "type": "NFR",
+    "key": "NFR-PII",
+    "title": "個人の情報（{{DAT.pii}}）を扱う：利用目的・保存期間（{{DAT.retention}}）・見られる人・外部送信（{{NFR.external_send}}）を決める",
+    "plain": "{{DAT.pii}}を扱うので、残す期間は{{DAT.retention}}、外部のサービスへは「{{NFR.external_send}}」とする",
+    "origin": "rule",
+    "confirm": true,
+    "topic": "nfr",
+    "moscow": "Must"
+   }
+  ],
+  "sources": [
+   "zip:03 R06",
+   "STD:個人情報保護法（要専門確認）"
+  ]
+ },
+ {
+  "id": "M-HIST",
+  "when": {
+   "slot": "DAT.history",
+   "in": [
+    "必要",
+    "あると良い"
+   ]
+  },
+  "emit": [
+   {
+    "type": "NFR",
+    "key": "NFR-HISTORY",
+    "title": "誰がいつ何を変えたかの記録を残す（{{DAT.history}}）",
+    "plain": "誰がいつ何を変えたかを記録する",
+    "origin": "customer",
+    "confirm": true,
+    "topic": "nfr"
+   }
+  ],
+  "sources": [
+   "B:§8 監査可能性"
+  ]
+ },
+ {
+  "id": "M-ROLE",
+  "when": {
+   "slot": "ROLE.list",
+   "has": "$param"
+  },
+  "emit": [
+   {
+    "type": "ROLE",
+    "key": "ROLE-{{param}}",
+    "title": "立場：{{param}}",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "B:§3"
+  ],
+  "forEach": "ROLE.list"
+ },
+ {
+  "id": "M-PERM-変える",
+  "when": {
+   "slot": "ROLE.matrix",
+   "at": "$param",
+   "eq": "変える"
+  },
+  "emit": [
+   {
+    "type": "PERM",
+    "key": "PERM-{{param}}",
+    "title": "「{{param}}」は見る・変える",
+    "plain": "「{{param}}」は、情報を見る・変える",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "ROLE-{{param}}"
+   }
+  ],
+  "sources": [
+   "B:§3",
+   "STD:RBAC"
+  ],
+  "forEach": "ROLE.list"
+ },
+ {
+  "id": "M-PERM-見る",
+  "when": {
+   "slot": "ROLE.matrix",
+   "at": "$param",
+   "eq": "見る"
+  },
+  "emit": [
+   {
+    "type": "PERM",
+    "key": "PERM-{{param}}",
+    "title": "「{{param}}」は見るだけ",
+    "plain": "「{{param}}」は、情報を見るだけ",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "ROLE-{{param}}"
+   }
+  ],
+  "sources": [
+   "B:§3",
+   "STD:RBAC"
+  ],
+  "forEach": "ROLE.list"
+ },
+ {
+  "id": "M-PERM-なし",
+  "when": {
+   "slot": "ROLE.matrix",
+   "at": "$param",
+   "eq": "なし"
+  },
+  "emit": [
+   {
+    "type": "PERM",
+    "key": "PERM-{{param}}",
+    "title": "「{{param}}」は見せない",
+    "plain": "「{{param}}」は、情報を見せない",
+    "origin": "customer",
+    "confirm": true,
+    "parent": "ROLE-{{param}}"
+   }
+  ],
+  "sources": [
+   "B:§3",
+   "STD:RBAC"
+  ],
+  "forEach": "ROLE.list"
+ },
+ {
+  "id": "M-PERM-ROW",
+  "when": {
+   "slot": "ROLE.see_scope",
+   "eq": "自分の分だけ"
+  },
+  "emit": [
+   {
+    "type": "PERM",
+    "key": "PERM-ROW",
+    "title": "利用者は自分の情報だけを見られる（行単位の制限）",
+    "plain": "使う人は、自分の情報だけを見られる",
+    "origin": "customer",
+    "confirm": true,
+    "moscow": "Must",
+    "ac": "別の人のURLやIDを入れても、他人の情報は表示されない"
+   }
+  ],
+  "sources": [
+   "B:§3",
+   "zip:04 K-03"
+  ]
+ },
+ {
+  "id": "M-PERM-EDIT",
+  "when": {
+   "slot": "ROLE.edit_scope",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "PERM",
+    "key": "PERM-EDIT",
+    "title": "変更できる人：{{ROLE.edit_scope}}",
+    "plain": "情報を変えられるのは「{{ROLE.edit_scope}}」",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "B:§3"
+  ]
+ },
+ {
+  "id": "M-NFR-SCALE",
+  "when": {
+   "slot": "NFR.users_total",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "NFR",
+    "key": "NFR-SCALE",
+    "title": "利用規模：{{NFR.users_total}}（同時 {{NFR.concurrency}}、1年後 {{NFR.users_growth}}）",
+    "plain": "使う人は{{NFR.users_total}}、同時に使うのは{{NFR.concurrency}}くらい",
+    "origin": "customer",
+    "confirm": true,
+    "topic": "nfr"
+   }
+  ],
+  "sources": [
+   "zip:04 判断軸",
+   "STD:ISO/IEC 25010"
+  ]
+ },
+ {
+  "id": "M-NFR-AVAIL",
+  "when": {
+   "slot": "NFR.downtime",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "NFR",
+    "key": "NFR-AVAIL",
+    "title": "止まったときに待てる時間：{{NFR.downtime}}（使う時間帯：{{NFR.usage_hours}}）",
+    "plain": "止まっても{{NFR.downtime}}",
+    "origin": "customer",
+    "confirm": true,
+    "topic": "nfr"
+   }
+  ],
+  "sources": [
+   "zip:04 判断軸"
+  ]
+ },
+ {
+  "id": "M-NFR-SEC",
+  "when": {
+   "slot": "NFR.sensitivity",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "NFR",
+    "key": "NFR-SEC",
+    "title": "情報が漏れたときの影響：{{NFR.sensitivity}}",
+    "plain": "この情報が漏れると「{{NFR.sensitivity}}」",
+    "origin": "customer",
+    "confirm": true,
+    "topic": "nfr"
+   }
+  ],
+  "sources": [
+   "zip:04 判断軸",
+   "STD:OWASP ASVS（要確認）"
+  ]
+ },
+ {
+  "id": "M-NFR-EXT",
+  "when": {
+   "slot": "NFR.external_send",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "NFR",
+    "key": "NFR-EXT",
+    "title": "外部サービス（AI等）への送信：{{NFR.external_send}}",
+    "plain": "情報を外部のサービス（AIなど）へは「{{NFR.external_send}}」",
+    "origin": "customer",
+    "confirm": true,
+    "topic": "nfr",
+    "moscow": "Must"
+   }
+  ],
+  "sources": [
+   "zip:Q-AI-004"
+  ]
+ },
+ {
+  "id": "M-NFR-DEVICE",
+  "when": {
+   "slot": "OUT.devices",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "NFR",
+    "key": "NFR-DEVICE",
+    "title": "使う端末：{{OUT.devices}}",
+    "plain": "{{OUT.devices}}で使えるようにする",
+    "origin": "customer",
+    "confirm": true,
+    "topic": "output",
+    "ac": "{{OUT.devices}}の画面幅で、横にはみ出さず最後まで操作できる"
+   }
+  ],
+  "sources": [
+   "D:依頼01",
+   "D:§4 #4"
+  ]
+ },
+ {
+  "id": "M-NFR-LINE",
+  "when": {
+   "slot": "OUT.open_from",
+   "eq": "LINE"
+  },
+  "emit": [
+   {
+    "type": "NFR",
+    "key": "NFR-INAPP",
+    "title": "LINEの中のブラウザで開いても使える（端末ごとに外のブラウザで開く手順を案内）",
+    "plain": "LINEから開いても使えるようにし、iPhone・Android・パソコンそれぞれの開き方を案内する",
+    "origin": "rule",
+    "confirm": true,
+    "topic": "toc"
+   }
+  ],
+  "sources": [
+   "D:依頼13"
+  ]
+ },
+ {
+  "id": "M-NFR-AUDIT",
+  "when": {
+   "slot": "NFR.audit",
+   "eq": "必要"
+  },
+  "emit": [
+   {
+    "type": "NFR",
+    "key": "NFR-AUDIT",
+    "title": "監査に耐える記録（操作記録・保存期間）が必要",
+    "origin": "customer",
+    "topic": "nfr"
+   }
+  ],
+  "sources": [
+   "B:§8"
+  ]
+ },
+ {
+  "id": "M-NFR-OFFLINE",
+  "when": {
+   "slot": "NFR.offline",
+   "eq": true
+  },
+  "emit": [
+   {
+    "type": "NFR",
+    "key": "NFR-OFFLINE",
+    "title": "電波のない場所でも入力でき、つながったら送る",
+    "plain": "電波がない場所でも使えるようにする",
+    "origin": "customer",
+    "confirm": true,
+    "topic": "nfr"
+   }
+  ],
+  "sources": [
+   "zip:04 C類型"
+  ]
+ },
+ {
+  "id": "M-ADR-PUB",
+  "when": {
+   "slot": "OUT.publish",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "ADR",
+    "key": "ADR-PUBLISH",
+    "title": "公開のしかた：{{OUT.publish}}",
+    "plain": "公開のしかたは「{{OUT.publish}}」",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "D:依頼15",
+   "D:§4 #1"
+  ]
+ },
+ {
+  "id": "M-AC-01",
+  "when": {
+   "slot": "AC.done_definition",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "AC",
+    "key": "AC-DONE",
+    "title": "完成の状態：{{AC.done_definition}}（確かめ方：{{AC.check_method}}）",
+    "plain": "「{{AC.done_definition}}」ができたら完成とし、{{AC.check_method}}で確かめる",
+    "origin": "customer",
+    "confirm": true
+   }
+  ],
+  "sources": [
+   "B:§4.3 受け入れ基準",
+   "D:§4 #19"
+  ]
+ },
+ {
+  "id": "M-AC-02",
+  "when": {
+   "slot": "AC.feedback_style",
+   "known": true
+  },
+  "emit": [
+   {
+    "type": "CON",
+    "key": "CON-FEEDBACK",
+    "title": "修正の伝え方：{{AC.feedback_style}}（意見が違うときの優先：{{PRJ.review_priority}}）",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "D:§4 #16",
+   "D:依頼26"
+  ]
+ },
+ {
+  "id": "M-CR",
+  "when": {
+   "slot": "CR.kind",
+   "has": "$param"
+  },
+  "emit": [
+   {
+    "type": "CR",
+    "key": "CR-{{param}}",
+    "title": "修正依頼：{{param}}（急ぎ：{{CR.urgency}}・場所：{{CR.where}}・既存の決定と：{{CR.conflict}}）",
+    "origin": "customer"
+   }
+  ],
+  "sources": [
+   "D:§3",
+   "zip:15_変更要求"
+  ],
+  "forEach": "CR.kind"
+ }
+]

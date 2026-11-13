@@ -1,0 +1,3809 @@
+[
+ {
+  "id": "Q-DAT-001",
+  "phase": "06_情報",
+  "step": 5,
+  "topic": "data",
+  "persona": "全員",
+  "text": "扱っている情報の種類を、カードで仕分けてください。",
+  "help": "右：扱っている／左：扱っていない／上：わからない。",
+  "intent": "扱う情報のまとまり（ENT）を一次仕分けし、以降の件数・関係の質問の対象を決める",
+  "technique": "選択の問い",
+  "decides": [
+   "情報のまとまりの一覧",
+   "件数・関係を聞く対象",
+   "技術選択（データ量の見積り）"
+  ],
+  "slot": "DAT.things",
+  "input": {
+   "type": "cards",
+   "optionsFrom": "entities",
+   "labels": {
+    "yes": "扱っている",
+    "no": "扱っていない",
+    "unknown": "わからない"
+   }
+  },
+  "mandatory": true,
+  "importance": 5,
+  "costSec": 40,
+  "outputs": [
+   "ENT",
+   "DAT.things"
+  ],
+  "patterns": [
+   "多くを「扱っている」→ 件数・関係を順に聞く",
+   "1〜2種類だけ → 表計算で足りる可能性"
+  ],
+  "hypothesis": "扱う情報は3種類以内に収まる",
+  "falsifier": "6種類以上が「扱っている」なら表計算単体は不向き",
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-001"
+  ]
+ },
+ {
+  "id": "Q-DAT-002",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "{{paramLabel}}は、全部でどのくらいありますか？",
+  "forEach": "DAT.things",
+  "intent": "データ量のケタを知り、表計算の上限に当たるかを判定する",
+  "technique": "数量のケタ",
+  "decides": [
+   "技術選択（表計算を除外するか）",
+   "性能の目標"
+  ],
+  "slot": "DAT.{param}.count",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "100件未満",
+     "label": "100件未満"
+    },
+    {
+     "v": "100〜1000件",
+     "label": "100〜1000件"
+    },
+    {
+     "v": "1000〜1万件",
+     "label": "1000〜1万件"
+    },
+    {
+     "v": "1万〜10万件",
+     "label": "1万〜10万件"
+    },
+    {
+     "v": "10万件以上",
+     "label": "10万件以上"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 10,
+  "outputs": [
+   "NFR.data_volume",
+   "ATTR"
+  ],
+  "hypothesis": "全部で1万件未満",
+  "falsifier": "10万件以上なら表計算は除外",
+  "patterns": [
+   "100件未満 → 表計算で十分",
+   "10万件以上 → 本格的な保存先が必要"
+  ],
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-008",
+   "zip:S21"
+  ]
+ },
+ {
+  "id": "Q-DAT-003",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "{{paramLabel}}は、1か月にどのくらい増えますか？",
+  "presupposes": [],
+  "forEach": "DAT.things",
+  "intent": "増える速さから数年後の量を見積もる",
+  "technique": "数量のケタ",
+  "decides": [
+   "技術選択（表計算の上限に近づくか）",
+   "保存期間の判断"
+  ],
+  "slot": "DAT.{param}.growth",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "月10件未満",
+     "label": "月10件未満"
+    },
+    {
+     "v": "月10〜100件",
+     "label": "月10〜100件"
+    },
+    {
+     "v": "月100〜1000件",
+     "label": "月100〜1000件"
+    },
+    {
+     "v": "月1000件以上",
+     "label": "月1000件以上"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 8,
+  "outputs": [
+   "NFR.data_volume"
+  ],
+  "hypothesis": "月100件未満",
+  "falsifier": "月1000件以上なら数年で表計算の上限に近づく",
+  "sources": [
+   "B:§2",
+   "zip:Q-DAT-008",
+   "zip:S21"
+  ]
+ },
+ {
+  "id": "Q-DAT-004",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "{{paramLabel}}は、1件ずつどうやって見分けていますか？",
+  "forEach": "DAT.things",
+  "intent": "1件を一意に特定する方法を知り、重複・名寄せの対策を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "見分けるための番号の要否",
+   "重複チェックの要否"
+  ],
+  "slot": "DAT.{param}.id",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "番号がある",
+     "label": "番号がある"
+    },
+    {
+     "v": "名前で見分ける",
+     "label": "名前で見分ける"
+    },
+    {
+     "v": "メール・電話で見分ける",
+     "label": "メール・電話で見分ける"
+    },
+    {
+     "v": "見分ける方法がない",
+     "label": "見分ける方法がない"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 10,
+  "outputs": [
+   "ENT.key",
+   "ATTR"
+  ],
+  "hypothesis": "番号か名前で見分けられる",
+  "falsifier": "見分ける方法がないなら番号の新設が必要",
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-004"
+  ]
+ },
+ {
+  "id": "Q-DAT-005",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "{{paramLabel}}について、残しておきたい項目をすべて選んでください。",
+  "help": "見本の書類や今の表の列を思い浮かべてください。",
+  "forEach": "DAT.things",
+  "intent": "一般的な項目から選んでもらい、足りない項目は深掘りで補う",
+  "technique": "選択の問い",
+  "decides": [
+   "入力欄・列の候補",
+   "必須項目の判断"
+  ],
+  "slot": "DAT.{param}.attrs",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "名前",
+     "label": "名前"
+    },
+    {
+     "v": "連絡先",
+     "label": "連絡先"
+    },
+    {
+     "v": "日付",
+     "label": "日付"
+    },
+    {
+     "v": "金額",
+     "label": "金額"
+    },
+    {
+     "v": "数量",
+     "label": "数量"
+    },
+    {
+     "v": "状態（途中・完了など）",
+     "label": "状態（途中・完了など）"
+    },
+    {
+     "v": "担当者",
+     "label": "担当者"
+    },
+    {
+     "v": "メモ",
+     "label": "メモ"
+    },
+    {
+     "v": "写真・ファイル",
+     "label": "写真・ファイル"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 25,
+  "outputs": [
+   "ATTR"
+  ],
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-002"
+  ]
+ },
+ {
+  "id": "Q-DAT-006",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "{{paramLabel}}には、「途中」「完了」のような状態がありますか？",
+  "forEach": "DAT.things",
+  "intent": "状態の遷移が必要かを判定し、後の流れ・承認の質問につなぐ",
+  "technique": "具体要求型",
+  "decides": [
+   "状態管理の要否",
+   "一覧の絞り込み項目"
+  ],
+  "slot": "DAT.{param}.status",
+  "input": {
+   "type": "yesno"
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 6,
+  "outputs": [
+   "ENT.status",
+   "FR"
+  ],
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-005"
+  ]
+ },
+ {
+  "id": "Q-DAT-007",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "{{paramLabel}}の正しい情報は、今どこにありますか？",
+  "forEach": "DAT.things",
+  "intent": "元になる情報の置き場所を知り、二重管理・移しかえの要否を判定する",
+  "technique": "具体要求型",
+  "decides": [
+   "正の置き場所",
+   "連携・移しかえの要否"
+  ],
+  "slot": "DAT.{param}.master",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "このシステム",
+     "label": "このシステム"
+    },
+    {
+     "v": "別のサービス",
+     "label": "別のサービス"
+    },
+    {
+     "v": "紙・Excel",
+     "label": "紙・Excel"
+    },
+    {
+     "v": "決まっていない",
+     "label": "決まっていない"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 10,
+  "outputs": [
+   "ENT.master",
+   "MIG"
+  ],
+  "hypothesis": "紙やExcelが正になっている",
+  "falsifier": "別のサービスが正なら連携が必要",
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-006"
+  ]
+ },
+ {
+  "id": "Q-DAT-008",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "お客様1人は、何回くらい注文や申込をしますか？",
+  "trigger": {
+   "all": [
+    {
+     "slot": "DAT.things",
+     "has": "customer"
+    },
+    {
+     "slot": "DAT.things",
+     "has": "order"
+    }
+   ]
+  },
+  "presupposes": [
+   "DAT.things"
+  ],
+  "intent": "情報どうしの1対多・多対多の関係を知り、項目の持たせ方を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "情報の持たせ方（1対多・多対多）",
+   "明細・履歴の要否"
+  ],
+  "slot": "REL.customer_order",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "1回だけ",
+     "label": "1回だけ"
+    },
+    {
+     "v": "何回もある",
+     "label": "何回もある"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 10,
+  "outputs": [
+   "REL"
+  ],
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-003"
+  ]
+ },
+ {
+  "id": "Q-DAT-009",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "注文1件には、商品がいくつ含まれますか？",
+  "trigger": {
+   "all": [
+    {
+     "slot": "DAT.things",
+     "has": "order"
+    },
+    {
+     "slot": "DAT.things",
+     "has": "product"
+    }
+   ]
+  },
+  "presupposes": [
+   "DAT.things"
+  ],
+  "intent": "情報どうしの1対多・多対多の関係を知り、項目の持たせ方を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "情報の持たせ方（1対多・多対多）",
+   "明細・履歴の要否"
+  ],
+  "slot": "REL.order_product",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "1つだけ",
+     "label": "1つだけ"
+    },
+    {
+     "v": "複数ある",
+     "label": "複数ある"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 10,
+  "outputs": [
+   "REL"
+  ],
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-003"
+  ]
+ },
+ {
+  "id": "Q-DAT-010",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "お客様1人は、何回くらい予約しますか？",
+  "trigger": {
+   "all": [
+    {
+     "slot": "DAT.things",
+     "has": "customer"
+    },
+    {
+     "slot": "DAT.things",
+     "has": "reservation"
+    }
+   ]
+  },
+  "presupposes": [
+   "DAT.things"
+  ],
+  "intent": "情報どうしの1対多・多対多の関係を知り、項目の持たせ方を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "情報の持たせ方（1対多・多対多）",
+   "明細・履歴の要否"
+  ],
+  "slot": "REL.customer_reservation",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "1回だけ",
+     "label": "1回だけ"
+    },
+    {
+     "v": "何回もある",
+     "label": "何回もある"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 10,
+  "outputs": [
+   "REL"
+  ],
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-003"
+  ]
+ },
+ {
+  "id": "Q-DAT-011",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "作業1件を担当するのは、何人ですか？",
+  "trigger": {
+   "all": [
+    {
+     "slot": "DAT.things",
+     "has": "staff"
+    },
+    {
+     "slot": "DAT.things",
+     "has": "task"
+    }
+   ]
+  },
+  "presupposes": [
+   "DAT.things"
+  ],
+  "intent": "情報どうしの1対多・多対多の関係を知り、項目の持たせ方を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "情報の持たせ方（1対多・多対多）",
+   "明細・履歴の要否"
+  ],
+  "slot": "REL.staff_task",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "1人",
+     "label": "1人"
+    },
+    {
+     "v": "複数人",
+     "label": "複数人"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 10,
+  "outputs": [
+   "REL"
+  ],
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-003"
+  ]
+ },
+ {
+  "id": "Q-DAT-012",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "お客様ごとの担当者は、決まっていますか？",
+  "trigger": {
+   "all": [
+    {
+     "slot": "DAT.things",
+     "has": "customer"
+    },
+    {
+     "slot": "DAT.things",
+     "has": "staff"
+    }
+   ]
+  },
+  "presupposes": [
+   "DAT.things"
+  ],
+  "intent": "情報どうしの1対多・多対多の関係を知り、項目の持たせ方を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "情報の持たせ方（1対多・多対多）",
+   "明細・履歴の要否"
+  ],
+  "slot": "REL.customer_staff",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "決まった1人",
+     "label": "決まった1人"
+    },
+    {
+     "v": "複数人・その都度",
+     "label": "複数人・その都度"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 10,
+  "outputs": [
+   "REL"
+  ],
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-003"
+  ]
+ },
+ {
+  "id": "Q-DAT-013",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "注文1件の支払いは、どのような形ですか？",
+  "trigger": {
+   "all": [
+    {
+     "slot": "DAT.things",
+     "has": "order"
+    },
+    {
+     "slot": "DAT.things",
+     "has": "payment"
+    }
+   ]
+  },
+  "presupposes": [
+   "DAT.things"
+  ],
+  "intent": "情報どうしの1対多・多対多の関係を知り、項目の持たせ方を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "情報の持たせ方（1対多・多対多）",
+   "明細・履歴の要否"
+  ],
+  "slot": "REL.order_payment",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "1回で全額",
+     "label": "1回で全額"
+    },
+    {
+     "v": "分割・複数回",
+     "label": "分割・複数回"
+    },
+    {
+     "v": "まとめて請求",
+     "label": "まとめて請求"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 10,
+  "outputs": [
+   "REL"
+  ],
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-003"
+  ]
+ },
+ {
+  "id": "Q-DAT-014",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "問い合わせをする人は、名前がわかる人ですか？",
+  "trigger": {
+   "all": [
+    {
+     "slot": "DAT.things",
+     "has": "customer"
+    },
+    {
+     "slot": "DAT.things",
+     "has": "inquiry"
+    }
+   ]
+  },
+  "presupposes": [
+   "DAT.things"
+  ],
+  "intent": "情報どうしの1対多・多対多の関係を知り、項目の持たせ方を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "情報の持たせ方（1対多・多対多）",
+   "明細・履歴の要否"
+  ],
+  "slot": "REL.customer_inquiry",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "お客様がわかる",
+     "label": "お客様がわかる"
+    },
+    {
+     "v": "名乗らない人もいる",
+     "label": "名乗らない人もいる"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 10,
+  "outputs": [
+   "REL"
+  ],
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-003"
+  ]
+ },
+ {
+  "id": "Q-DAT-015",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "利用者は、教材をどの順番で進めますか？",
+  "trigger": {
+   "all": [
+    {
+     "slot": "DAT.things",
+     "has": "customer"
+    },
+    {
+     "slot": "DAT.things",
+     "has": "content"
+    }
+   ]
+  },
+  "presupposes": [
+   "DAT.things"
+  ],
+  "intent": "情報どうしの1対多・多対多の関係を知り、項目の持たせ方を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "情報の持たせ方（1対多・多対多）",
+   "明細・履歴の要否"
+  ],
+  "slot": "REL.member_content",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "全員同じ順に進む",
+     "label": "全員同じ順に進む"
+    },
+    {
+     "v": "人ごとに選ぶ",
+     "label": "人ごとに選ぶ"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 10,
+  "outputs": [
+   "REL"
+  ],
+  "sources": [
+   "B:§5",
+   "zip:Q-DAT-003"
+  ]
+ },
+ {
+  "id": "Q-DAT-016",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "入力してもらう内容に、個人がわかる情報は含まれますか？",
+  "intent": "個人情報の種類を把握し、保存場所・見られる人・保存期間の厳しさを決める",
+  "technique": "具体要求型",
+  "decides": [
+   "保管方法",
+   "見られる人の範囲",
+   "外部サービスに送ってよいか"
+  ],
+  "slot": "DAT.pii",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "名前",
+     "label": "名前"
+    },
+    {
+     "v": "連絡先",
+     "label": "連絡先"
+    },
+    {
+     "v": "住所",
+     "label": "住所"
+    },
+    {
+     "v": "生年月日",
+     "label": "生年月日"
+    },
+    {
+     "v": "お金・口座",
+     "label": "お金・口座"
+    },
+    {
+     "v": "健康・病歴",
+     "label": "健康・病歴"
+    },
+    {
+     "v": "本人の考え・悩み",
+     "label": "本人の考え・悩み"
+    },
+    {
+     "v": "なし",
+     "label": "なし"
+    }
+   ]
+  },
+  "mandatory": {
+   "any": [
+    {
+     "slot": "PRJ.audience",
+     "in": [
+      "社外の取引先",
+      "一般の個人",
+      "社内と社外"
+     ]
+    },
+    {
+     "topic": "toc"
+    }
+   ]
+  },
+  "importance": 5,
+  "costSec": 15,
+  "outputs": [
+   "NFR.confidentiality",
+   "DAT.pii"
+  ],
+  "followups": [
+   {
+    "when": {
+     "slot": "DAT.pii",
+     "hasAny": [
+      "健康・病歴",
+      "お金・口座"
+     ]
+    },
+    "ask": "Q-DAT-021",
+    "why": "重い個人情報は保存期間を先に確かめる"
+   },
+   {
+    "when": {
+     "slot": "DAT.pii",
+     "hasAny": [
+      "健康・病歴",
+      "お金・口座"
+     ]
+    },
+    "ask": "Q-ROL-009",
+    "why": "重い個人情報は見られる人を先に絞る"
+   }
+  ],
+  "hypothesis": "名前・連絡先までで、重い情報は含まれない",
+  "falsifier": "健康・お金の情報があれば保管方法の水準が上がる",
+  "sources": [
+   "B:§2",
+   "D:§4 #2",
+   "zip:Q-NFR-006"
+  ]
+ },
+ {
+  "id": "Q-DAT-017",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "情報は、どのくらいの期間、残しておきますか？",
+  "presupposes": [
+   "DAT.things"
+  ],
+  "intent": "保存期間と削除の決まりを知る",
+  "technique": "時点の分離",
+  "decides": [
+   "古い情報の削除・保管ルール",
+   "保存先の容量"
+  ],
+  "slot": "DAT.retention",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "1年未満",
+     "label": "1年未満"
+    },
+    {
+     "v": "1〜5年",
+     "label": "1〜5年"
+    },
+    {
+     "v": "5年以上",
+     "label": "5年以上"
+    },
+    {
+     "v": "法令で決まっている",
+     "label": "法令で決まっている"
+    },
+    {
+     "v": "決めていない",
+     "label": "決めていない"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 10,
+  "outputs": [
+   "NFR.retention",
+   "RULE"
+  ],
+  "dedupe": "retention",
+  "sources": [
+   "zip:Q-DAT-008",
+   "STD:個人情報保護法"
+  ]
+ },
+ {
+  "id": "Q-DAT-018",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "誰がいつ変えたかを、あとから見られる必要がありますか？",
+  "intent": "変更履歴の要否を知る（監査・取り消しの根拠）",
+  "technique": "採否テスト",
+  "decides": [
+   "変更履歴機能の要否",
+   "技術選択（履歴を残せない構成を除外）"
+  ],
+  "slot": "DAT.history",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "必要",
+     "label": "必要"
+    },
+    {
+     "v": "あると良い",
+     "label": "あると良い"
+    },
+    {
+     "v": "いらない",
+     "label": "いらない"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 8,
+  "outputs": [
+   "NFR.audit_log",
+   "FR"
+  ],
+  "hypothesis": "履歴は「あると良い」程度",
+  "falsifier": "「必要」なら静的ページ構成は除外",
+  "sources": [
+   "zip:Q-DAT-010",
+   "B:§2"
+  ]
+ },
+ {
+  "id": "Q-DAT-019",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "写真やファイルを、情報に添付しますか？",
+  "intent": "ファイル保管の要否を知り、保存先・容量を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "ファイル保存先",
+   "容量の目安"
+  ],
+  "slot": "DAT.files",
+  "input": {
+   "type": "yesno"
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 5,
+  "outputs": [
+   "FR",
+   "NFR.storage"
+  ],
+  "sources": [
+   "zip:Q-DAT-011"
+  ]
+ },
+ {
+  "id": "Q-DAT-020",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "別の端末や次の版へ、引き継ぎたい情報はありますか？",
+  "intent": "引き継ぎ方法（書き出し・読み込み・ログイン）の要否を判定する",
+  "technique": "具体要求型",
+  "decides": [
+   "引き継ぎ機能の要否",
+   "ファイル形式",
+   "ログインの要否"
+  ],
+  "slot": "DAT.carry_over",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "別の端末へ",
+     "label": "別の端末へ"
+    },
+    {
+     "v": "無料版から本番へ",
+     "label": "無料版から本番へ"
+    },
+    {
+     "v": "次の版へ",
+     "label": "次の版へ"
+    },
+    {
+     "v": "どれもない",
+     "label": "どれもない"
+    }
+   ]
+  },
+  "mandatory": {
+   "any": [
+    {
+     "slot": "ROLE.login",
+     "eq": "URLを開くだけで使いたい"
+    },
+    {
+     "slot": "TOC.free_paid",
+     "in": [
+      "無料版を別に作る",
+      "途中から有料"
+     ]
+    }
+   ]
+  },
+  "importance": 4,
+  "costSec": 12,
+  "outputs": [
+   "FR",
+   "NFR.portability"
+  ],
+  "hypothesis": "引き継ぎはない",
+  "falsifier": "無料版から本番へ引き継ぐなら書き出し機能が要る",
+  "sources": [
+   "D:§4 #3",
+   "zip:Q-DAT-014"
+  ]
+ },
+ {
+  "id": "Q-DAT-021",
+  "phase": "06_情報",
+  "step": 6,
+  "topic": "data",
+  "persona": "全員",
+  "text": "健康やお金の情報は、いつまで残す必要がありますか？",
+  "presupposes": [
+   "DAT.pii"
+  ],
+  "intent": "重い個人情報の保存期間を先に確かめる",
+  "technique": "時点の分離",
+  "decides": [
+   "保存期間",
+   "削除の方法"
+  ],
+  "slot": "DAT.retention",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "1年未満",
+     "label": "1年未満"
+    },
+    {
+     "v": "1〜5年",
+     "label": "1〜5年"
+    },
+    {
+     "v": "5年以上",
+     "label": "5年以上"
+    },
+    {
+     "v": "法令で決まっている",
+     "label": "法令で決まっている"
+    },
+    {
+     "v": "決めていない",
+     "label": "決めていない"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 10,
+  "outputs": [
+   "NFR.retention"
+  ],
+  "queuedOnly": true,
+  "dedupe": "retention",
+  "sources": [
+   "B:§2",
+   "STD:個人情報保護法"
+  ]
+ },
+ {
+  "id": "Q-ROL-001",
+  "phase": "07_使う人",
+  "step": 6,
+  "topic": "roles",
+  "persona": "全員",
+  "text": "このしくみを使う人は、どんな立場の人ですか？",
+  "intent": "使う人の立場を洗い出し、見られる範囲の整理の行にする",
+  "technique": "選択の問い",
+  "decides": [
+   "立場の一覧",
+   "見られる範囲の表の行"
+  ],
+  "slot": "ROLE.list",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "経営者・管理者",
+     "label": "経営者・管理者"
+    },
+    {
+     "v": "社員・スタッフ",
+     "label": "社員・スタッフ"
+    },
+    {
+     "v": "お客様・会員",
+     "label": "お客様・会員"
+    },
+    {
+     "v": "取引先",
+     "label": "取引先"
+    },
+    {
+     "v": "外部の協力者",
+     "label": "外部の協力者"
+    },
+    {
+     "v": "一般の利用者（名前を名乗らない）",
+     "label": "一般の利用者（名前を名乗らない）"
+    }
+   ]
+  },
+  "mandatory": true,
+  "importance": 5,
+  "costSec": 15,
+  "outputs": [
+   "ROLE"
+  ],
+  "hypothesis": "立場は3つ以内",
+  "falsifier": "立場が5つ以上なら見られる範囲の分け方を細かくする",
+  "sources": [
+   "B:§3",
+   "zip:Q-DAT-001"
+  ]
+ },
+ {
+  "id": "Q-ROL-002",
+  "phase": "07_使う人",
+  "step": 6,
+  "topic": "roles",
+  "persona": "全員",
+  "text": "人によって、見られてはいけない情報はありますか？",
+  "presupposes": [
+   "ROLE.list"
+  ],
+  "intent": "閲覧範囲の分け方（全員同じ／本人分のみ／立場別）を決める。技術選択の主要条件",
+  "technique": "対置型",
+  "decides": [
+   "見える範囲の分け方",
+   "技術選択（本人分のみ表示できる構成か）"
+  ],
+  "slot": "ROLE.see_scope",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "全員が全部見てよい",
+     "label": "全員が全部見てよい"
+    },
+    {
+     "v": "自分の分だけ",
+     "label": "自分の分だけ"
+    },
+    {
+     "v": "立場ごとに違う",
+     "label": "立場ごとに違う"
+    },
+    {
+     "v": "わからない",
+     "label": "わからない"
+    }
+   ]
+  },
+  "mandatory": true,
+  "importance": 5,
+  "costSec": 12,
+  "outputs": [
+   "PERM",
+   "ROLE"
+  ],
+  "hypothesis": "全員が全部見てよい",
+  "falsifier": "「自分の分だけ」なら表計算単体は除外",
+  "patterns": [
+   "全員が全部 → 単純",
+   "自分の分だけ → ログインと行単位の制限が必要"
+  ],
+  "sources": [
+   "B:§3",
+   "zip:S20"
+  ]
+ },
+ {
+  "id": "Q-ROL-003",
+  "phase": "07_使う人",
+  "step": 6,
+  "topic": "roles",
+  "persona": "全員",
+  "text": "情報を書き換えてよいのは、誰ですか？",
+  "presupposes": [
+   "ROLE.list"
+  ],
+  "intent": "変更できる人の範囲を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "変更の許可範囲",
+   "承認の要否"
+  ],
+  "slot": "ROLE.edit_scope",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "本人だけ",
+     "label": "本人だけ"
+    },
+    {
+     "v": "管理者だけ",
+     "label": "管理者だけ"
+    },
+    {
+     "v": "担当者と管理者",
+     "label": "担当者と管理者"
+    },
+    {
+     "v": "誰でも",
+     "label": "誰でも"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 10,
+  "outputs": [
+   "PERM"
+  ],
+  "sources": [
+   "B:§3"
+  ]
+ },
+ {
+  "id": "Q-ROL-004",
+  "phase": "07_使う人",
+  "step": 6,
+  "topic": "roles",
+  "persona": "全員",
+  "text": "使う前に、ログイン（本人確認）は必要ですか？",
+  "intent": "ログインの要否を決める。公開方法・保存先を左右する",
+  "technique": "対置型",
+  "decides": [
+   "ログイン方式",
+   "技術選択（URLだけで使う構成の可否）"
+  ],
+  "slot": "ROLE.login",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "必要",
+     "label": "必要"
+    },
+    {
+     "v": "URLを開くだけで使いたい",
+     "label": "URLを開くだけで使いたい"
+    },
+    {
+     "v": "人によって違う",
+     "label": "人によって違う"
+    }
+   ]
+  },
+  "mandatory": true,
+  "importance": 5,
+  "costSec": 10,
+  "outputs": [
+   "NFR.auth",
+   "ROLE"
+  ],
+  "hypothesis": "本人確認が要る",
+  "falsifier": "URLだけで使いたいならログイン機能は不要（ただし本人分の表示ができない）",
+  "sources": [
+   "D:§4 #2",
+   "zip:Q-DAT-014"
+  ]
+ },
+ {
+  "id": "Q-ROL-005",
+  "phase": "07_使う人",
+  "step": 6,
+  "topic": "roles",
+  "persona": "全員",
+  "text": "使う人は、Googleのアカウントを持っていますか？",
+  "intent": "Googleアカウント前提の構成が使えるかを判定する",
+  "technique": "具体要求型",
+  "decides": [
+   "技術選択（Google系ツールの可否）"
+  ],
+  "slot": "ROLE.google_accounts",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "全員持っている",
+     "label": "全員持っている"
+    },
+    {
+     "v": "社内の人だけ持っている",
+     "label": "社内の人だけ持っている"
+    },
+    {
+     "v": "持っていない人が多い",
+     "label": "持っていない人が多い"
+    }
+   ]
+  },
+  "mandatory": {
+   "any": [
+    {
+     "slot": "PRJ.audience",
+     "in": [
+      "社外の取引先",
+      "一般の個人",
+      "社内と社外"
+     ]
+    },
+    {
+     "slot": "ROLE.login",
+     "eq": "必要"
+    }
+   ]
+  },
+  "importance": 4,
+  "costSec": 8,
+  "outputs": [
+   "NFR.auth",
+   "CON"
+  ],
+  "sources": [
+   "zip:04 §3"
+  ]
+ },
+ {
+  "id": "Q-ROL-006",
+  "phase": "07_使う人",
+  "step": 6,
+  "topic": "roles",
+  "persona": [
+   "管理者",
+   "経営者",
+   "IT担当"
+  ],
+  "text": "管理する人は、どんな作業をしますか？",
+  "trigger": {
+   "slot": "ROLE.list",
+   "has": "経営者・管理者"
+  },
+  "intent": "管理者の作業を洗い出し、管理画面の機能にする",
+  "technique": "運用の問い",
+  "decides": [
+   "管理機能の範囲",
+   "管理者の数"
+  ],
+  "slot": "ROLE.admin_ops",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "利用者の追加・削除",
+     "label": "利用者の追加・削除"
+    },
+    {
+     "v": "内容の確認・承認",
+     "label": "内容の確認・承認"
+    },
+    {
+     "v": "集計・出力",
+     "label": "集計・出力"
+    },
+    {
+     "v": "設定の変更",
+     "label": "設定の変更"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 12,
+  "outputs": [
+   "FR",
+   "ROLE"
+  ],
+  "sources": [
+   "B:§3"
+  ]
+ },
+ {
+  "id": "Q-ROL-007",
+  "phase": "07_使う人",
+  "step": 6,
+  "topic": "roles",
+  "persona": "全員",
+  "text": "運営する側は、利用者が入力した内容を見る必要がありますか？",
+  "intent": "運営側が利用者の入力を見るかを決める（見る場合、本人の端末だけの構成は除外）",
+  "technique": "対置型",
+  "decides": [
+   "技術選択（端末内で完結する構成の可否）",
+   "集計機能の要否"
+  ],
+  "slot": "ROLE.operator_view",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "見る必要がある",
+     "label": "見る必要がある"
+    },
+    {
+     "v": "見なくてよい（本人の端末だけでよい）",
+     "label": "見なくてよい（本人の端末だけでよい）"
+    },
+    {
+     "v": "まとめた数字だけ見たい",
+     "label": "まとめた数字だけ見たい"
+    }
+   ]
+  },
+  "mandatory": true,
+  "importance": 5,
+  "costSec": 10,
+  "outputs": [
+   "PERM",
+   "NFR"
+  ],
+  "hypothesis": "運営は見なくてよい",
+  "falsifier": "見る必要があれば、入力を預かる保存先が要る",
+  "sources": [
+   "D:§4 #2",
+   "zip:04 §3"
+  ]
+ },
+ {
+  "id": "Q-ROL-008",
+  "phase": "07_使う人",
+  "step": 6,
+  "topic": "roles",
+  "persona": "全員",
+  "text": "立場ごとに、情報を見る・変えるのを決めてください。",
+  "help": "立場ごとに、当てはまるものをタップしてください。",
+  "trigger": {
+   "slot": "ROLE.list",
+   "count_gte": 2
+  },
+  "presupposes": [
+   "ROLE.list"
+  ],
+  "intent": "立場×できることを一度に確かめる",
+  "technique": "具体要求型",
+  "decides": [
+   "見られる範囲の表",
+   "操作の許可範囲"
+  ],
+  "slot": "ROLE.matrix",
+  "input": {
+   "type": "matrix",
+   "rowsFrom": "ROLE.list",
+   "columns": [
+    {
+     "v": "変える",
+     "label": "見る・変える"
+    },
+    {
+     "v": "見る",
+     "label": "見るだけ"
+    },
+    {
+     "v": "なし",
+     "label": "見せない"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 5,
+  "costSec": 45,
+  "outputs": [
+   "PERM",
+   "ROLE"
+  ],
+  "sources": [
+   "B:§3",
+   "zip:Q-DAT-001"
+  ]
+ },
+ {
+  "id": "Q-ROL-009",
+  "phase": "07_使う人",
+  "step": 6,
+  "topic": "roles",
+  "persona": "全員",
+  "text": "健康やお金の情報を見てよいのは、誰ですか？",
+  "presupposes": [
+   "DAT.pii"
+  ],
+  "intent": "重い個人情報の見られる範囲を先に絞る",
+  "technique": "具体要求型",
+  "decides": [
+   "見える範囲の分け方"
+  ],
+  "slot": "ROLE.see_scope",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "全員が全部見てよい",
+     "label": "全員が全部見てよい"
+    },
+    {
+     "v": "自分の分だけ",
+     "label": "自分の分だけ"
+    },
+    {
+     "v": "立場ごとに違う",
+     "label": "立場ごとに違う"
+    },
+    {
+     "v": "わからない",
+     "label": "わからない"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 10,
+  "outputs": [
+   "PERM"
+  ],
+  "queuedOnly": true,
+  "dedupe": "see_scope",
+  "sources": [
+   "B:§3"
+  ]
+ },
+ {
+  "id": "Q-OUT-001",
+  "phase": "08_画面と出力",
+  "step": 6,
+  "topic": "output",
+  "persona": "全員",
+  "text": "利用者は、どの機器で開きますか？",
+  "intent": "使う端末を知り、画面の作りと確認する端末を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "画面の作り（スマホ優先など）",
+   "確認する端末"
+  ],
+  "slot": "OUT.devices",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "スマホ",
+     "label": "スマホ"
+    },
+    {
+     "v": "パソコン",
+     "label": "パソコン"
+    },
+    {
+     "v": "タブレット",
+     "label": "タブレット"
+    }
+   ]
+  },
+  "mandatory": true,
+  "importance": 4,
+  "costSec": 8,
+  "outputs": [
+   "NFR.devices",
+   "FR"
+  ],
+  "hypothesis": "スマホが中心",
+  "falsifier": "パソコンだけなら横長の画面で足りる",
+  "sources": [
+   "D:§4 #4",
+   "zip:Q-SCR-008"
+  ]
+ },
+ {
+  "id": "Q-OUT-002",
+  "phase": "08_画面と出力",
+  "step": 6,
+  "topic": "output",
+  "persona": "全員",
+  "text": "利用者がいちばん多く開く入口は、どこですか？",
+  "presupposes": [],
+  "intent": "アプリ内ブラウザなど入口ごとの制約を知る",
+  "technique": "具体要求型",
+  "decides": [
+   "入口ごとの案内",
+   "アプリ内ブラウザへの対策"
+  ],
+  "slot": "OUT.open_from",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "LINE",
+     "label": "LINE"
+    },
+    {
+     "v": "メール",
+     "label": "メール"
+    },
+    {
+     "v": "社内のポータル・ブックマーク",
+     "label": "社内のポータル・ブックマーク"
+    },
+    {
+     "v": "QRコード",
+     "label": "QRコード"
+    },
+    {
+     "v": "検索・広告",
+     "label": "検索・広告"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 8,
+  "outputs": [
+   "NFR",
+   "FR"
+  ],
+  "sources": [
+   "D:§4 #4",
+   "zip:Q-SCR-008"
+  ]
+ },
+ {
+  "id": "Q-OUT-003",
+  "phase": "08_画面と出力",
+  "step": 6,
+  "topic": "output",
+  "persona": "全員",
+  "text": "作りたい出力物を、すべて選んでください。",
+  "intent": "出力物の種類を洗い出し、様式・上限の質問を出すかを決める",
+  "technique": "具体要求型",
+  "decides": [
+   "出力機能の範囲",
+   "様式・上限を聞くか"
+  ],
+  "slot": "OUT.outputs",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "一覧表",
+     "label": "一覧表"
+    },
+    {
+     "v": "集計・グラフ",
+     "label": "集計・グラフ"
+    },
+    {
+     "v": "PDF・印刷物",
+     "label": "PDF・印刷物"
+    },
+    {
+     "v": "メールのお知らせ",
+     "label": "メールのお知らせ"
+    },
+    {
+     "v": "LINEのお知らせ",
+     "label": "LINEのお知らせ"
+    },
+    {
+     "v": "CSV・Excel出力",
+     "label": "CSV・Excel出力"
+    },
+    {
+     "v": "なし",
+     "label": "なし"
+    }
+   ]
+  },
+  "mandatory": {
+   "slot": "PRJ.category",
+   "hasAny": [
+    "診断・自己理解",
+    "学習・ワーク",
+    "データ分析・レポート"
+   ]
+  },
+  "importance": 4,
+  "costSec": 12,
+  "outputs": [
+   "FR",
+   "OUT"
+  ],
+  "sources": [
+   "D:§4 #5",
+   "zip:Q-SCR-003"
+  ]
+ },
+ {
+  "id": "Q-OUT-004",
+  "phase": "08_画面と出力",
+  "step": 6,
+  "topic": "output",
+  "persona": "全員",
+  "text": "PDFや印刷物には、決まりがありますか？",
+  "help": "例：「A4で1枚まで」「全部で800字まで」",
+  "trigger": {
+   "slot": "OUT.outputs",
+   "has": "PDF・印刷物"
+  },
+  "intent": "枚数・文字数・様式の決まりを先に知り、あふれ・崩れを防ぐ",
+  "technique": "具体要求型",
+  "decides": [
+   "出力物の作り方（上限・様式）"
+  ],
+  "slot": "OUT.pdf_limit",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "枚数が決まっている",
+     "label": "枚数が決まっている"
+    },
+    {
+     "v": "文字数が決まっている",
+     "label": "文字数が決まっている"
+    },
+    {
+     "v": "様式が決まっている",
+     "label": "様式が決まっている"
+    },
+    {
+     "v": "決まりはない",
+     "label": "決まりはない"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 8,
+  "outputs": [
+   "OUT.limits",
+   "FR"
+  ],
+  "sources": [
+   "D:§4 #5",
+   "zip:Q-SCR-004"
+  ]
+ },
+ {
+  "id": "Q-OUT-005",
+  "phase": "08_画面と出力",
+  "step": 6,
+  "topic": "output",
+  "persona": "全員",
+  "text": "お知らせは、誰に送りますか？",
+  "trigger": {
+   "slot": "OUT.outputs",
+   "hasAny": [
+    "メールのお知らせ",
+    "LINEのお知らせ"
+   ]
+  },
+  "intent": "通知の宛先を知る",
+  "technique": "具体要求型",
+  "decides": [
+   "通知機能の範囲",
+   "連携の要否"
+  ],
+  "slot": "OUT.notify",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "本人",
+     "label": "本人"
+    },
+    {
+     "v": "担当者",
+     "label": "担当者"
+    },
+    {
+     "v": "管理者",
+     "label": "管理者"
+    },
+    {
+     "v": "お客様",
+     "label": "お客様"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 8,
+  "outputs": [
+   "FR",
+   "INT"
+  ],
+  "sources": [
+   "zip:Q-INT-004"
+  ]
+ },
+ {
+  "id": "Q-OUT-006",
+  "phase": "08_画面と出力",
+  "step": 6,
+  "topic": "output",
+  "persona": "全員",
+  "text": "画面に出す言葉に、決まった呼び方や使わない言葉はありますか？",
+  "intent": "用語規則の有無を知り、画面の言葉の手戻りを防ぐ",
+  "technique": "具体要求型",
+  "decides": [
+   "用語集の作成",
+   "画面文言の確認の進め方"
+  ],
+  "slot": "OUT.words_rule",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "ある",
+     "label": "ある"
+    },
+    {
+     "v": "ない",
+     "label": "ない"
+    },
+    {
+     "v": "これから決める",
+     "label": "これから決める"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 10,
+  "outputs": [
+   "RULE.glossary",
+   "FR"
+  ],
+  "hypothesis": "開発側の内部用語が画面に出る",
+  "falsifier": "用語規則がなければ確認は一般的な表現で足りる",
+  "patterns": [
+   "ある → 一覧をもらう",
+   "これから決める → 決める人と期日を聞く"
+  ],
+  "sources": [
+   "D:§4 #6",
+   "D:§1 #22",
+   "D:§1 #25",
+   "zip:Q-SCR-006"
+  ]
+ },
+ {
+  "id": "Q-OUT-007",
+  "phase": "08_画面と出力",
+  "step": 6,
+  "topic": "output",
+  "persona": "全員",
+  "text": "画面の言葉づかいは、どんな雰囲気がよいですか？",
+  "intent": "言葉の雰囲気を決める",
+  "technique": "選択の問い",
+  "decides": [
+   "画面文言のトーン"
+  ],
+  "slot": "OUT.tone",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "ていねい",
+     "label": "ていねい"
+    },
+    {
+     "v": "やわらかい・親しみ",
+     "label": "やわらかい・親しみ"
+    },
+    {
+     "v": "簡潔・事務的",
+     "label": "簡潔・事務的"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 2,
+  "costSec": 6,
+  "outputs": [
+   "FR",
+   "RULE.glossary"
+  ],
+  "sources": [
+   "zip:Q-SCR-007"
+  ]
+ },
+ {
+  "id": "Q-OUT-008",
+  "phase": "08_画面と出力",
+  "step": 6,
+  "topic": "output",
+  "persona": "全員",
+  "text": "出来上がったものは、どこに置いて使いますか？",
+  "intent": "公開方法（社内のみ／URL限定／一般公開／AIアシスタント上）を決める。保存・書き出しの可否を左右する",
+  "technique": "選択の問い",
+  "decides": [
+   "技術選択（公開方法で候補が絞られる）",
+   "保存の仕組み",
+   "URLの数"
+  ],
+  "slot": "OUT.publish",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "社内だけで使う",
+     "label": "社内だけで使う"
+    },
+    {
+     "v": "URLを知っている人だけ",
+     "label": "URLを知っている人だけ"
+    },
+    {
+     "v": "誰でも見られる公開",
+     "label": "誰でも見られる公開"
+    },
+    {
+     "v": "Claude・ChatGPTなどの上で配る",
+     "label": "Claude・ChatGPTなどの上で配る"
+    },
+    {
+     "v": "決まっていない",
+     "label": "決まっていない"
+    }
+   ]
+  },
+  "mandatory": true,
+  "importance": 5,
+  "costSec": 10,
+  "outputs": [
+   "NFR.publish",
+   "ADR"
+  ],
+  "hypothesis": "公開方法は未決定",
+  "falsifier": "社内だけなら一般公開の備えは不要",
+  "patterns": [
+   "決まっていない → 候補を提示して選んでもらう",
+   "Claude上で配る → 保存・書き出しに制約"
+  ],
+  "sources": [
+   "D:§4 #1",
+   "D:§1 #8",
+   "D:§1 #15",
+   "zip:Q-CON-006"
+  ]
+ },
+ {
+  "id": "Q-OUT-009",
+  "phase": "08_画面と出力",
+  "step": 6,
+  "topic": "output",
+  "persona": "全員",
+  "text": "入力欄は、全部書かないと次へ進めないほうがよいですか？",
+  "intent": "必須入力の方針を決め、空欄で完了になる不具合を防ぐ",
+  "technique": "採否テスト",
+  "decides": [
+   "必須項目の設定",
+   "完了の条件"
+  ],
+  "slot": "OUT.required_input",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "全部書かないと進めない",
+     "label": "全部書かないと進めない"
+    },
+    {
+     "v": "空欄でも進める",
+     "label": "空欄でも進める"
+    },
+    {
+     "v": "項目による",
+     "label": "項目による"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 8,
+  "outputs": [
+   "RULE.validation",
+   "AC"
+  ],
+  "hypothesis": "項目によって違う",
+  "falsifier": "全部必須なら途中保存の要否も確認する",
+  "sources": [
+   "D:§4 #9",
+   "D:§1 #22",
+   "D:§1 #26",
+   "zip:Q-RUL-006"
+  ]
+ },
+ {
+  "id": "Q-OUT-010",
+  "phase": "08_画面と出力",
+  "step": 6,
+  "topic": "output",
+  "persona": "全員",
+  "text": "進み具合に合わせて、次にやることを案内しますか？",
+  "trigger": {
+   "any": [
+    {
+     "slot": "PRJ.audience",
+     "eq": "一般の個人"
+    },
+    {
+     "slot": "PRJ.category",
+     "has": "学習・ワーク"
+    }
+   ]
+  },
+  "intent": "進み具合に連動した案内・表示の要否を知り、表示条件の手戻りを防ぐ",
+  "technique": "具体要求型",
+  "decides": [
+   "表示条件の設計",
+   "案内文の数"
+  ],
+  "slot": "OUT.progress_guide",
+  "input": {
+   "type": "yesno"
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 6,
+  "outputs": [
+   "FR",
+   "RULE"
+  ],
+  "sources": [
+   "D:§4 #18",
+   "zip:Q-SCR-005"
+  ]
+ },
+ {
+  "id": "Q-OUT-011",
+  "phase": "08_画面と出力",
+  "step": 6,
+  "topic": "output",
+  "persona": "全員",
+  "text": "作るものの中で、AIに任せたい作業はありますか？",
+  "help": "今回の聞き取りではAIは使っていません。作るものに入れるかどうかの質問です。",
+  "intent": "作るもの自体にAIを入れるかを知る（入れる場合のみAIの論点を出す）",
+  "technique": "選択の問い",
+  "decides": [
+   "AI機能の有無",
+   "AI関連の質問を出すか",
+   "技術選択（外部送信できない場合の除外）"
+  ],
+  "slot": "AI.want",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "文章の要約・言い換え",
+     "label": "文章の要約・言い換え"
+    },
+    {
+     "v": "分類・振り分け",
+     "label": "分類・振り分け"
+    },
+    {
+     "v": "文章の下書き",
+     "label": "文章の下書き"
+    },
+    {
+     "v": "問い合わせへの回答",
+     "label": "問い合わせへの回答"
+    },
+    {
+     "v": "画像・書類の読み取り",
+     "label": "画像・書類の読み取り"
+    },
+    {
+     "v": "AIは使わない",
+     "label": "AIは使わない"
+    }
+   ]
+  },
+  "mandatory": {
+   "any": [
+    {
+     "slot": "PRJ.audience",
+     "in": [
+      "社外の取引先",
+      "一般の個人",
+      "社内と社外"
+     ]
+    },
+    {
+     "slot": "PRJ.category",
+     "hasAny": [
+      "診断・自己理解",
+      "学習・ワーク"
+     ]
+    }
+   ]
+  },
+  "importance": 4,
+  "costSec": 15,
+  "outputs": [
+   "FR",
+   "AI.want"
+  ],
+  "hypothesis": "AIは使わない",
+  "falsifier": "1つでも選べばAI関連の確認が必要",
+  "sources": [
+   "D:§4 #10",
+   "zip:Q-AI-001"
+  ]
+ },
+ {
+  "id": "Q-LNK-001",
+  "phase": "09_連携",
+  "step": 6,
+  "topic": "integration",
+  "persona": "全員",
+  "text": "つなぎたいサービスは、ありますか？",
+  "intent": "連携先を洗い出す",
+  "technique": "選択の問い",
+  "decides": [
+   "連携の範囲",
+   "技術選択（法令対応が重い会計連携など）"
+  ],
+  "slot": "INT.systems",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "会計ソフト",
+     "label": "会計ソフト"
+    },
+    {
+     "v": "決済サービス",
+     "label": "決済サービス"
+    },
+    {
+     "v": "LINE公式アカウント",
+     "label": "LINE公式アカウント"
+    },
+    {
+     "v": "メール配信",
+     "label": "メール配信"
+    },
+    {
+     "v": "カレンダー",
+     "label": "カレンダー"
+    },
+    {
+     "v": "既存の顧客管理",
+     "label": "既存の顧客管理"
+    },
+    {
+     "v": "フォーム",
+     "label": "フォーム"
+    },
+    {
+     "v": "動画・学習サービス",
+     "label": "動画・学習サービス"
+    },
+    {
+     "v": "なし",
+     "label": "なし"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 15,
+  "outputs": [
+   "INT"
+  ],
+  "followups": [
+   {
+    "when": {
+     "all": [
+      {
+       "slot": "INT.systems",
+       "known": true
+      },
+      {
+       "not": {
+        "slot": "INT.systems",
+        "has": "なし"
+       }
+      }
+     ]
+    },
+    "ask": "Q-LNK-002",
+    "why": "連携先が決まったら情報の流れを確かめる"
+   },
+   {
+    "when": {
+     "all": [
+      {
+       "slot": "INT.systems",
+       "known": true
+      },
+      {
+       "not": {
+        "slot": "INT.systems",
+        "has": "なし"
+       }
+      }
+     ]
+    },
+    "ask": "Q-LNK-003",
+    "why": "連携先が決まったら頻度を確かめる"
+   }
+  ],
+  "hypothesis": "連携は1〜2件",
+  "falsifier": "なしなら連携の質問は不要",
+  "sources": [
+   "zip:Q-INT-001"
+  ]
+ },
+ {
+  "id": "Q-LNK-002",
+  "phase": "09_連携",
+  "step": 6,
+  "topic": "integration",
+  "persona": "全員",
+  "text": "そのサービスとは、情報をどちら向きにやりとりしますか？",
+  "presupposes": [
+   "INT.systems"
+  ],
+  "intent": "連携の向き（取り込み／送信／双方向）を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "連携の作り方",
+   "競合の対策の要否"
+  ],
+  "slot": "INT.direction",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "取り込むだけ",
+     "label": "取り込むだけ"
+    },
+    {
+     "v": "送るだけ",
+     "label": "送るだけ"
+    },
+    {
+     "v": "両方向",
+     "label": "両方向"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 8,
+  "outputs": [
+   "INT.direction"
+  ],
+  "queuedOnly": true,
+  "sources": [
+   "zip:Q-INT-001"
+  ]
+ },
+ {
+  "id": "Q-LNK-003",
+  "phase": "09_連携",
+  "step": 6,
+  "topic": "integration",
+  "persona": "全員",
+  "text": "そのサービスとのやりとりは、どのくらいの頻度ですか？",
+  "presupposes": [
+   "INT.systems"
+  ],
+  "intent": "連携のタイミング（即時／定時／手作業）を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "連携方式",
+   "技術選択"
+  ],
+  "slot": "INT.timing",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "すぐに（その場で）",
+     "label": "すぐに（その場で）"
+    },
+    {
+     "v": "1日1回など決まった時刻",
+     "label": "1日1回など決まった時刻"
+    },
+    {
+     "v": "手作業でときどき",
+     "label": "手作業でときどき"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 8,
+  "outputs": [
+   "INT.timing"
+  ],
+  "queuedOnly": true,
+  "sources": [
+   "zip:Q-INT-003"
+  ]
+ },
+ {
+  "id": "Q-LNK-004",
+  "phase": "09_連携",
+  "step": 6,
+  "topic": "integration",
+  "persona": [
+   "IT担当",
+   "管理者"
+  ],
+  "text": "相手のサービスには、外から情報をやりとりする方法がありますか？",
+  "help": "サービスの提供元の資料や問い合わせ窓口でわかります。",
+  "trigger": {
+   "all": [
+    {
+     "slot": "INT.systems",
+     "known": true
+    },
+    {
+     "not": {
+      "slot": "INT.systems",
+      "has": "なし"
+     }
+    }
+   ]
+  },
+  "presupposes": [
+   "INT.systems"
+  ],
+  "intent": "連携先に連携用の口があるかを知り、実現可能性を判定する",
+  "technique": "具体要求型",
+  "decides": [
+   "連携の実現可否",
+   "手作業での代替の要否"
+  ],
+  "slot": "INT.api_known",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "わかっている",
+     "label": "わかっている"
+    },
+    {
+     "v": "わからない",
+     "label": "わからない"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 15,
+  "outputs": [
+   "INT.method"
+  ],
+  "sources": [
+   "zip:Q-INT-002"
+  ]
+ },
+ {
+  "id": "Q-NFR-001",
+  "phase": "10_規模と安全",
+  "step": 6,
+  "topic": "nfr",
+  "persona": "全員",
+  "text": "このしくみを使う人は、全部で何人くらいですか？",
+  "intent": "利用者数のケタを知る。技術選択の主要条件",
+  "technique": "数量のケタ",
+  "decides": [
+   "技術選択（上限・料金）",
+   "性能の目標"
+  ],
+  "slot": "NFR.users_total",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "10人以下",
+     "label": "10人以下"
+    },
+    {
+     "v": "11〜100人",
+     "label": "11〜100人"
+    },
+    {
+     "v": "101〜1000人",
+     "label": "101〜1000人"
+    },
+    {
+     "v": "1001〜1万人",
+     "label": "1001〜1万人"
+    },
+    {
+     "v": "1万人超",
+     "label": "1万人超"
+    }
+   ]
+  },
+  "mandatory": true,
+  "importance": 5,
+  "costSec": 8,
+  "outputs": [
+   "NFR.users"
+  ],
+  "hypothesis": "100人以下",
+  "falsifier": "1001人以上なら無料枠・表計算の構成は不向き",
+  "sources": [
+   "B:§2",
+   "zip:Q-NFR-001"
+  ]
+ },
+ {
+  "id": "Q-NFR-002",
+  "phase": "10_規模と安全",
+  "step": 6,
+  "topic": "nfr",
+  "persona": "全員",
+  "text": "1年後には、使う人はどのくらい増えそうですか？",
+  "presupposes": [
+   "NFR.users_total"
+  ],
+  "intent": "将来の規模から作り直しのリスクを見積もる",
+  "technique": "時系列追跡",
+  "decides": [
+   "構成の余裕"
+  ],
+  "slot": "NFR.users_growth",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "ほぼ変わらない",
+     "label": "ほぼ変わらない"
+    },
+    {
+     "v": "2倍くらい",
+     "label": "2倍くらい"
+    },
+    {
+     "v": "10倍以上",
+     "label": "10倍以上"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 2,
+  "costSec": 6,
+  "outputs": [
+   "NFR.users"
+  ],
+  "sources": [
+   "zip:Q-NFR-001"
+  ]
+ },
+ {
+  "id": "Q-NFR-003",
+  "phase": "10_規模と安全",
+  "step": 6,
+  "topic": "nfr",
+  "persona": "全員",
+  "text": "同じ時間に使う人は、多いときで何人くらいですか？",
+  "help": "例：締め日の直後、授業の直後などいちばん混む時",
+  "intent": "同時に使う人数を知る。技術選択の主要条件",
+  "technique": "数量のケタ",
+  "decides": [
+   "技術選択（同時実行の上限）",
+   "性能の目標"
+  ],
+  "slot": "NFR.concurrency",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "1〜5人",
+     "label": "1〜5人"
+    },
+    {
+     "v": "6〜30人",
+     "label": "6〜30人"
+    },
+    {
+     "v": "31〜100人",
+     "label": "31〜100人"
+    },
+    {
+     "v": "101人以上",
+     "label": "101人以上"
+    }
+   ]
+  },
+  "mandatory": true,
+  "importance": 5,
+  "costSec": 10,
+  "outputs": [
+   "NFR.concurrency"
+  ],
+  "sources": [
+   "B:§2",
+   "zip:Q-NFR-002",
+   "zip:S20"
+  ]
+ },
+ {
+  "id": "Q-NFR-004",
+  "phase": "10_規模と安全",
+  "step": 6,
+  "topic": "nfr",
+  "persona": "全員",
+  "text": "情報を書き換える作業は、どのくらいの頻度で起きますか？",
+  "intent": "書き込みの頻度を知り、保存先の向き不向きを判定する",
+  "technique": "数量のケタ",
+  "decides": [
+   "保存先の選択",
+   "同時書き込みの対策"
+  ],
+  "slot": "NFR.update_freq",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "月に数回",
+     "label": "月に数回"
+    },
+    {
+     "v": "週に数回",
+     "label": "週に数回"
+    },
+    {
+     "v": "1日1回くらい",
+     "label": "1日1回くらい"
+    },
+    {
+     "v": "1日に何回も",
+     "label": "1日に何回も"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 8,
+  "outputs": [
+   "NFR.write_freq"
+  ],
+  "sources": [
+   "zip:Q-NFR-002",
+   "zip:S20"
+  ]
+ },
+ {
+  "id": "Q-NFR-005",
+  "phase": "10_規模と安全",
+  "step": 6,
+  "topic": "nfr",
+  "persona": [
+   "経営者",
+   "管理者",
+   "IT担当"
+  ],
+  "text": "使えなくなったとき、どのくらいなら待てますか？",
+  "help": "待てる時間の目安を選んでください。使えない間は紙で代わりにする、でもかまいません。",
+  "intent": "止まってよい時間を知り、無料枠・単一構成が許されるかを判定する",
+  "technique": "数量のケタ",
+  "decides": [
+   "技術選択（止まりやすい構成の除外）",
+   "バックアップ・復旧の方針"
+  ],
+  "slot": "NFR.downtime",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "数日でも大丈夫",
+     "label": "数日でも大丈夫"
+    },
+    {
+     "v": "1日なら待てる",
+     "label": "1日なら待てる"
+    },
+    {
+     "v": "数時間なら待てる",
+     "label": "数時間なら待てる"
+    },
+    {
+     "v": "数分でも困る",
+     "label": "数分でも困る"
+    }
+   ]
+  },
+  "mandatory": true,
+  "importance": 4,
+  "costSec": 10,
+  "outputs": [
+   "NFR.availability"
+  ],
+  "hypothesis": "数時間は待てる",
+  "falsifier": "数分でも困るなら無料の構成は不向き",
+  "sources": [
+   "zip:Q-NFR-004",
+   "STD:可用性"
+  ]
+ },
+ {
+  "id": "Q-NFR-006",
+  "phase": "10_規模と安全",
+  "step": 6,
+  "topic": "nfr",
+  "persona": "全員",
+  "text": "情報が外に漏れたら、どのくらい困りますか？",
+  "intent": "漏れたときの重大さを知り、保管・ログインの水準を決める。技術選択の主要条件",
+  "technique": "数量のケタ",
+  "decides": [
+   "技術選択（保管場所の水準）",
+   "ログイン方式"
+  ],
+  "slot": "NFR.sensitivity",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "漏れても困らない",
+     "label": "漏れても困らない"
+    },
+    {
+     "v": "少し困る",
+     "label": "少し困る"
+    },
+    {
+     "v": "とても困る",
+     "label": "とても困る"
+    },
+    {
+     "v": "法律や契約の問題になる",
+     "label": "法律や契約の問題になる"
+    }
+   ]
+  },
+  "mandatory": true,
+  "importance": 5,
+  "costSec": 10,
+  "outputs": [
+   "NFR.confidentiality"
+  ],
+  "hypothesis": "少し困る程度",
+  "falsifier": "法律や契約の問題になるなら、限定した保存先が必要",
+  "sources": [
+   "B:§2",
+   "zip:Q-NFR-006"
+  ]
+ },
+ {
+  "id": "Q-NFR-007",
+  "phase": "10_規模と安全",
+  "step": 6,
+  "topic": "nfr",
+  "persona": "全員",
+  "text": "名前などの情報を、外部のサービス（AIなど）に送ってもよいですか？",
+  "intent": "情報を外部に送れるかを知り、AI・外部連携の可否を決める",
+  "technique": "対置型",
+  "decides": [
+   "技術選択（AI利用の可否）",
+   "名前を消してから送るかの方針"
+  ],
+  "slot": "NFR.external_send",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "送ってよい",
+     "label": "送ってよい"
+    },
+    {
+     "v": "名前などを消せば送ってよい",
+     "label": "名前などを消せば送ってよい"
+    },
+    {
+     "v": "送ってはいけない",
+     "label": "送ってはいけない"
+    },
+    {
+     "v": "わからない",
+     "label": "わからない"
+    }
+   ]
+  },
+  "mandatory": {
+   "slot": "AI.want",
+   "hasAny": [
+    "文章の要約・言い換え",
+    "分類・振り分け",
+    "文章の下書き",
+    "問い合わせへの回答",
+    "画像・書類の読み取り"
+   ]
+  },
+  "importance": 5,
+  "costSec": 10,
+  "outputs": [
+   "NFR.confidentiality",
+   "ADR"
+  ],
+  "hypothesis": "名前を消せば送ってよい",
+  "falsifier": "送ってはいけないならAI機能は端末内か使わない",
+  "sources": [
+   "zip:Q-AI-004",
+   "B:§2"
+  ]
+ },
+ {
+  "id": "Q-NFR-008",
+  "phase": "10_規模と安全",
+  "step": 6,
+  "topic": "nfr",
+  "persona": [
+   "経営者",
+   "管理者",
+   "IT担当"
+  ],
+  "text": "あとから「誰がいつ何をしたか」を説明する必要はありますか？",
+  "intent": "監査・説明責任の要否を知る",
+  "technique": "採否テスト",
+  "decides": [
+   "操作記録の要否",
+   "技術選択（記録を残せない構成の除外）"
+  ],
+  "slot": "NFR.audit",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "必要",
+     "label": "必要"
+    },
+    {
+     "v": "あると良い",
+     "label": "あると良い"
+    },
+    {
+     "v": "いらない",
+     "label": "いらない"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 8,
+  "outputs": [
+   "NFR.audit_log"
+  ],
+  "dedupe": "audit",
+  "sources": [
+   "zip:Q-DAT-010",
+   "STD:内部統制"
+  ]
+ },
+ {
+  "id": "Q-NFR-009",
+  "phase": "10_規模と安全",
+  "step": 6,
+  "topic": "nfr",
+  "persona": [
+   "管理者",
+   "IT担当",
+   "現場"
+  ],
+  "text": "数分以上かかるような、まとめての処理はありますか？",
+  "help": "例：月末の一括計算、数百件へのまとめ送信",
+  "intent": "一括計算・大量送信など長い処理の有無を知り、実行時間の上限に当たるかを判定する",
+  "technique": "具体要求型",
+  "decides": [
+   "技術選択（実行時間の上限）",
+   "処理の分割"
+  ],
+  "slot": "NFR.heavy_batch",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "ある（数分以上かかる）",
+     "label": "ある（数分以上かかる）"
+    },
+    {
+     "v": "少しある",
+     "label": "少しある"
+    },
+    {
+     "v": "ない",
+     "label": "ない"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 10,
+  "outputs": [
+   "NFR.batch"
+  ],
+  "sources": [
+   "zip:Q-INT-003",
+   "zip:S20"
+  ]
+ },
+ {
+  "id": "Q-NFR-010",
+  "phase": "10_規模と安全",
+  "step": 6,
+  "topic": "nfr",
+  "persona": "全員",
+  "text": "電波のない場所で使うことはありますか？",
+  "intent": "オフライン利用の要否を知る",
+  "technique": "具体要求型",
+  "decides": [
+   "オフライン対応の要否",
+   "保存先の選択"
+  ],
+  "slot": "NFR.offline",
+  "input": {
+   "type": "yesno"
+  },
+  "mandatory": false,
+  "importance": 2,
+  "costSec": 5,
+  "outputs": [
+   "NFR.offline"
+  ],
+  "sources": [
+   "zip:Q-NFR-008"
+  ]
+ },
+ {
+  "id": "Q-NFR-011",
+  "phase": "10_規模と安全",
+  "step": 6,
+  "topic": "nfr",
+  "persona": "全員",
+  "text": "使う時間帯は、いつですか？",
+  "intent": "使う時間帯を知り、止めてよい時間・保守の時間を決める",
+  "technique": "時点の分離",
+  "decides": [
+   "保守してよい時間",
+   "止まったときの影響"
+  ],
+  "slot": "NFR.usage_hours",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "平日の昼だけ",
+     "label": "平日の昼だけ"
+    },
+    {
+     "v": "毎日朝から夜まで",
+     "label": "毎日朝から夜まで"
+    },
+    {
+     "v": "24時間いつでも",
+     "label": "24時間いつでも"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 2,
+  "costSec": 6,
+  "outputs": [
+   "NFR.availability"
+  ],
+  "sources": [
+   "zip:Q-CON-005"
+  ]
+ },
+ {
+  "id": "Q-CON-001",
+  "phase": "11_予算と体制",
+  "step": 6,
+  "topic": "constraints",
+  "persona": "全員",
+  "text": "毎月、このしくみに払える費用は、いくらまでですか？",
+  "intent": "毎月の費用の上限を知る。技術選択の主要条件（既製サービスを使うかの判断にも使う）",
+  "technique": "数量のケタ",
+  "decides": [
+   "技術選択（有料サービスの可否）",
+   "既製サービスを使うか作るか"
+  ],
+  "slot": "CON.budget_monthly",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "0円",
+     "label": "0円"
+    },
+    {
+     "v": "月3千円まで",
+     "label": "月3千円まで"
+    },
+    {
+     "v": "月1万円まで",
+     "label": "月1万円まで"
+    },
+    {
+     "v": "月5万円まで",
+     "label": "月5万円まで"
+    },
+    {
+     "v": "月5万円以上",
+     "label": "月5万円以上"
+    }
+   ]
+  },
+  "mandatory": true,
+  "importance": 5,
+  "costSec": 10,
+  "outputs": [
+   "CON.budget"
+  ],
+  "hypothesis": "月1万円までなら有料の土台も使える",
+  "falsifier": "0円なら有料サービスは候補から外れる",
+  "sources": [
+   "zip:Q-CON-002",
+   "zip:S36",
+   "zip:S37"
+  ]
+ },
+ {
+  "id": "Q-CON-002",
+  "phase": "11_予算と体制",
+  "step": 6,
+  "topic": "constraints",
+  "persona": [
+   "経営者",
+   "管理者"
+  ],
+  "text": "最初に1回だけ払える費用は、いくらまでですか？",
+  "intent": "初期費用の上限を知る",
+  "technique": "数量のケタ",
+  "decides": [
+   "作り方の規模",
+   "外部に頼むか"
+  ],
+  "slot": "CON.budget_initial",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "0円",
+     "label": "0円"
+    },
+    {
+     "v": "10万円まで",
+     "label": "10万円まで"
+    },
+    {
+     "v": "50万円まで",
+     "label": "50万円まで"
+    },
+    {
+     "v": "50万円以上",
+     "label": "50万円以上"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 8,
+  "outputs": [
+   "CON.budget"
+  ],
+  "sources": [
+   "zip:Q-CON-002"
+  ]
+ },
+ {
+  "id": "Q-CON-003",
+  "phase": "11_予算と体制",
+  "step": 6,
+  "topic": "constraints",
+  "persona": [
+   "経営者",
+   "管理者",
+   "IT担当"
+  ],
+  "text": "クレジットカードの登録が必要なサービスを、使えますか？",
+  "intent": "カード登録が必要なサービスを選べるかを知る",
+  "technique": "具体要求型",
+  "decides": [
+   "技術選択（請求先登録が要る構成の可否）"
+  ],
+  "slot": "CON.card_ok",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "使える",
+     "label": "使える"
+    },
+    {
+     "v": "使えない",
+     "label": "使えない"
+    },
+    {
+     "v": "相談すれば使える",
+     "label": "相談すれば使える"
+    }
+   ]
+  },
+  "mandatory": {
+   "slot": "CON.budget_monthly",
+   "in": [
+    "月3千円まで",
+    "月1万円まで",
+    "月5万円まで",
+    "月5万円以上"
+   ]
+  },
+  "importance": 3,
+  "costSec": 6,
+  "outputs": [
+   "CON.signup"
+  ],
+  "sources": [
+   "zip:Q-CON-003",
+   "zip:S36"
+  ]
+ },
+ {
+  "id": "Q-CON-004",
+  "phase": "11_予算と体制",
+  "step": 6,
+  "topic": "constraints",
+  "persona": "全員",
+  "text": "会社で契約しているサービスは、どれですか？",
+  "help": "わからなければ「わからない」で大丈夫です。",
+  "intent": "今あるサービスの契約を知り、追加費用なしで使える土台を絞る。技術選択の主要条件",
+  "technique": "具体要求型",
+  "decides": [
+   "技術選択（使える土台）",
+   "追加費用の有無"
+  ],
+  "slot": "CON.workspace",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "Google Workspace",
+     "label": "Google Workspace"
+    },
+    {
+     "v": "Microsoft 365",
+     "label": "Microsoft 365"
+    },
+    {
+     "v": "個人のGoogleアカウントだけ",
+     "label": "個人のGoogleアカウントだけ"
+    },
+    {
+     "v": "特にない",
+     "label": "特にない"
+    }
+   ]
+  },
+  "mandatory": true,
+  "importance": 5,
+  "costSec": 8,
+  "outputs": [
+   "CON.existing_subscriptions"
+  ],
+  "sources": [
+   "zip:Q-CON-001",
+   "zip:S22"
+  ]
+ },
+ {
+  "id": "Q-CON-005",
+  "phase": "11_予算と体制",
+  "step": 6,
+  "topic": "constraints",
+  "persona": "全員",
+  "text": "作ったあとに直したり手直ししたりするのは、誰ですか？",
+  "intent": "作ったあとの保守担当を知り、扱いやすい構成かを判定する。技術選択の主要条件",
+  "technique": "運用の問い",
+  "decides": [
+   "技術選択（保守の難しさ）",
+   "引き渡し資料の内容"
+  ],
+  "slot": "CON.maintainer",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "社内にスプレッドシートなら直せる人がいる",
+     "label": "社内にスプレッドシートなら直せる人がいる"
+    },
+    {
+     "v": "社内にプログラムを書ける人がいる",
+     "label": "社内にプログラムを書ける人がいる"
+    },
+    {
+     "v": "社内にいない（外部に頼む）",
+     "label": "社内にいない（外部に頼む）"
+    }
+   ]
+  },
+  "mandatory": true,
+  "importance": 5,
+  "costSec": 10,
+  "outputs": [
+   "CON.ops_owner"
+  ],
+  "hypothesis": "社内にスプレッドシートなら直せる人がいる",
+  "falsifier": "社内にいないなら、本格的な構成は避ける",
+  "sources": [
+   "zip:Q-CON-004",
+   "zip:Q-CON-008"
+  ]
+ },
+ {
+  "id": "Q-MIG-001",
+  "phase": "12_移行",
+  "step": 6,
+  "topic": "migration",
+  "persona": "全員",
+  "text": "今ある情報は、新しい仕組みに移しますか？",
+  "intent": "移しかえの要否と範囲を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "移しかえ作業の要否",
+   "移しかえの範囲"
+  ],
+  "slot": "MIG.existing_data",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "移す",
+     "label": "移す"
+    },
+    {
+     "v": "移さない（新しく始める）",
+     "label": "移さない（新しく始める）"
+    },
+    {
+     "v": "一部だけ移す",
+     "label": "一部だけ移す"
+    }
+   ]
+  },
+  "mandatory": {
+   "slot": "ASIS.tools",
+   "hasAny": [
+    "Excel",
+    "Googleスプレッドシート",
+    "既存のサービス・システム"
+   ]
+  },
+  "importance": 4,
+  "costSec": 10,
+  "outputs": [
+   "MIG.scope"
+  ],
+  "sources": [
+   "zip:Q-MIG-001",
+   "B:§8"
+  ]
+ },
+ {
+  "id": "Q-MIG-002",
+  "phase": "12_移行",
+  "step": 6,
+  "topic": "migration",
+  "persona": "全員",
+  "text": "今ある情報は、どのくらい整っていますか？",
+  "trigger": {
+   "slot": "MIG.existing_data",
+   "in": [
+    "移す",
+    "一部だけ移す"
+   ]
+  },
+  "presupposes": [
+   "MIG.existing_data"
+  ],
+  "intent": "表記ゆれ・欠けの程度を知り、整える作業量を見積もる",
+  "technique": "具体要求型",
+  "decides": [
+   "整える作業の量",
+   "移しかえ前の掃除の要否"
+  ],
+  "slot": "MIG.data_quality",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "きれいに整っている",
+     "label": "きれいに整っている"
+    },
+    {
+     "v": "少し乱れている",
+     "label": "少し乱れている"
+    },
+    {
+     "v": "かなりばらばら",
+     "label": "かなりばらばら"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 10,
+  "outputs": [
+   "MIG.data_quality"
+  ],
+  "sources": [
+   "zip:Q-MIG-005"
+  ]
+ },
+ {
+  "id": "Q-MIG-003",
+  "phase": "12_移行",
+  "step": 6,
+  "topic": "migration",
+  "persona": "全員",
+  "text": "切り替えたあとも、しばらく古いやり方を続けますか？",
+  "trigger": {
+   "slot": "MIG.existing_data",
+   "in": [
+    "移す",
+    "一部だけ移す"
+   ]
+  },
+  "presupposes": [
+   "MIG.existing_data"
+  ],
+  "intent": "並行運用の要否を知り、切り替えの段取りを決める",
+  "technique": "時点の分離",
+  "decides": [
+   "切り替えの計画",
+   "並行期間の作業"
+  ],
+  "slot": "MIG.parallel_run",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "する",
+     "label": "する"
+    },
+    {
+     "v": "しない",
+     "label": "しない"
+    },
+    {
+     "v": "決めていない",
+     "label": "決めていない"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 8,
+  "outputs": [
+   "MIG.rollout"
+  ],
+  "sources": [
+   "zip:Q-MIG-004"
+  ]
+ },
+ {
+  "id": "Q-MIG-004",
+  "phase": "12_移行",
+  "step": 6,
+  "topic": "migration",
+  "persona": "全員",
+  "text": "使い方の説明は、どのくらい必要ですか？",
+  "intent": "説明の手間を知り、説明資料・説明会の計画を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "説明資料の範囲",
+   "説明会の要否"
+  ],
+  "slot": "MIG.training",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "いらない",
+     "label": "いらない"
+    },
+    {
+     "v": "簡単な説明書",
+     "label": "簡単な説明書"
+    },
+    {
+     "v": "説明会が必要",
+     "label": "説明会が必要"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 2,
+  "costSec": 6,
+  "outputs": [
+   "MIG.training"
+  ],
+  "sources": [
+   "zip:Q-MIG-003"
+  ]
+ },
+ {
+  "id": "Q-TOC-001",
+  "phase": "13_利用者体験",
+  "step": 6,
+  "topic": "toc",
+  "persona": "全員",
+  "text": "利用者がいちばん多く来る入口は、どこですか？",
+  "intent": "来訪の入口を知り、最初の画面と案内を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "最初の画面の作り",
+   "入口ごとの案内"
+  ],
+  "slot": "TOC.entry",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "LINEのメッセージ",
+     "label": "LINEのメッセージ"
+    },
+    {
+     "v": "広告",
+     "label": "広告"
+    },
+    {
+     "v": "メール",
+     "label": "メール"
+    },
+    {
+     "v": "ホームページ",
+     "label": "ホームページ"
+    },
+    {
+     "v": "紹介・口コミ",
+     "label": "紹介・口コミ"
+    },
+    {
+     "v": "対面・QRコード",
+     "label": "対面・QRコード"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 8,
+  "outputs": [
+   "TOC.entry",
+   "FR"
+  ],
+  "hypothesis": "LINEか広告から来る",
+  "falsifier": "紹介・対面が中心なら入口の工夫は小さくてよい",
+  "sources": [
+   "D:§4 #1",
+   "D:§4 #4",
+   "D:§1 #08"
+  ]
+ },
+ {
+  "id": "Q-TOC-002",
+  "phase": "13_利用者体験",
+  "step": 6,
+  "topic": "toc",
+  "persona": "全員",
+  "text": "利用者が1回に使える時間は、どのくらいですか？",
+  "intent": "1回の利用時間を知り、入力量・分割を決める",
+  "technique": "数量のケタ",
+  "decides": [
+   "入力量の上限",
+   "途中保存の要否"
+  ],
+  "slot": "TOC.session_len",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "5分以内",
+     "label": "5分以内"
+    },
+    {
+     "v": "15分くらい",
+     "label": "15分くらい"
+    },
+    {
+     "v": "30分以上",
+     "label": "30分以上"
+    },
+    {
+     "v": "何回かに分けて",
+     "label": "何回かに分けて"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 3,
+  "costSec": 6,
+  "outputs": [
+   "TOC.session"
+  ],
+  "sources": [
+   "D:§4 #18"
+  ]
+ },
+ {
+  "id": "Q-TOC-003",
+  "phase": "13_利用者体験",
+  "step": 6,
+  "topic": "toc",
+  "persona": "全員",
+  "text": "使い終わった人に、次にしてほしいことは何ですか？",
+  "intent": "終わった後の次の行動を知り、最後の画面の案内を決める",
+  "technique": "具体要求型",
+  "decides": [
+   "最後の画面の案内",
+   "計測する行動"
+  ],
+  "slot": "TOC.next_action",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "申し込み・購入",
+     "label": "申し込み・購入"
+    },
+    {
+     "v": "問い合わせ・面談",
+     "label": "問い合わせ・面談"
+    },
+    {
+     "v": "登録",
+     "label": "登録"
+    },
+    {
+     "v": "本番の利用に進む",
+     "label": "本番の利用に進む"
+    },
+    {
+     "v": "特にない",
+     "label": "特にない"
+    }
+   ]
+  },
+  "mandatory": {
+   "slot": "PRJ.audience",
+   "eq": "一般の個人"
+  },
+  "importance": 4,
+  "costSec": 8,
+  "outputs": [
+   "TOC.next_action",
+   "KPI"
+  ],
+  "sources": [
+   "D:§4 #3",
+   "D:§1 #11"
+  ]
+ },
+ {
+  "id": "Q-TOC-004",
+  "phase": "13_利用者体験",
+  "step": 6,
+  "topic": "toc",
+  "persona": "全員",
+  "text": "途中でやめても、続きから書けることは必要ですか？",
+  "intent": "途中保存・再開の要否を知る",
+  "technique": "採否テスト",
+  "decides": [
+   "保存の仕組み",
+   "ログインの要否"
+  ],
+  "slot": "TOC.resume",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "必要",
+     "label": "必要"
+    },
+    {
+     "v": "いらない",
+     "label": "いらない"
+    },
+    {
+     "v": "あると良い",
+     "label": "あると良い"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 8,
+  "outputs": [
+   "FR",
+   "NFR"
+  ],
+  "sources": [
+   "zip:Q-SCR-009",
+   "D:§4 #3"
+  ]
+ },
+ {
+  "id": "Q-TOC-005",
+  "phase": "13_利用者体験",
+  "step": 6,
+  "topic": "toc",
+  "persona": "全員",
+  "text": "無料で使える版と、本番の版は分けますか？",
+  "intent": "無料版と本番の分け方を知り、URLの数・引き継ぎを決める",
+  "technique": "選択の問い",
+  "decides": [
+   "版の数・URLの数",
+   "引き継ぎの要否"
+  ],
+  "slot": "TOC.free_paid",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "分けない",
+     "label": "分けない"
+    },
+    {
+     "v": "無料版を別に作る",
+     "label": "無料版を別に作る"
+    },
+    {
+     "v": "途中から有料",
+     "label": "途中から有料"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 8,
+  "outputs": [
+   "FR",
+   "ADR"
+  ],
+  "sources": [
+   "D:§4 #1",
+   "D:§4 #3",
+   "D:§1 #08"
+  ]
+ },
+ {
+  "id": "Q-AIF-001",
+  "phase": "14_AI機能",
+  "step": 6,
+  "topic": "ai",
+  "persona": "全員",
+  "text": "AIが作った結果は、誰が確かめてから使いますか？",
+  "presupposes": [
+   "AI.want"
+  ],
+  "intent": "AIの出力を人が確認する運用を決める",
+  "technique": "運用の問い",
+  "decides": [
+   "確認の流れ",
+   "間違いへの備え"
+  ],
+  "slot": "AI.checker",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "使う本人",
+     "label": "使う本人"
+    },
+    {
+     "v": "担当者",
+     "label": "担当者"
+    },
+    {
+     "v": "管理者",
+     "label": "管理者"
+    },
+    {
+     "v": "確認しない",
+     "label": "確認しない"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 8,
+  "outputs": [
+   "AI.review",
+   "FR"
+  ],
+  "sources": [
+   "zip:Q-AI-003"
+  ]
+ },
+ {
+  "id": "Q-AIF-002",
+  "phase": "14_AI機能",
+  "step": 6,
+  "topic": "ai",
+  "persona": "全員",
+  "text": "AIの「良い結果」「困る結果」の見本は、ありますか？",
+  "presupposes": [
+   "AI.want"
+  ],
+  "intent": "出力の品質の基準を知る（見本があれば指示文の方針を決められる）",
+  "technique": "具体要求型",
+  "decides": [
+   "AIへの指示の作り方",
+   "合格の基準"
+  ],
+  "slot": "AI.quality_example",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "ある",
+     "label": "ある"
+    },
+    {
+     "v": "ない",
+     "label": "ない"
+    },
+    {
+     "v": "これから作る",
+     "label": "これから作る"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 10,
+  "outputs": [
+   "AI.quality",
+   "AC"
+  ],
+  "sources": [
+   "D:§4 #11",
+   "D:§1 #01",
+   "zip:Q-AI-002"
+  ]
+ },
+ {
+  "id": "Q-AIF-003",
+  "phase": "14_AI機能",
+  "step": 6,
+  "topic": "ai",
+  "persona": "全員",
+  "text": "AIに渡さず、本人の言葉のまま残したい部分はありますか？",
+  "presupposes": [
+   "AI.want"
+  ],
+  "intent": "AIに任せない範囲を知る",
+  "technique": "具体要求型",
+  "decides": [
+   "AIを使う範囲",
+   "本人入力の保存方法"
+  ],
+  "slot": "AI.own_words",
+  "input": {
+   "type": "text",
+   "placeholder": "例：自分で決めた宣言の文"
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 40,
+  "outputs": [
+   "AI.scope",
+   "RULE"
+  ],
+  "epistemic": true,
+  "deepdive": [
+   "abstract"
+  ],
+  "hypothesis": "本人の言葉は残したい部分がある",
+  "falsifier": "すべてAIに任せてよいなら範囲の分けは不要",
+  "sources": [
+   "D:§4 #10",
+   "zip:Q-AI-001"
+  ]
+ },
+ {
+  "id": "Q-AIF-004",
+  "phase": "14_AI機能",
+  "step": 6,
+  "topic": "ai",
+  "persona": [
+   "経営者",
+   "管理者"
+  ],
+  "text": "AIを使う機能の費用は、1か月いくらまでなら出せますか？",
+  "presupposes": [
+   "AI.want"
+  ],
+  "intent": "AI利用の費用上限を知り、モデル・回数制限を決める",
+  "technique": "数量のケタ",
+  "decides": [
+   "AIの種類・プラン",
+   "1人あたりの利用回数の上限"
+  ],
+  "slot": "CON.ai_cost_cap",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "使わない",
+     "label": "使わない"
+    },
+    {
+     "v": "月数千円まで",
+     "label": "月数千円まで"
+    },
+    {
+     "v": "月数万円まで",
+     "label": "月数万円まで"
+    },
+    {
+     "v": "上限なし",
+     "label": "上限なし"
+    }
+   ]
+  },
+  "mandatory": false,
+  "importance": 4,
+  "costSec": 8,
+  "outputs": [
+   "CON.ai_budget"
+  ],
+  "sources": [
+   "D:§4 #12",
+   "zip:Q-AI-005"
+  ]
+ }
+]

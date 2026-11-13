@@ -1,0 +1,1174 @@
+{
+ "_doc": "項目（スロット）辞書。質問・ルール・要件変換の共通の受け皿。critical=品質指標と未決定事項の対象、weight=不確実性の重み(1〜3,初期設計値)、topic=属する論点、req=主な変換先、askWho=わからない時に聞く相手。{e} はエンティティ種別ごとに展開される（tools/build.js）。",
+ "PRJ.request_raw": {
+  "label": "相談の内容（原文）",
+  "type": "text",
+  "topic": "core",
+  "critical": true,
+  "weight": 3,
+  "req": "BR"
+ },
+ "PRJ.kind": {
+  "label": "新しく作るか・今あるものを直すか",
+  "type": "enum",
+  "topic": "core",
+  "critical": true,
+  "weight": 2,
+  "req": "PRJ"
+ },
+ "PRJ.audience": {
+  "label": "使う人の種類（社内・社外・一般の個人）",
+  "type": "enum",
+  "topic": "core",
+  "critical": true,
+  "weight": 3,
+  "req": "PRJ"
+ },
+ "PRJ.category": {
+  "label": "仕事の種類",
+  "type": "multi",
+  "topic": "core",
+  "critical": true,
+  "weight": 3,
+  "req": "PRJ"
+ },
+ "PRJ.deadline": {
+  "label": "使い始めたい時期",
+  "type": "enum",
+  "topic": "constraints",
+  "critical": true,
+  "weight": 2,
+  "req": "CON"
+ },
+ "PRJ.deadline_reason": {
+  "label": "その時期の理由",
+  "type": "enum",
+  "topic": "constraints",
+  "critical": false,
+  "weight": 1,
+  "req": "CON"
+ },
+ "PRJ.cost_of_delay": {
+  "label": "間に合わないと起きること",
+  "type": "text",
+  "topic": "constraints",
+  "critical": false,
+  "weight": 1,
+  "req": "CON"
+ },
+ "PRJ.decision_maker": {
+  "label": "最終的に決める人",
+  "type": "enum",
+  "topic": "core",
+  "critical": true,
+  "weight": 2,
+  "req": "STK"
+ },
+ "PRJ.reviewer_split": {
+  "label": "途中で確認する人と決める人が別か",
+  "type": "bool",
+  "topic": "core",
+  "critical": false,
+  "weight": 1,
+  "req": "STK"
+ },
+ "PRJ.review_priority": {
+  "label": "確認者と決める人の意見が違うときの優先",
+  "type": "enum",
+  "topic": "core",
+  "critical": false,
+  "weight": 1,
+  "req": "STK"
+ },
+ "PRJ.conformance_docs": {
+  "label": "従うべき資料（マニュアル・台本・規程など）",
+  "type": "enum",
+  "topic": "core",
+  "critical": false,
+  "weight": 2,
+  "req": "CON",
+  "askWho": "資料の持ち主"
+ },
+ "PRJ.conformance_level": {
+  "label": "その資料にどこまで合わせるか",
+  "type": "enum",
+  "topic": "core",
+  "critical": false,
+  "weight": 1,
+  "req": "CON"
+ },
+ "ISS.topics": {
+  "label": "関係のある話題",
+  "type": "multi",
+  "topic": "core",
+  "critical": false,
+  "weight": 2
+ },
+ "ISS.topics_no": {
+  "label": "関係のない話題",
+  "type": "multi",
+  "topic": "core",
+  "critical": false,
+  "weight": 1
+ },
+ "ISS.top": {
+  "label": "いちばん大事な話題",
+  "type": "enum",
+  "topic": "core",
+  "critical": false,
+  "weight": 2
+ },
+ "VIS.mission": {
+  "label": "事業で、誰に何を届けたいか",
+  "type": "text",
+  "topic": "vision",
+  "critical": true,
+  "weight": 2,
+  "req": "VIS"
+ },
+ "VIS.why_now": {
+  "label": "なぜ今これに取り組むか",
+  "type": "enum",
+  "topic": "vision",
+  "critical": false,
+  "weight": 2,
+  "req": "VIS"
+ },
+ "VIS.motivation": {
+  "label": "目指す姿に近づきたいのか、困った事態を避けたいのか",
+  "type": "enum",
+  "topic": "vision",
+  "critical": false,
+  "weight": 1,
+  "req": "VIS"
+ },
+ "VIS.values": {
+  "label": "大事にしていること",
+  "type": "text",
+  "topic": "vision",
+  "critical": false,
+  "weight": 1,
+  "req": "VIS"
+ },
+ "VIS.not_do": {
+  "label": "やらないと決めていること",
+  "type": "text",
+  "topic": "vision",
+  "critical": false,
+  "weight": 2,
+  "req": "VIS"
+ },
+ "VIS.success_picture": {
+  "label": "1年後にこうなっていたら成功",
+  "type": "text",
+  "topic": "vision",
+  "critical": false,
+  "weight": 2,
+  "req": "VIS"
+ },
+ "VIS.customers": {
+  "label": "事業のお客様は誰か",
+  "type": "text",
+  "topic": "vision",
+  "critical": false,
+  "weight": 1,
+  "req": "VIS"
+ },
+ "VIS.terms": {
+  "label": "業界・社内でよく使う言葉",
+  "type": "text",
+  "topic": "vision",
+  "critical": false,
+  "weight": 1,
+  "req": "GLOS"
+ },
+ "VIS.tradeoff": {
+  "label": "迷ったときに優先すること",
+  "type": "enum",
+  "topic": "vision",
+  "critical": false,
+  "weight": 2,
+  "req": "VIS"
+ },
+ "BR.problem": {
+  "label": "困っていること",
+  "type": "text",
+  "topic": "problem",
+  "critical": true,
+  "weight": 3,
+  "req": "BR"
+ },
+ "BR.problem_type": {
+  "label": "困りごとの種類",
+  "type": "multi",
+  "topic": "problem",
+  "critical": true,
+  "weight": 3,
+  "req": "BR"
+ },
+ "BR.who_suffers": {
+  "label": "いちばん困っている人",
+  "type": "enum",
+  "topic": "problem",
+  "critical": true,
+  "weight": 2,
+  "req": "STK"
+ },
+ "BR.frequency": {
+  "label": "困りごとが起きる頻度",
+  "type": "enum",
+  "topic": "problem",
+  "critical": true,
+  "weight": 2,
+  "req": "BR"
+ },
+ "BR.last_case": {
+  "label": "直近で起きた時期",
+  "type": "enum",
+  "topic": "problem",
+  "critical": false,
+  "weight": 2,
+  "req": "BR"
+ },
+ "BR.evidence": {
+  "label": "困りごとの根拠（記録・観察・伝聞・感覚）",
+  "type": "enum",
+  "topic": "problem",
+  "critical": true,
+  "weight": 2,
+  "req": "BR"
+ },
+ "BR.workaround": {
+  "label": "今どうやってしのいでいるか",
+  "type": "text",
+  "topic": "problem",
+  "critical": false,
+  "weight": 1,
+  "req": "ASIS"
+ },
+ "BR.means": {
+  "label": "お客様が考えている手段",
+  "type": "text",
+  "topic": "problem",
+  "critical": false,
+  "weight": 1,
+  "req": "BR"
+ },
+ "BR.cause_yes": {
+  "label": "原因として当てはまるもの",
+  "type": "multi",
+  "topic": "problem",
+  "critical": false,
+  "weight": 2,
+  "req": "BR"
+ },
+ "BR.cause_yes_no": {
+  "label": "原因として当てはまらないもの",
+  "type": "multi",
+  "topic": "problem",
+  "critical": false,
+  "weight": 1
+ },
+ "BR.cause_yes_unknown": {
+  "label": "原因かわからないもの",
+  "type": "multi",
+  "topic": "problem",
+  "critical": false,
+  "weight": 1
+ },
+ "BR.build_or_not": {
+  "label": "作る以外の手（ルール変更・既製品）を試したか",
+  "type": "enum",
+  "topic": "problem",
+  "critical": false,
+  "weight": 2,
+  "req": "ADR"
+ },
+ "BR.goal_type": {
+  "label": "いちばん得たい成果",
+  "type": "enum",
+  "topic": "kpi",
+  "critical": true,
+  "weight": 3,
+  "req": "BR"
+ },
+ "BR.kpi_metric": {
+  "label": "成果を測るもの",
+  "type": "enum",
+  "topic": "kpi",
+  "critical": true,
+  "weight": 2,
+  "req": "BR"
+ },
+ "BR.kpi_measurable": {
+  "label": "今その数字を数えられるか",
+  "type": "enum",
+  "topic": "kpi",
+  "critical": false,
+  "weight": 2,
+  "req": "BR"
+ },
+ "BR.kpi_baseline": {
+  "label": "今の数字",
+  "type": "number",
+  "topic": "kpi",
+  "critical": false,
+  "weight": 2,
+  "req": "BR"
+ },
+ "BR.kpi_target": {
+  "label": "目標の数字",
+  "type": "number",
+  "topic": "kpi",
+  "critical": false,
+  "weight": 2,
+  "req": "BR"
+ },
+ "BR.kpi_when": {
+  "label": "目標の期限",
+  "type": "enum",
+  "topic": "kpi",
+  "critical": false,
+  "weight": 1,
+  "req": "BR"
+ },
+ "BR.roi_hours": {
+  "label": "その作業にかかっている時間（月あたり）",
+  "type": "enum",
+  "topic": "kpi",
+  "critical": false,
+  "weight": 2,
+  "req": "BR"
+ },
+ "BR.roi_people": {
+  "label": "その作業に関わる人数",
+  "type": "enum",
+  "topic": "kpi",
+  "critical": false,
+  "weight": 1,
+  "req": "BR"
+ },
+ "BR.success_check": {
+  "label": "うまくいったと判断する場面",
+  "type": "text",
+  "topic": "kpi",
+  "critical": false,
+  "weight": 2,
+  "req": "AC"
+ },
+ "ASIS.tools": {
+  "label": "今使っている道具",
+  "type": "multi",
+  "topic": "flow",
+  "critical": true,
+  "weight": 2,
+  "req": "ASIS"
+ },
+ "ASIS.trigger": {
+  "label": "仕事が始まるきっかけ",
+  "type": "enum",
+  "topic": "flow",
+  "critical": true,
+  "weight": 2,
+  "req": "BP"
+ },
+ "ASIS.steps": {
+  "label": "実際の一件の流れ（時系列）",
+  "type": "list",
+  "topic": "flow",
+  "critical": true,
+  "weight": 3,
+  "req": "BP"
+ },
+ "ASIS.volume": {
+  "label": "その仕事の件数（月あたり）",
+  "type": "enum",
+  "topic": "flow",
+  "critical": true,
+  "weight": 2,
+  "req": "NFR"
+ },
+ "ASIS.time_per_case": {
+  "label": "1件あたりの時間",
+  "type": "enum",
+  "topic": "flow",
+  "critical": false,
+  "weight": 1,
+  "req": "BR"
+ },
+ "ASIS.handoffs": {
+  "label": "途中で人が交代する（引き継ぐ）か",
+  "type": "bool",
+  "topic": "flow",
+  "critical": false,
+  "weight": 2,
+  "req": "BP"
+ },
+ "ASIS.pain_step": {
+  "label": "いちばん手間・ミスが出る段階",
+  "type": "text",
+  "topic": "flow",
+  "critical": false,
+  "weight": 2,
+  "req": "BP"
+ },
+ "ASIS.variation": {
+  "label": "人によってやり方が違うか",
+  "type": "enum",
+  "topic": "flow",
+  "critical": false,
+  "weight": 2,
+  "req": "RULE"
+ },
+ "TOBE.change": {
+  "label": "変わってほしい段階",
+  "type": "text",
+  "topic": "flow",
+  "critical": false,
+  "weight": 2,
+  "req": "BP"
+ },
+ "TOBE.keep": {
+  "label": "変えたくないこと",
+  "type": "text",
+  "topic": "flow",
+  "critical": false,
+  "weight": 1,
+  "req": "CON"
+ },
+ "RULE.approval": {
+  "label": "誰かの許可（承認）がいる段階",
+  "type": "bool",
+  "topic": "rules",
+  "critical": true,
+  "weight": 2,
+  "req": "RULE"
+ },
+ "RULE.approval_levels": {
+  "label": "承認の段数",
+  "type": "enum",
+  "topic": "rules",
+  "critical": false,
+  "weight": 2,
+  "req": "RULE"
+ },
+ "RULE.reject_flow": {
+  "label": "差し戻しのときの流れ",
+  "type": "enum",
+  "topic": "rules",
+  "critical": false,
+  "weight": 1,
+  "req": "RULE"
+ },
+ "RULE.calc": {
+  "label": "計算・判定のルール",
+  "type": "bool",
+  "topic": "rules",
+  "critical": false,
+  "weight": 2,
+  "req": "RULE"
+ },
+ "RULE.calc_detail": {
+  "label": "計算・判定のルールの中身",
+  "type": "text",
+  "topic": "rules",
+  "critical": false,
+  "weight": 2,
+  "req": "RULE"
+ },
+ "RULE.deadlines": {
+  "label": "期限・締め日のルール",
+  "type": "bool",
+  "topic": "rules",
+  "critical": false,
+  "weight": 1,
+  "req": "RULE"
+ },
+ "RULE.exceptions": {
+  "label": "いつもと違う対応（例外）",
+  "type": "text",
+  "topic": "rules",
+  "critical": true,
+  "weight": 2,
+  "req": "RULE"
+ },
+ "RULE.exception_freq": {
+  "label": "例外の頻度",
+  "type": "enum",
+  "topic": "rules",
+  "critical": false,
+  "weight": 1,
+  "req": "RULE"
+ },
+ "RULE.required_fields": {
+  "label": "空欄を許さない項目があるか",
+  "type": "enum",
+  "topic": "rules",
+  "critical": false,
+  "weight": 2,
+  "req": "RULE"
+ },
+ "DAT.things": {
+  "label": "扱っている情報の種類",
+  "type": "multi",
+  "topic": "data",
+  "critical": true,
+  "weight": 3,
+  "req": "ENT"
+ },
+ "DAT.things_no": {
+  "label": "扱っていない情報",
+  "type": "multi",
+  "topic": "data",
+  "critical": false,
+  "weight": 1
+ },
+ "DAT.things_unknown": {
+  "label": "扱っているかわからない情報",
+  "type": "multi",
+  "topic": "data",
+  "critical": false,
+  "weight": 1
+ },
+ "DAT.{e}.count": {
+  "label": "{e}の件数（全部で）",
+  "type": "enum",
+  "topic": "data",
+  "critical": true,
+  "weight": 2,
+  "req": "ENT"
+ },
+ "DAT.{e}.growth": {
+  "label": "{e}が1か月に増える件数",
+  "type": "enum",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "NFR"
+ },
+ "DAT.{e}.id": {
+  "label": "{e}の見分け方",
+  "type": "enum",
+  "topic": "data",
+  "critical": true,
+  "weight": 2,
+  "req": "ATTR"
+ },
+ "DAT.{e}.attrs": {
+  "label": "{e}について残したい項目",
+  "type": "multi",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "ATTR"
+ },
+ "DAT.{e}.status": {
+  "label": "{e}に「状態」（途中・完了など）があるか",
+  "type": "bool",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "STATE"
+ },
+ "DAT.{e}.master": {
+  "label": "{e}の正しい情報が置いてある場所",
+  "type": "enum",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "ENT"
+ },
+ "REL.customer_order": {
+  "label": "お客様1人あたりの注文・申込",
+  "type": "enum",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "REL"
+ },
+ "REL.order_product": {
+  "label": "注文1件に含まれる商品の数",
+  "type": "enum",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "REL"
+ },
+ "REL.customer_reservation": {
+  "label": "お客様1人あたりの予約",
+  "type": "enum",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "REL"
+ },
+ "REL.staff_task": {
+  "label": "作業1件の担当者の数",
+  "type": "enum",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "REL"
+ },
+ "REL.customer_staff": {
+  "label": "お客様ごとの担当者",
+  "type": "enum",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "REL"
+ },
+ "REL.order_payment": {
+  "label": "注文と支払いの対応",
+  "type": "enum",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "REL"
+ },
+ "REL.customer_inquiry": {
+  "label": "問い合わせとお客様の対応",
+  "type": "enum",
+  "topic": "data",
+  "critical": false,
+  "weight": 1,
+  "req": "REL"
+ },
+ "REL.member_content": {
+  "label": "利用者と教材・コンテンツの進み具合",
+  "type": "enum",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "REL"
+ },
+ "DAT.pii": {
+  "label": "含まれる個人の情報",
+  "type": "multi",
+  "topic": "data",
+  "critical": true,
+  "weight": 3,
+  "req": "NFR"
+ },
+ "DAT.retention": {
+  "label": "情報を残しておく期間",
+  "type": "enum",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "NFR"
+ },
+ "DAT.history": {
+  "label": "誰がいつ変えたかの記録が必要か",
+  "type": "enum",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "NFR"
+ },
+ "DAT.files": {
+  "label": "写真・ファイルを扱うか",
+  "type": "bool",
+  "topic": "data",
+  "critical": false,
+  "weight": 1,
+  "req": "FR"
+ },
+ "DAT.carry_over": {
+  "label": "別の端末・次の版・本番へ引き継ぐ情報があるか",
+  "type": "enum",
+  "topic": "data",
+  "critical": false,
+  "weight": 2,
+  "req": "FR"
+ },
+ "ROLE.list": {
+  "label": "使う人の立場",
+  "type": "multi",
+  "topic": "roles",
+  "critical": true,
+  "weight": 3,
+  "req": "ROLE"
+ },
+ "ROLE.see_scope": {
+  "label": "人によって見てはいけない情報",
+  "type": "enum",
+  "topic": "roles",
+  "critical": true,
+  "weight": 3,
+  "req": "PERM"
+ },
+ "ROLE.edit_scope": {
+  "label": "変更できる人の範囲",
+  "type": "enum",
+  "topic": "roles",
+  "critical": true,
+  "weight": 2,
+  "req": "PERM"
+ },
+ "ROLE.login": {
+  "label": "ログインの要否",
+  "type": "enum",
+  "topic": "roles",
+  "critical": true,
+  "weight": 3,
+  "req": "NFR"
+ },
+ "ROLE.google_accounts": {
+  "label": "使う人がGoogleアカウントを持っているか",
+  "type": "enum",
+  "topic": "roles",
+  "critical": true,
+  "weight": 2,
+  "req": "CON"
+ },
+ "ROLE.admin_ops": {
+  "label": "管理する人がやること",
+  "type": "multi",
+  "topic": "roles",
+  "critical": false,
+  "weight": 1,
+  "req": "FR"
+ },
+ "ROLE.operator_view": {
+  "label": "運営側が利用者の入力を見る必要",
+  "type": "enum",
+  "topic": "roles",
+  "critical": true,
+  "weight": 2,
+  "req": "FR"
+ },
+ "OUT.devices": {
+  "label": "使う端末",
+  "type": "multi",
+  "topic": "output",
+  "critical": true,
+  "weight": 2,
+  "req": "NFR"
+ },
+ "OUT.open_from": {
+  "label": "どこから開くか（LINE・メール・ブックマーク等）",
+  "type": "enum",
+  "topic": "output",
+  "critical": false,
+  "weight": 2,
+  "req": "NFR"
+ },
+ "OUT.outputs": {
+  "label": "作りたい出力物",
+  "type": "multi",
+  "topic": "output",
+  "critical": true,
+  "weight": 2,
+  "req": "FR"
+ },
+ "OUT.pdf_limit": {
+  "label": "PDF・印刷物の枚数や文字数の決まり",
+  "type": "enum",
+  "topic": "output",
+  "critical": false,
+  "weight": 2,
+  "req": "AC"
+ },
+ "OUT.notify": {
+  "label": "お知らせ（通知）を送る相手",
+  "type": "multi",
+  "topic": "output",
+  "critical": false,
+  "weight": 2,
+  "req": "FR"
+ },
+ "OUT.words_rule": {
+  "label": "画面で使わない言葉の決まり",
+  "type": "enum",
+  "topic": "output",
+  "critical": false,
+  "weight": 2,
+  "req": "GLOS"
+ },
+ "OUT.tone": {
+  "label": "画面の言葉の雰囲気",
+  "type": "enum",
+  "topic": "output",
+  "critical": false,
+  "weight": 1,
+  "req": "GLOS"
+ },
+ "OUT.publish": {
+  "label": "公開のしかた（どこに置くか）",
+  "type": "enum",
+  "topic": "output",
+  "critical": true,
+  "weight": 3,
+  "req": "ADR"
+ },
+ "OUT.required_input": {
+  "label": "全部書かないと先へ進めないようにするか",
+  "type": "enum",
+  "topic": "output",
+  "critical": false,
+  "weight": 2,
+  "req": "FR"
+ },
+ "OUT.progress_guide": {
+  "label": "進み具合に合わせた案内が必要か",
+  "type": "bool",
+  "topic": "output",
+  "critical": false,
+  "weight": 1,
+  "req": "FR"
+ },
+ "INT.systems": {
+  "label": "つなぎたいサービス",
+  "type": "multi",
+  "topic": "integration",
+  "critical": true,
+  "weight": 3,
+  "req": "INT"
+ },
+ "INT.direction": {
+  "label": "情報の流れの向き",
+  "type": "enum",
+  "topic": "integration",
+  "critical": false,
+  "weight": 2,
+  "req": "INT"
+ },
+ "INT.timing": {
+  "label": "連携のタイミング",
+  "type": "enum",
+  "topic": "integration",
+  "critical": false,
+  "weight": 2,
+  "req": "INT"
+ },
+ "INT.api_known": {
+  "label": "相手のサービスの連携方法がわかっているか",
+  "type": "enum",
+  "topic": "integration",
+  "critical": false,
+  "weight": 2,
+  "req": "INT",
+  "askWho": "IT担当・サービスの提供元"
+ },
+ "NFR.users_total": {
+  "label": "使う人の人数",
+  "type": "enum",
+  "topic": "nfr",
+  "critical": true,
+  "weight": 3,
+  "req": "NFR"
+ },
+ "NFR.users_growth": {
+  "label": "1年後の人数の見込み",
+  "type": "enum",
+  "topic": "nfr",
+  "critical": false,
+  "weight": 1,
+  "req": "NFR"
+ },
+ "NFR.concurrency": {
+  "label": "同時に使う人数",
+  "type": "enum",
+  "topic": "nfr",
+  "critical": true,
+  "weight": 2,
+  "req": "NFR"
+ },
+ "NFR.update_freq": {
+  "label": "情報を書き換える頻度",
+  "type": "enum",
+  "topic": "nfr",
+  "critical": false,
+  "weight": 2,
+  "req": "NFR"
+ },
+ "NFR.downtime": {
+  "label": "止まったら待てる時間",
+  "type": "enum",
+  "topic": "nfr",
+  "critical": true,
+  "weight": 2,
+  "req": "NFR"
+ },
+ "NFR.sensitivity": {
+  "label": "漏れたときの困り度",
+  "type": "enum",
+  "topic": "nfr",
+  "critical": true,
+  "weight": 3,
+  "req": "NFR"
+ },
+ "NFR.external_send": {
+  "label": "情報を外部のサービス（AIなど）に送ってよいか",
+  "type": "enum",
+  "topic": "nfr",
+  "critical": true,
+  "weight": 3,
+  "req": "NFR"
+ },
+ "NFR.audit": {
+  "label": "後から監査・説明が必要か",
+  "type": "enum",
+  "topic": "nfr",
+  "critical": false,
+  "weight": 2,
+  "req": "NFR"
+ },
+ "NFR.heavy_batch": {
+  "label": "まとめて重い処理（一括計算・大量送信）があるか",
+  "type": "enum",
+  "topic": "nfr",
+  "critical": false,
+  "weight": 2,
+  "req": "NFR"
+ },
+ "NFR.offline": {
+  "label": "電波がない場所で使うか",
+  "type": "bool",
+  "topic": "nfr",
+  "critical": false,
+  "weight": 1,
+  "req": "NFR"
+ },
+ "NFR.usage_hours": {
+  "label": "使う時間帯",
+  "type": "enum",
+  "topic": "nfr",
+  "critical": false,
+  "weight": 1,
+  "req": "NFR"
+ },
+ "CON.budget_monthly": {
+  "label": "毎月払える費用",
+  "type": "enum",
+  "topic": "constraints",
+  "critical": true,
+  "weight": 3,
+  "req": "CON"
+ },
+ "CON.budget_initial": {
+  "label": "最初に払える費用",
+  "type": "enum",
+  "topic": "constraints",
+  "critical": false,
+  "weight": 2,
+  "req": "CON"
+ },
+ "CON.card_ok": {
+  "label": "カード登録が必要なサービスを使えるか",
+  "type": "enum",
+  "topic": "constraints",
+  "critical": false,
+  "weight": 2,
+  "req": "CON"
+ },
+ "CON.workspace": {
+  "label": "会社で契約しているサービス",
+  "type": "enum",
+  "topic": "constraints",
+  "critical": true,
+  "weight": 3,
+  "req": "CON"
+ },
+ "CON.maintainer": {
+  "label": "作った後に直す人",
+  "type": "enum",
+  "topic": "constraints",
+  "critical": true,
+  "weight": 3,
+  "req": "CON"
+ },
+ "CON.ai_cost_cap": {
+  "label": "AIを使う機能の費用の上限",
+  "type": "enum",
+  "topic": "ai",
+  "critical": false,
+  "weight": 2,
+  "req": "CON"
+ },
+ "MIG.existing_data": {
+  "label": "今ある情報を新しい仕組みに移すか",
+  "type": "enum",
+  "topic": "migration",
+  "critical": true,
+  "weight": 2,
+  "req": "MIG"
+ },
+ "MIG.data_quality": {
+  "label": "今ある情報の整い具合",
+  "type": "enum",
+  "topic": "migration",
+  "critical": false,
+  "weight": 2,
+  "req": "MIG"
+ },
+ "MIG.parallel_run": {
+  "label": "しばらく古いやり方と並行するか",
+  "type": "enum",
+  "topic": "migration",
+  "critical": false,
+  "weight": 1,
+  "req": "MIG"
+ },
+ "MIG.training": {
+  "label": "使い方の説明が必要な人",
+  "type": "enum",
+  "topic": "migration",
+  "critical": false,
+  "weight": 1,
+  "req": "MIG"
+ },
+ "TOC.entry": {
+  "label": "利用者が最初に来る入口",
+  "type": "enum",
+  "topic": "toc",
+  "critical": true,
+  "weight": 2,
+  "req": "FR"
+ },
+ "TOC.session_len": {
+  "label": "利用者が1回に使える時間",
+  "type": "enum",
+  "topic": "toc",
+  "critical": false,
+  "weight": 2,
+  "req": "NFR"
+ },
+ "TOC.next_action": {
+  "label": "使い終わった人にしてほしい次の行動",
+  "type": "enum",
+  "topic": "toc",
+  "critical": true,
+  "weight": 2,
+  "req": "BR"
+ },
+ "TOC.resume": {
+  "label": "途中でやめて、あとで続ける必要",
+  "type": "enum",
+  "topic": "toc",
+  "critical": false,
+  "weight": 2,
+  "req": "FR"
+ },
+ "TOC.free_paid": {
+  "label": "無料版と本番の分け方",
+  "type": "enum",
+  "topic": "toc",
+  "critical": false,
+  "weight": 2,
+  "req": "FR"
+ },
+ "AI.want": {
+  "label": "作るものの中でAIに任せたい作業",
+  "type": "multi",
+  "topic": "ai",
+  "critical": true,
+  "weight": 2,
+  "req": "FR"
+ },
+ "AI.checker": {
+  "label": "AIの結果を確かめる人",
+  "type": "enum",
+  "topic": "ai",
+  "critical": false,
+  "weight": 2,
+  "req": "AC"
+ },
+ "AI.quality_example": {
+  "label": "AIの良い出力・悪い出力の例があるか",
+  "type": "enum",
+  "topic": "ai",
+  "critical": false,
+  "weight": 2,
+  "req": "AC"
+ },
+ "AI.own_words": {
+  "label": "AIに渡さず本人の言葉のまま残す部分",
+  "type": "text",
+  "topic": "ai",
+  "critical": false,
+  "weight": 1,
+  "req": "FR"
+ },
+ "PRI.must": {
+  "label": "最初の版に必ず入れたいこと",
+  "type": "multi",
+  "topic": "acceptance",
+  "critical": true,
+  "weight": 3,
+  "req": "PRI"
+ },
+ "PRI.first_release": {
+  "label": "最初の版の範囲",
+  "type": "enum",
+  "topic": "acceptance",
+  "critical": false,
+  "weight": 2,
+  "req": "PRI"
+ },
+ "AC.done_definition": {
+  "label": "完成と言える状態",
+  "type": "text",
+  "topic": "acceptance",
+  "critical": true,
+  "weight": 3,
+  "req": "AC"
+ },
+ "AC.check_method": {
+  "label": "完成を確かめる方法",
+  "type": "enum",
+  "topic": "acceptance",
+  "critical": true,
+  "weight": 2,
+  "req": "AC"
+ },
+ "AC.feedback_style": {
+  "label": "修正の伝え方",
+  "type": "enum",
+  "topic": "acceptance",
+  "critical": false,
+  "weight": 1,
+  "req": "CR"
+ },
+ "CR.kind": {
+  "label": "直したい内容の種類",
+  "type": "multi",
+  "topic": "change",
+  "critical": true,
+  "weight": 2,
+  "req": "CR"
+ },
+ "CR.urgency": {
+  "label": "直す急ぎ具合",
+  "type": "enum",
+  "topic": "change",
+  "critical": false,
+  "weight": 2,
+  "req": "CR"
+ },
+ "CR.where": {
+  "label": "直したい場所（画面・段階）",
+  "type": "text",
+  "topic": "change",
+  "critical": false,
+  "weight": 2,
+  "req": "CR"
+ },
+ "CR.conflict": {
+  "label": "これまでに決めたこととぶつかるか",
+  "type": "enum",
+  "topic": "change",
+  "critical": false,
+  "weight": 2,
+  "req": "CR"
+ },
+ "ROLE.matrix": {
+  "label": "立場ごとに見られる・変えられる範囲",
+  "type": "matrix",
+  "topic": "roles",
+  "critical": false,
+  "weight": 3,
+  "req": "PERM"
+ }
+}

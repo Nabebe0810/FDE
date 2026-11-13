@@ -1,0 +1,16 @@
+{
+  "name": "fde-hearing",
+  "version": "0.1.0",
+  "private": true,
+  "description": "非エンジニアの回答から要件を構造化する、AIを使わないヒアリングツール（質問DB＋ルールエンジン＋状態管理）",
+  "scripts": {
+    "build": "node tools/build.js && node tools/bundle.js",
+    "check": "node tools/build.js --check",
+    "test": "node tools/build.js && node --test",
+    "simulate": "node tools/simulate.js",
+    "analyze": "node tools/analyze-logs.js",
+    "export:csv": "node tools/export-csv.js"
+  },
+  "engines": { "node": ">=18" },
+  "license": "UNLICENSED"
+}

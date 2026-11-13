@@ -1,0 +1,52 @@
+{
+  "_doc": "技術選定ルール。3段（ノックアウト→重み付け→ADR下書き）。上限・料金は前回成果物（zip 04_tech_selection_matrix.md／01 §11）で 2026-11-13 に確認した値で、このリポジトリでは再確認していない。採用前に出典で再確認すること。scores は 1（不向き）〜5（最適）の初期設計値（実証値ではない）。",
+  "checkedAt": "2026-11-13（前回成果物の確認日。本ツール作成時は未再確認）",
+  "requiredInputs": ["NFR.users_total", "NFR.concurrency", "NFR.sensitivity", "ROLE.login", "ROLE.see_scope", "ROLE.operator_view", "CON.budget_monthly", "CON.maintainer", "CON.workspace", "OUT.publish"],
+  "architectures": [
+    {"id": "A", "label": "スプレッドシート＋フォーム", "plain": "Googleスプレッドシートとフォームだけで回す", "stack": "Google スプレッドシート, Google フォーム", "cost": "既存 Workspace 内"},
+    {"id": "B", "label": "スプレッドシート＋Apps Script", "plain": "スプレッドシートに自動処理や簡単な画面を足す", "stack": "A + Apps Script（Webアプリ・トリガー・メール）", "cost": "既存 Workspace 内"},
+    {"id": "C", "label": "AppSheet", "plain": "ノーコードで業務アプリを作る", "stack": "AppSheet + スプレッドシート等", "cost": "契約中の Workspace 版に含まれるか要確認【zip S22】"},
+    {"id": "D", "label": "端末内で完結する静的Webページ", "plain": "サーバーを持たず、入力は使う人の端末に残す", "stack": "HTML/JS を静的ホスティング（GitHub Pages 等）、保存は端末内＋書き出し", "cost": "ホスティングの無料枠次第（要確認）"},
+    {"id": "E", "label": "AIアシスタント上のツール", "plain": "Claude の Artifacts や GPTs の上で配る", "stack": "Claude Artifacts、カスタムGPT、Gemini の Gem 等", "cost": "既存サブスク内（利用者側の上限に計上される場合あり【zip S35】）"},
+    {"id": "F", "label": "Webアプリ＋BaaS", "plain": "ログインと保存がそろった土台の上に作る", "stack": "フロント + Supabase／Firebase 等", "cost": "無料枠あり。停止条件・上限は要確認【zip S37】"},
+    {"id": "G", "label": "Webアプリ＋サーバー＋RDB", "plain": "本格的なサーバーとデータベースを持つ", "stack": "Cloud Run 等 + PostgreSQL 等", "cost": "請求先登録が必要【zip S36】。常時稼働は有料になりやすい"},
+    {"id": "H", "label": "既製サービスを使う（作らない）", "plain": "売っているサービスを契約する", "stack": "業務特化SaaS", "cost": "月額費用が多い"}
+  ],
+  "knockouts": [
+    {"id": "K-01", "label": "まとめて重い処理（数分以上）が必要", "when": {"slot": "NFR.heavy_batch", "eq": "ある（数分以上かかる）"}, "effects": {"B": "x", "C": "warn", "F": "warn", "H": "warn"}, "source": "zip S20（Apps Script 1回6分）"},
+    {"id": "K-02", "label": "データ量がスプレッドシートの上限に数年で近づく", "when": {"any": [{"slot": "DAT.customer.growth", "eq": "月1000件以上"}, {"slot": "DAT.order.growth", "eq": "月1000件以上"}, {"slot": "DAT.record.growth", "eq": "月1000件以上"}, {"slot": "ASIS.volume", "eq": "月1000件以上"}]}, "effects": {"A": "x", "B": "x", "C": "warn", "D": "warn", "E": "x", "H": "warn"}, "source": "zip S21（1,000万セル等の上限。要再確認）"},
+    {"id": "K-03", "label": "社外の人に「自分の分だけ」見せる必要", "when": {"all": [{"slot": "PRJ.audience", "in": ["社外の取引先", "一般の個人", "社内と社外"]}, {"slot": "ROLE.see_scope", "in": ["自分の分だけ", "立場ごとに違う"]}]}, "effects": {"A": "x", "B": "warn", "D": "x", "E": "x", "H": "warn"}, "source": "zip 04 §3"},
+    {"id": "K-04", "label": "ログインなし・URL1つで不特定多数が使う", "when": {"slot": "ROLE.login", "eq": "URLを開くだけで使いたい"}, "effects": {"A": "warn", "B": "warn", "C": "x", "H": "warn"}, "source": "zip 04 §3"},
+    {"id": "K-05", "label": "Googleアカウントを持たない人が編集する", "when": {"slot": "ROLE.google_accounts", "eq": "持っていない人が多い"}, "effects": {"A": "x", "B": "warn", "C": "warn"}, "source": "zip 04 §3"},
+    {"id": "K-06", "label": "運営側が利用者の入力を見る・集計する", "when": {"slot": "ROLE.operator_view", "in": ["見る必要がある", "まとめた数字だけ見たい"]}, "effects": {"D": "x", "E": "warn"}, "source": "zip 04 §3、zip S35"},
+    {"id": "K-07", "label": "追加費用ゼロ・カード登録不可", "when": {"any": [{"slot": "CON.budget_monthly", "eq": "0円"}, {"slot": "CON.card_ok", "eq": "使えない"}]}, "effects": {"C": "warn", "D": "warn", "F": "warn", "G": "x", "H": "x"}, "source": "zip S36、zip S37"},
+    {"id": "K-08", "label": "作った後に直せる人が社内にいない", "when": {"slot": "CON.maintainer", "eq": "社内にいない（外部に頼む）"}, "effects": {"B": "warn", "D": "warn", "F": "warn", "G": "x"}, "source": "zip 04 §3"},
+    {"id": "K-09", "label": "外部に送れない情報をAIで処理したい", "when": {"all": [{"slot": "NFR.external_send", "eq": "送ってはいけない"}, {"slot": "AI.want", "hasAny": ["文章の要約・言い換え", "分類・振り分け", "文章の下書き", "問い合わせへの回答", "画像・書類の読み取り"]}]}, "effects": {"B": "warn", "C": "warn", "D": "x", "E": "x", "F": "warn", "G": "warn", "H": "warn"}, "source": "zip 04 §3"},
+    {"id": "K-10", "label": "止まると数分でも困る", "when": {"slot": "NFR.downtime", "eq": "数分でも困る"}, "effects": {"A": "warn", "B": "warn", "D": "warn", "E": "x"}, "source": "zip 04 §2（稼働率）"},
+    {"id": "K-11", "label": "誰がいつ変えたかを監査で説明する必要", "when": {"any": [{"slot": "NFR.audit", "eq": "必要"}, {"slot": "DAT.history", "eq": "必要"}]}, "effects": {"A": "warn", "D": "x", "E": "x"}, "source": "zip 04 §2（監査・履歴）"},
+    {"id": "K-12", "label": "同時に100人を超えて使う", "when": {"slot": "NFR.concurrency", "eq": "101人以上"}, "effects": {"A": "x", "B": "warn", "C": "warn"}, "source": "zip S20（同時実行30/ユーザー、数え方は要検証）"},
+    {"id": "K-13", "label": "Google Workspace を使っていない", "when": {"slot": "CON.workspace", "in": ["Microsoft 365", "特にない"]}, "effects": {"A": "warn", "B": "warn", "C": "x"}, "source": "zip 04 §4"},
+    {"id": "K-14", "label": "業界標準の業務（会計・勤怠など）で法令対応が重い", "when": {"slot": "INT.systems", "has": "会計ソフト"}, "effects": {"H": "plus"}, "source": "zip 04 §6"}
+  ],
+  "criteria": [
+    {"id": "W-COST", "label": "追加費用の少なさ", "weight": 3, "weightWhen": [{"when": {"slot": "CON.budget_monthly", "eq": "0円"}, "weight": 5}, {"when": {"slot": "CON.budget_monthly", "eq": "月5万円以上"}, "weight": 1}], "scores": {"A": 5, "B": 5, "C": 4, "D": 5, "E": 4, "F": 3, "G": 1, "H": 2}},
+    {"id": "W-SPEED", "label": "立ち上げの速さ", "weight": 3, "weightWhen": [{"when": {"slot": "PRJ.deadline", "eq": "1か月以内"}, "weight": 5}, {"when": {"slot": "VIS.tradeoff__top", "eq": "早く使い始める"}, "weight": 5}], "scores": {"A": 5, "B": 4, "C": 4, "D": 4, "E": 5, "F": 3, "G": 1, "H": 4}},
+    {"id": "W-PERM", "label": "見える範囲を細かく分けられる", "weight": 2, "weightWhen": [{"when": {"slot": "ROLE.see_scope", "in": ["自分の分だけ", "立場ごとに違う"]}, "weight": 4}], "scores": {"A": 1, "B": 2, "C": 4, "D": 1, "E": 1, "F": 5, "G": 5, "H": 4}},
+    {"id": "W-SCALE", "label": "データ量・同時利用への強さ", "weight": 2, "weightWhen": [{"when": {"slot": "NFR.users_total", "in": ["1001〜1万人", "1万人超"]}, "weight": 4}], "scores": {"A": 1, "B": 2, "C": 3, "D": 4, "E": 3, "F": 4, "G": 5, "H": 4}},
+    {"id": "W-INT", "label": "ほかのサービスとのつなぎやすさ", "weight": 1, "weightWhen": [{"when": {"slot": "INT.systems", "count_gte": 2}, "weight": 3}], "scores": {"A": 2, "B": 4, "C": 3, "D": 1, "E": 2, "F": 4, "G": 5, "H": 3}},
+    {"id": "W-MAINT", "label": "社内で直し続けられる", "weight": 3, "weightWhen": [{"when": {"slot": "CON.maintainer", "eq": "社内にスプレッドシートなら直せる人がいる"}, "weight": 4}], "scores": {"A": 5, "B": 3, "C": 4, "D": 2, "E": 3, "F": 2, "G": 1, "H": 5}},
+    {"id": "W-UPTIME", "label": "止まりにくさ・データの守りやすさ", "weight": 2, "weightWhen": [{"when": {"slot": "NFR.sensitivity", "in": ["とても困る", "法律や契約の問題になる"]}, "weight": 4}], "scores": {"A": 3, "B": 3, "C": 4, "D": 2, "E": 2, "F": 4, "G": 4, "H": 4}},
+    {"id": "W-UX", "label": "画面の自由度（一般の人向けの使いやすさ）", "weight": 1, "weightWhen": [{"when": {"slot": "PRJ.audience", "eq": "一般の個人"}, "weight": 4}], "scores": {"A": 1, "B": 2, "C": 2, "D": 5, "E": 3, "F": 5, "G": 5, "H": 2}},
+    {"id": "W-EXIT", "label": "あとで移しやすい", "weight": 1, "weightWhen": [{"when": {"slot": "VIS.tradeoff__top", "eq": "あとで広げやすい"}, "weight": 4}], "scores": {"A": 4, "B": 3, "C": 2, "D": 4, "E": 2, "F": 3, "G": 4, "H": 1}}
+  ],
+  "tradeoffs": {
+    "A": "最速で始められ顧客が自分で直せる ↔ 入力ミス防止・権限・同時編集が弱い",
+    "B": "既存契約内で通知・自動化まで作れる ↔ 実行時間・回数の上限、同時書き込みは自前で制御、テストと版管理が弱い",
+    "C": "ノーコードで権限・スマホ画面が作れる ↔ 表現の自由度、固有の知識が保守者に必要",
+    "D": "無料・高速・個人情報をサーバーに持たない ↔ 端末を変えると消える、引き継ぎは書き出し／読み込みで設計が必要",
+    "E": "作るのが最速、URLで配れる ↔ 提供元の仕様変更の影響、長期保存・正本には向かない",
+    "F": "ログイン・権限・DBが短期間で手に入る ↔ 無料枠の上限と停止条件、移行時の依存",
+    "G": "自由度と拡張性が最大 ↔ 初期費用・運用費・技術的負債の管理が最大",
+    "H": "法改正対応・保守を外部に任せられる ↔ 月額費用、業務をサービスに合わせる必要"
+  }
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "HF-CAUSE", "label": "困りごとの原因", "decides": ["どの機能を優先するか（自動化・手順の統一・情報の一元化・承認の短縮）"],
+    "activateWhen": {"slot": "BR.problem_type", "known": true},
+    "sources": ["C:VS3", "C:原則6", "A:12_仮説", "A:13_検証"],
+    "hyps": [
+      {"id": "HC-VOLUME", "label": "件数が多すぎる", "card": "件数が多すぎて手が回らない", "plain": "1件ずつは単純でも、数が多い",
+       "falsifier": "その仕事が月10件未満なら、量は主な原因ではない", "discriminators": ["Q-FLW-004", "Q-HYP-001"],
+       "supportWhen": {"all": [{"slot": "BR.cause_yes", "has": "HC-VOLUME"}, {"slot": "ASIS.volume", "in": ["月100〜1000件", "月1000件以上"]}]},
+       "refuteWhen": {"any": [{"slot": "ASIS.volume", "eq": "月10件未満"}, {"slot": "BR.cause_yes_no", "has": "HC-VOLUME"}]}},
+      {"id": "HC-VARIANCE", "label": "人によってやり方が違う", "card": "人によってやり方が違う", "plain": "手順が決まっていない・人に頼っている",
+       "falsifier": "全員が同じ手順でやっているなら、やり方のばらつきは原因ではない", "discriminators": ["Q-FLW-007", "Q-HYP-001"],
+       "supportWhen": {"all": [{"slot": "BR.cause_yes", "has": "HC-VARIANCE"}, {"slot": "ASIS.variation", "eq": "人によって大きく違う"}]},
+       "refuteWhen": {"any": [{"slot": "ASIS.variation", "eq": "みんな同じ"}, {"slot": "BR.cause_yes_no", "has": "HC-VARIANCE"}]}},
+      {"id": "HC-SCATTER", "label": "情報が散らばっている", "card": "情報があちこちにある", "plain": "探すのに時間がかかる",
+       "falsifier": "情報が1か所にまとまっているなら、散らばりは原因ではない", "discriminators": ["Q-FLW-001", "Q-HYP-001"],
+       "supportWhen": {"all": [{"slot": "BR.cause_yes", "has": "HC-SCATTER"}, {"slot": "ASIS.tools", "count_gte": 3}]},
+       "refuteWhen": {"any": [{"slot": "ASIS.tools", "count_lte": 1}, {"slot": "BR.cause_yes_no", "has": "HC-SCATTER"}]}},
+      {"id": "HC-WAIT", "label": "確認・承認の待ちが長い", "card": "確認や許可の待ちが長い", "plain": "人の返事を待って止まる",
+       "falsifier": "誰の許可もいらない仕事なら、承認待ちは原因ではない", "discriminators": ["Q-RUL-001", "Q-HYP-001"],
+       "supportWhen": {"all": [{"slot": "BR.cause_yes", "has": "HC-WAIT"}, {"slot": "RULE.approval", "eq": true}]},
+       "refuteWhen": {"any": [{"slot": "RULE.approval", "eq": false}, {"slot": "BR.cause_yes_no", "has": "HC-WAIT"}]}},
+      {"id": "HC-REKEY", "label": "同じ内容を何度も書き写している", "card": "同じことを何度も書き写す", "plain": "紙からExcelへ、Excelからメールへ",
+       "falsifier": "使っている道具が1つだけなら、書き写しは起きにくい", "discriminators": ["Q-FLW-001", "Q-FLW-003", "Q-HYP-001"],
+       "supportWhen": {"all": [{"slot": "BR.cause_yes", "has": "HC-REKEY"}, {"slot": "ASIS.tools", "count_gte": 2}]},
+       "refuteWhen": {"any": [{"slot": "ASIS.tools", "count_lte": 1}, {"slot": "BR.cause_yes_no", "has": "HC-REKEY"}]}},
+      {"id": "HC-RULE", "label": "決まりごと・例外が複雑", "card": "決まりや例外がややこしい", "plain": "場合分けが多くて迷う",
+       "falsifier": "例外がほぼないなら、決まりの複雑さは原因ではない", "discriminators": ["Q-RUL-006", "Q-HYP-001"],
+       "supportWhen": {"all": [{"slot": "BR.cause_yes", "has": "HC-RULE"}, {"slot": "RULE.exception_freq", "eq": "毎日のようにある"}]},
+       "refuteWhen": {"any": [{"slot": "RULE.exception_freq", "eq": "ほぼない"}, {"slot": "BR.cause_yes_no", "has": "HC-RULE"}]}},
+      {"id": "HC-SKILL", "label": "道具に慣れていない", "card": "今の道具をうまく使えていない", "plain": "操作や設定がわからない",
+       "falsifier": "今の道具の使い方を説明しても改善しないなら、慣れは原因ではない", "discriminators": ["Q-HYP-001", "Q-PRB-008"],
+       "supportWhen": {"slot": "BR.cause_yes", "has": "HC-SKILL"},
+       "refuteWhen": {"slot": "BR.cause_yes_no", "has": "HC-SKILL"}}
+    ]
+  },
+  {
+    "id": "HF-SOLUTION", "label": "解決のかたち（作るか・作らないか）", "decides": ["新しく作るか、設定変更・ルール変更・既製サービスで済ませるか"],
+    "activateWhen": {"slot": "BR.problem", "known": true},
+    "sources": ["C:原則4", "C:VS4", "A:14_比較評価", "zip:04_tech_selection_matrix H類型"],
+    "hyps": [
+      {"id": "HS-BUILD", "label": "新しく作るのがよい", "plain": "専用の仕組みを作る",
+       "falsifier": "今の道具の設定やルール変更で困りごとが解消するなら、作る必要はない", "discriminators": ["Q-PRB-008"],
+       "supportWhen": {"slot": "BR.build_or_not", "in": ["試してだめだった", "考えたが合わない"]}},
+      {"id": "HS-CONFIG", "label": "今の道具の設定・使い方を変える", "plain": "作らずに今の道具を活かす",
+       "falsifier": "設定変更を試してだめだったなら、この案は外れ", "discriminators": ["Q-PRB-008", "Q-HYP-001"],
+       "supportWhen": {"slot": "BR.cause_yes", "has": "HC-SKILL"},
+       "refuteWhen": {"slot": "BR.build_or_not", "eq": "試してだめだった"}},
+      {"id": "HS-RULE", "label": "仕事のルール・分担を変える", "plain": "手順をそろえれば道具はそのままでよい",
+       "falsifier": "手順をそろえても件数や待ちが残るなら、ルール変更だけでは足りない", "discriminators": ["Q-FLW-007", "Q-HYP-001"],
+       "supportWhen": {"slot": "BR.cause_yes", "hasAny": ["HC-VARIANCE", "HC-RULE"]},
+       "refuteWhen": {"any": [{"slot": "ASIS.variation", "eq": "みんな同じ"}, {"slot": "BR.build_or_not", "eq": "試してだめだった"}]}},
+      {"id": "HS-SAAS", "label": "既製のサービスを使う", "plain": "作らずに、売っているサービスを使う",
+       "falsifier": "毎月の費用を払えない、または業務に合うサービスがないなら外れ", "discriminators": ["Q-CON-001", "Q-PRB-008"],
+       "refuteWhen": {"slot": "CON.budget_monthly", "eq": "0円"}}
+    ]
+  }
+]

@@ -1,0 +1,6 @@
+[
+  {"det": "solutionOnly", "ask": "G-PROBLEM", "why": "手段だけの回答 → 元の困りごと・期待する成果を聞く（解決策から入らない）", "sources": ["C:原則4", "A:08_顧客課題", "zip:Q-PRJ-001"]},
+  {"det": "abstract", "ask": "G-CONCRETE", "why": "抽象的な回答 → いちばん最近の一件を聞く（具体要求型）", "sources": ["C:原則5", "C:VS4"]},
+  {"det": "needsEvidence", "ask": "G-EVIDENCE", "why": "評価の言葉に数字・観察がない → 根拠の種類を聞く", "sources": ["C:VS0", "A:24_品質ゲート", "A:24_品質ゲート"]},
+  {"det": "speculative", "ask": "G-EVIDENCE", "why": "推量の言い回し → 確かめたことがあるかを聞く", "sources": ["C:原則1", "C:VS0"]}
+]

@@ -1,0 +1,320 @@
+[
+ {
+  "id": "B-EVIDENCE",
+  "label": "困りごとの根拠が未入力",
+  "flag": "evidence_missing",
+  "boostTopic": "problem",
+  "boost": 2,
+  "when": {
+   "all": [
+    {
+     "slot": "BR.problem",
+     "known": true
+    },
+    {
+     "slot": "BR.evidence",
+     "resolved": false
+    },
+    {
+     "slot": "BR.problem__evidence",
+     "resolved": false
+    }
+   ]
+  },
+  "sources": [
+   "C:VS0"
+  ],
+  "resolves": [
+   "BR.evidence"
+  ]
+ },
+ {
+  "id": "B-SOLUTION",
+  "label": "手段だけが先に出ている",
+  "flag": "solution_first",
+  "boostTopic": "problem",
+  "boost": 2,
+  "when": {
+   "all": [
+    {
+     "slot": "BR.means",
+     "known": true
+    },
+    {
+     "slot": "BR.problem_type",
+     "resolved": false
+    }
+   ]
+  },
+  "sources": [
+   "C:原則4"
+  ],
+  "resolves": [
+   "BR.problem_type",
+   "BR.goal_type"
+  ]
+ },
+ {
+  "id": "B-KPI",
+  "label": "成果と測り方が不明",
+  "flag": "kpi_unknown",
+  "boostTopic": "kpi",
+  "boost": 2,
+  "when": {
+   "all": [
+    {
+     "slot": "BR.goal_type",
+     "known": true
+    },
+    {
+     "slot": "BR.kpi_metric",
+     "resolved": false
+    }
+   ]
+  },
+  "sources": [
+   "A:20_KPI",
+   "B:§1"
+  ],
+  "resolves": [
+   "BR.kpi_metric",
+   "BR.kpi_measurable"
+  ]
+ },
+ {
+  "id": "B-FLOW",
+  "label": "仕事の流れが未整理",
+  "flag": "flow_unknown",
+  "boostTopic": "flow",
+  "boost": 2,
+  "when": {
+   "all": [
+    {
+     "topic": "flow"
+    },
+    {
+     "slot": "ASIS.steps",
+     "resolved": false
+    }
+   ]
+  },
+  "sources": [
+   "zip:S01 BABOK",
+   "B:§4"
+  ],
+  "resolves": [
+   "ASIS.steps",
+   "ASIS.trigger",
+   "ASIS.volume"
+  ]
+ },
+ {
+  "id": "B-DATA",
+  "label": "データの件数・見分け方・関係が不明",
+  "flag": "data_unclear",
+  "boostTopic": "data",
+  "boost": 2,
+  "when": {
+   "slot": "DAT.things",
+   "count_gte": 1
+  },
+  "sources": [
+   "B:§5",
+   "zip:03 第2部"
+  ],
+  "resolves": [
+   "DAT.{e}.count",
+   "DAT.{e}.id"
+  ]
+ },
+ {
+  "id": "B-ROLE",
+  "label": "見える範囲・変更できる人が未定義",
+  "flag": "role_undefined",
+  "boostTopic": "roles",
+  "boost": 2,
+  "when": {
+   "all": [
+    {
+     "slot": "ROLE.list",
+     "count_gte": 2
+    },
+    {
+     "any": [
+      {
+       "slot": "ROLE.see_scope",
+       "resolved": false
+      },
+      {
+       "slot": "ROLE.edit_scope",
+       "resolved": false
+      }
+     ]
+    }
+   ]
+  },
+  "sources": [
+   "B:§3"
+  ],
+  "resolves": [
+   "ROLE.see_scope",
+   "ROLE.edit_scope",
+   "ROLE.matrix"
+  ]
+ },
+ {
+  "id": "B-TECH",
+  "label": "技術構成を決める材料が不足",
+  "flag": "tech_insufficient",
+  "boostTopic": "nfr",
+  "boost": 1,
+  "when": {
+   "any": [
+    {
+     "slot": "NFR.users_total",
+     "resolved": false
+    },
+    {
+     "slot": "NFR.sensitivity",
+     "resolved": false
+    },
+    {
+     "slot": "ROLE.login",
+     "resolved": false
+    },
+    {
+     "slot": "CON.budget_monthly",
+     "resolved": false
+    },
+    {
+     "slot": "CON.maintainer",
+     "resolved": false
+    },
+    {
+     "slot": "OUT.publish",
+     "resolved": false
+    }
+   ]
+  },
+  "sources": [
+   "zip:04_tech_selection_matrix"
+  ],
+  "resolves": [
+   "NFR.users_total",
+   "NFR.sensitivity",
+   "ROLE.login",
+   "OUT.publish",
+   "NFR.concurrency"
+  ]
+ },
+ {
+  "id": "B-TECH2",
+  "label": "予算・体制の材料が不足",
+  "flag": "tech_insufficient_con",
+  "boostTopic": "constraints",
+  "boost": 1,
+  "when": {
+   "any": [
+    {
+     "slot": "CON.budget_monthly",
+     "resolved": false
+    },
+    {
+     "slot": "CON.maintainer",
+     "resolved": false
+    },
+    {
+     "slot": "CON.workspace",
+     "resolved": false
+    }
+   ]
+  },
+  "sources": [
+   "zip:04_tech_selection_matrix"
+  ],
+  "resolves": [
+   "CON.budget_monthly",
+   "CON.maintainer",
+   "CON.workspace"
+  ]
+ },
+ {
+  "id": "B-PII",
+  "label": "個人情報があり、扱いが未確認",
+  "flag": "pii_unclear",
+  "boostTopic": "nfr",
+  "boost": 2,
+  "when": {
+   "all": [
+    {
+     "slot": "DAT.pii",
+     "hasAny": [
+      "名前",
+      "連絡先",
+      "住所",
+      "生年月日",
+      "お金・口座",
+      "健康・病歴",
+      "本人の考え・悩み"
+     ]
+    },
+    {
+     "any": [
+      {
+       "slot": "NFR.external_send",
+       "resolved": false
+      },
+      {
+       "slot": "DAT.retention",
+       "resolved": false
+      }
+     ]
+    }
+   ]
+  },
+  "sources": [
+   "zip:03 R06"
+  ],
+  "resolves": [
+   "NFR.external_send",
+   "DAT.retention"
+  ]
+ },
+ {
+  "id": "B-TOC",
+  "label": "一般の利用者向けの体験が未確認",
+  "flag": "toc_unclear",
+  "boostTopic": "toc",
+  "boost": 1,
+  "when": {
+   "slot": "PRJ.audience",
+   "eq": "一般の個人"
+  },
+  "sources": [
+   "D:§4 #1-#4"
+  ],
+  "resolves": [
+   "TOC.entry",
+   "TOC.next_action",
+   "TOC.resume"
+  ]
+ },
+ {
+  "id": "B-ACCEPT",
+  "label": "完成の基準が未定義",
+  "flag": "ac_unknown",
+  "boostTopic": "acceptance",
+  "boost": 1,
+  "when": {
+   "slot": "AC.done_definition",
+   "resolved": false
+  },
+  "sources": [
+   "B:§4.3 受け入れ基準",
+   "D:§4 #19"
+  ],
+  "resolves": [
+   "AC.done_definition"
+  ]
+ }
+]

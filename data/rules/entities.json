@@ -1,0 +1,27 @@
+{
+  "_doc": "エンティティ（扱う情報のまとまり）の型辞書。DAT.things の値。attrs は「残したい項目」カードの候補（業種をまたぐ典型例。案件ごとに追加はFDEが行う）。",
+  "types": {
+    "customer": {"label": "お客様・会員", "plain": "名前や連絡先など、相手ごとの情報", "attrs": ["名前", "連絡先", "住所", "会員番号", "申込日", "状態（見込み・契約中など）", "担当者", "メモ"]},
+    "staff": {"label": "社員・スタッフ", "plain": "働く人ごとの情報", "attrs": ["名前", "所属", "役割", "連絡先", "勤務日", "資格"]},
+    "product": {"label": "商品・サービス", "plain": "売っているもの・提供しているもの", "attrs": ["名前", "値段", "種類", "在庫", "説明", "公開する・しない"]},
+    "order": {"label": "注文・申込", "plain": "誰が何をいつ頼んだか", "attrs": ["申込日", "申込者", "内容", "数量", "金額", "状態（受付・対応中・完了）", "担当者"]},
+    "reservation": {"label": "予約", "plain": "日時と人の組み合わせ", "attrs": ["日時", "予約者", "人数", "場所・部屋", "状態（仮・確定・キャンセル）"]},
+    "payment": {"label": "お金・請求", "plain": "請求・入金・支払い", "attrs": ["金額", "請求日", "支払期限", "入金日", "支払方法", "状態（未請求・請求済・入金済）"]},
+    "document": {"label": "書類・ファイル", "plain": "申請書・契約書・写真など", "attrs": ["書類名", "作成日", "作成者", "版", "保存場所", "承認状態"]},
+    "task": {"label": "作業・案件", "plain": "やること・進めている仕事", "attrs": ["件名", "担当者", "期限", "状態（未着手・対応中・完了）", "優先度", "依頼元"]},
+    "record": {"label": "日報・記録", "plain": "毎日・毎回つける記録", "attrs": ["日付", "記録者", "内容", "数値", "写真"]},
+    "content": {"label": "教材・コンテンツ", "plain": "動画・記事・問いなど、利用者に見せるもの", "attrs": ["タイトル", "番号・順番", "本文・URL", "公開日", "対象者"]},
+    "inquiry": {"label": "問い合わせ", "plain": "お客様からの質問・相談", "attrs": ["受付日", "相談者", "内容", "回答", "状態（未対応・対応中・完了）", "担当者"]},
+    "inventory": {"label": "在庫・備品", "plain": "数を管理するもの", "attrs": ["品名", "数量", "置き場所", "発注点", "入荷日"]}
+  },
+  "relations": [
+    {"slot": "REL.customer_order", "a": "customer", "b": "order", "one": "1回だけ", "many": "何回もある", "card": "1:N"},
+    {"slot": "REL.order_product", "a": "order", "b": "product", "one": "1つだけ", "many": "複数ある", "card": "N:M（明細）"},
+    {"slot": "REL.customer_reservation", "a": "customer", "b": "reservation", "one": "1回だけ", "many": "何回もある", "card": "1:N"},
+    {"slot": "REL.staff_task", "a": "staff", "b": "task", "one": "1人", "many": "複数人", "card": "N:M（担当割当）"},
+    {"slot": "REL.customer_staff", "a": "customer", "b": "staff", "one": "決まった1人", "many": "複数人・その都度", "card": "N:1 / N:M"},
+    {"slot": "REL.order_payment", "a": "order", "b": "payment", "one": "1回で全額", "many": "分割・複数回", "card": "1:N"},
+    {"slot": "REL.customer_inquiry", "a": "customer", "b": "inquiry", "one": "お客様がわかる", "many": "名乗らない人もいる", "card": "1:N（任意）"},
+    {"slot": "REL.member_content", "a": "customer", "b": "content", "one": "全員同じ順に進む", "many": "人ごとに選ぶ", "card": "N:M（進捗）"}
+  ]
+}

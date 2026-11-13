@@ -1,0 +1,69 @@
+{
+ "_doc": "選択アルゴリズムの初期設計パラメータ。実証済みの値ではない。実測ログ（tools/analyze-logs.js）を見て調整し、変えたら ruleVersion を上げる。",
+ "ruleVersion": "2026.11.13-1",
+ "weights": {
+  "uncertainty": 1.0,
+  "decision": 0.8,
+  "importance": 1.5,
+  "downstream": 0.4,
+  "branch": 0.6,
+  "cost": 0.6,
+  "phaseOrder": 1.2
+ },
+ "phaseOrder": [
+  "00_受付",
+  "01_思い",
+  "02_困りごと",
+  "03_成果",
+  "04_仕事の流れ",
+  "05_決まりごと",
+  "06_情報",
+  "07_使う人",
+  "08_画面と出力",
+  "09_連携",
+  "10_規模と安全",
+  "11_予算と体制",
+  "12_移行",
+  "13_利用者体験",
+  "14_AI機能",
+  "15_優先と完成",
+  "16_修正依頼",
+  "90_深掘り"
+ ],
+ "stopScore": 5.0,
+ "time": {
+  "targetMin": 35,
+  "hardMaxMin": 45,
+  "pressureMin": 8,
+  "minImportanceUnderPressure": 4,
+  "maxCardSec": 300,
+  "expectedFollowupRate": 0.25
+ },
+ "deepdive": {
+  "maxDepth": 2
+ },
+ "detect": {
+  "abstractMinChars": 15
+ },
+ "confirm": {
+  "maxCards": 16,
+  "typeOrder": [
+   "VIS",
+   "BR",
+   "CON",
+   "FR",
+   "NFR",
+   "PERM",
+   "ENT",
+   "ATTR",
+   "RULE",
+   "BP",
+   "INT",
+   "MIG",
+   "AC",
+   "ADR"
+  ]
+ },
+ "stopScoreRisePerTarget": 1.0,
+ "_stopDoc": "T3（任意）の質問は score >= stopScore + 経過/目標時間 × stopScoreRisePerTarget のときだけ出す。時間がたつほど厳しくなる。"
+}

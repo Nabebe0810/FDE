@@ -1,0 +1,190 @@
+[
+ {
+  "id": "core",
+  "label": "相談の中身",
+  "always": true,
+  "hiddenCard": true
+ },
+ {
+  "id": "vision",
+  "label": "事業と思い",
+  "card": "事業の思い・大事にしていること",
+  "plain": "なぜこの事業をしているか",
+  "activateWhen": {
+   "persona": [
+    "経営者",
+    "管理者"
+   ]
+  }
+ },
+ {
+  "id": "problem",
+  "label": "困りごと",
+  "always": true,
+  "hiddenCard": true
+ },
+ {
+  "id": "kpi",
+  "label": "成果の測り方",
+  "always": true,
+  "hiddenCard": true
+ },
+ {
+  "id": "flow",
+  "label": "仕事の流れ",
+  "card": "仕事の手順・流れ",
+  "plain": "誰が何をどの順でしているか",
+  "activateWhen": {
+   "any": [
+    {
+     "slot": "PRJ.category",
+     "hasAny": [
+      "記録・一覧・集計",
+      "申請・承認",
+      "予約・受付",
+      "顧客管理・営業",
+      "在庫・発注"
+     ]
+    },
+    {
+     "slot": "PRJ.audience",
+     "in": [
+      "社内",
+      "社内と社外"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "rules",
+  "label": "決まりごと・例外",
+  "card": "決まりごと・いつもと違う対応",
+  "plain": "承認・計算・締め日・例外",
+  "activateWhen": {
+   "any": [
+    {
+     "topic": "flow"
+    },
+    {
+     "slot": "PRJ.category",
+     "hasAny": [
+      "申請・承認"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "data",
+  "label": "扱う情報",
+  "always": true,
+  "hiddenCard": true
+ },
+ {
+  "id": "roles",
+  "label": "使う人と見える範囲",
+  "always": true,
+  "hiddenCard": true
+ },
+ {
+  "id": "output",
+  "label": "画面・出力・言葉",
+  "always": true,
+  "hiddenCard": true
+ },
+ {
+  "id": "integration",
+  "label": "ほかのサービスとの連携",
+  "card": "ほかのサービスとのつながり",
+  "plain": "会計・LINE・カレンダーなど",
+  "activateWhen": {
+   "slot": "ASIS.tools",
+   "hasAny": [
+    "既存のサービス・システム"
+   ]
+  }
+ },
+ {
+  "id": "nfr",
+  "label": "規模・安全・止まったとき",
+  "always": true,
+  "hiddenCard": true
+ },
+ {
+  "id": "constraints",
+  "label": "予算・期限・体制",
+  "always": true,
+  "hiddenCard": true
+ },
+ {
+  "id": "migration",
+  "label": "今ある情報の移しかえ",
+  "card": "今ある情報の移しかえ",
+  "plain": "Excelや紙の情報を新しい仕組みへ",
+  "activateWhen": {
+   "any": [
+    {
+     "slot": "PRJ.kind",
+     "eq": "改修"
+    },
+    {
+     "slot": "ASIS.tools",
+     "hasAny": [
+      "Excel",
+      "Googleスプレッドシート",
+      "既存のサービス・システム"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "id": "toc",
+  "label": "一般の利用者の体験",
+  "card": "一般の利用者の使い心地",
+  "plain": "広告やLINEから来た人が迷わず使えるか",
+  "activateWhen": {
+   "slot": "PRJ.audience",
+   "in": [
+    "一般の個人"
+   ]
+  }
+ },
+ {
+  "id": "ai",
+  "label": "作るものにAIを入れるか",
+  "card": "作るものにAIを入れる",
+  "plain": "要約・分類・下書きなど",
+  "activateWhen": {
+   "all": [
+    {
+     "slot": "AI.want",
+     "count_gte": 1
+    },
+    {
+     "not": {
+      "slot": "AI.want",
+      "has": "AIは使わない"
+     }
+    }
+   ]
+  }
+ },
+ {
+  "id": "change",
+  "label": "修正・追加の依頼",
+  "card": "今あるものの修正・追加",
+  "plain": "すでにあるツールを直したい",
+  "activateWhen": {
+   "slot": "PRJ.kind",
+   "eq": "改修"
+  }
+ },
+ {
+  "id": "acceptance",
+  "label": "優先順位と完成の基準",
+  "always": true,
+  "hiddenCard": true
+ }
+]

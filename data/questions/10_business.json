@@ -1,0 +1,2865 @@
+[
+ {
+  "id": "Q-VIS-001",
+  "phase": "01_思い",
+  "step": 5,
+  "topic": "vision",
+  "persona": [
+   "経営者",
+   "管理者"
+  ],
+  "text": "この事業は、誰に何を届けるためにやっていますか？",
+  "help": "うまくまとめなくて大丈夫です。お客様の顔を思い浮かべて書いてください。",
+  "intent": "事業の存在理由を本人の言葉で得る（以後の優先判断の物差し）",
+  "technique": "具体要求型",
+  "decides": [
+   "優先順位で迷ったときの判断基準",
+   "画面や文書で使う言葉の方向"
+  ],
+  "slot": "VIS.mission",
+  "input": {
+   "type": "longtext",
+   "placeholder": "例：地方の美容室オーナーに、予約が埋まる工夫を届けたい"
+  },
+  "epistemic": true,
+  "deepdive": [
+   "abstract"
+  ],
+  "patterns": [
+   "「誰に」が具体的 → 事業の対象が定まる",
+   "「みんなに」「社会に」→ 最近のお客様の一件を聞く"
+  ],
+  "hypothesis": "今回の相談の目的は、事業の「誰に何を」と結びついている",
+  "falsifier": "事業の説明がなく、手段だけが語られるなら、目的との結びつきは未確認として扱う",
+  "outputs": [
+   "VIS"
+  ],
+  "importance": 4,
+  "costSec": 60,
+  "sources": [
+   "A:04_発想の問い",
+   "C:VS7",
+   "zip:Q-GOL-001"
+  ],
+  "mandatory": {
+   "persona": [
+    "経営者"
+   ]
+  }
+ },
+ {
+  "id": "Q-VIS-002",
+  "phase": "01_思い",
+  "step": 5,
+  "topic": "vision",
+  "persona": [
+   "経営者",
+   "管理者"
+  ],
+  "text": "事業のお客様は、どんな方々ですか？",
+  "help": "年代・立場・困りごとなど、思いつくことを書いてください。",
+  "intent": "お客様像を押さえ、使う人・届ける相手の取り違えを防ぐ",
+  "technique": "具体要求型",
+  "decides": [
+   "利用者の種類の確認",
+   "画面の言葉づかい"
+  ],
+  "slot": "VIS.customers",
+  "input": {
+   "type": "text",
+   "placeholder": "例：30〜50代の小規模事業主"
+  },
+  "deepdive": [
+   "abstract"
+  ],
+  "patterns": [
+   "社内の人だけ → 事業のお客様と今回の利用者は別",
+   "複数の層 → 優先する層を後で聞く"
+  ],
+  "outputs": [
+   "VIS",
+   "ROLE"
+  ],
+  "importance": 3,
+  "costSec": 25,
+  "sources": [
+   "A:08_顧客課題",
+   "C:VS1",
+   "zip:Q-GOL-008"
+  ]
+ },
+ {
+  "id": "Q-VIS-003",
+  "phase": "01_思い",
+  "step": 5,
+  "topic": "vision",
+  "persona": [
+   "経営者",
+   "管理者"
+  ],
+  "text": "この取り組みに、いま着手するのはなぜですか？",
+  "intent": "着手の理由を分け、期限と優先度の根拠を知る（時点の分離）",
+  "technique": "時点の分離",
+  "decides": [
+   "期限の強さ",
+   "優先順位の根拠",
+   "決める人への確認の要否"
+  ],
+  "slot": "VIS.why_now",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "困りごとが限界",
+     "label": "困りごとが限界に近い"
+    },
+    {
+     "v": "事業を広げる",
+     "label": "事業を広げたい"
+    },
+    {
+     "v": "外部の変化（制度・競合）",
+     "label": "制度や競合など、外の変化があった"
+    },
+    {
+     "v": "上から求められた",
+     "label": "上から求められた"
+    },
+    {
+     "v": "前から考えていた",
+     "label": "前から考えていた"
+    }
+   ]
+  },
+  "patterns": [
+   "外部の変化 → 期限の根拠を確認",
+   "上から求められた → 本人の困りごとを別に確認"
+  ],
+  "hypothesis": "着手の理由が「上から求められた」だけなら、本人が感じる困りごとは別にある可能性がある",
+  "falsifier": "本人の困りごとが具体的な一件で語られれば、この仮説は外れる",
+  "outputs": [
+   "VIS",
+   "CON"
+  ],
+  "importance": 3,
+  "costSec": 12,
+  "sources": [
+   "C:VS6",
+   "A:04_発想の問い",
+   "zip:Q-GOL-001"
+  ]
+ },
+ {
+  "id": "Q-VIS-004",
+  "phase": "01_思い",
+  "step": 5,
+  "topic": "vision",
+  "persona": [
+   "経営者",
+   "管理者"
+  ],
+  "text": "この取り組みは、近づきたい姿と避けたい事態のどちらが強いですか？",
+  "intent": "成果の置き方（伸ばす／守る）を決める。二択にせず「両方」「どちらでもない」を許す",
+  "technique": "選択の問い",
+  "decides": [
+   "成果の測り方（増やす指標か減らす指標か）",
+   "リスクの聞き取りの重さ"
+  ],
+  "slot": "VIS.motivation",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "目指す姿に近づきたい",
+     "label": "近づきたい姿がある"
+    },
+    {
+     "v": "困った事態を避けたい",
+     "label": "避けたい事態がある"
+    },
+    {
+     "v": "両方",
+     "label": "両方ある"
+    },
+    {
+     "v": "どちらでもない",
+     "label": "どちらでもない"
+    }
+   ]
+  },
+  "outputs": [
+   "VIS",
+   "BR"
+  ],
+  "importance": 2,
+  "costSec": 12,
+  "sources": [
+   "C:VS6",
+   "A:04_発想の問い"
+  ]
+ },
+ {
+  "id": "Q-VIS-005",
+  "phase": "01_思い",
+  "step": 5,
+  "topic": "vision",
+  "persona": [
+   "経営者",
+   "管理者"
+  ],
+  "text": "仕事で大事にしていることを、1つ教えてください。",
+  "help": "理由まで書かなくて大丈夫です。",
+  "intent": "判断に迷ったときの本人の基準を得る",
+  "technique": "具体要求型",
+  "decides": [
+   "優先順位の判断",
+   "画面や出力の方針"
+  ],
+  "slot": "VIS.values",
+  "input": {
+   "type": "text",
+   "placeholder": "例：お客様を待たせない"
+  },
+  "deepdive": [
+   "abstract"
+  ],
+  "outputs": [
+   "VIS"
+  ],
+  "importance": 2,
+  "costSec": 25,
+  "sources": [
+   "C:VS7",
+   "A:02_発想法ガイド"
+  ]
+ },
+ {
+  "id": "Q-VIS-006",
+  "phase": "01_思い",
+  "step": 5,
+  "topic": "vision",
+  "persona": [
+   "経営者",
+   "管理者"
+  ],
+  "text": "これだけは「やらない」と決めていることはありますか？",
+  "help": "ない場合は、そのまま「ない」と書いてください。",
+  "intent": "範囲の外（やらないこと）を先に決め、後からの範囲拡大を防ぐ（採否テスト）",
+  "technique": "採否テスト",
+  "decides": [
+   "最初の版に入れないこと",
+   "画面や通知の作り方の制限"
+  ],
+  "slot": "VIS.not_do",
+  "input": {
+   "type": "text",
+   "placeholder": "例：お客様に営業電話はしない"
+  },
+  "patterns": [
+   "具体的な禁止事項 → 制約として記録",
+   "「特にない」→ 完成の基準で範囲を固める"
+  ],
+  "outputs": [
+   "VIS",
+   "CON"
+  ],
+  "importance": 3,
+  "costSec": 30,
+  "sources": [
+   "C:VS7",
+   "zip:Q-GOL-006",
+   "D:§4 #19"
+  ]
+ },
+ {
+  "id": "Q-VIS-007",
+  "phase": "01_思い",
+  "step": 5,
+  "topic": "vision",
+  "persona": [
+   "経営者",
+   "管理者"
+  ],
+  "text": "1年後にどうなっていたら、「うまくいった」と言えますか？",
+  "help": "場面で書くと伝わります。「誰が」「何を」「どうしている」が書けると助かります。",
+  "intent": "1年後の姿を引き出し、成果の測り方と完成の基準につなぐ（時間軸の問い）",
+  "technique": "具体要求型",
+  "decides": [
+   "成果の測り方",
+   "完成の基準",
+   "最初の版の範囲"
+  ],
+  "slot": "VIS.success_picture",
+  "input": {
+   "type": "longtext",
+   "placeholder": "例：月末の残業がなくなり、スタッフが新しい仕事に時間を使えている"
+  },
+  "epistemic": true,
+  "deepdive": [
+   "abstract"
+  ],
+  "patterns": [
+   "数字や場面が出る → 成果の指標の候補",
+   "「楽になる」など抽象語 → 最近の一件を聞く"
+  ],
+  "outputs": [
+   "VIS",
+   "BR",
+   "AC"
+  ],
+  "importance": 4,
+  "costSec": 60,
+  "sources": [
+   "A:02_発想法ガイド",
+   "A:04_発想の問い",
+   "C:VS7"
+  ]
+ },
+ {
+  "id": "Q-VIS-008",
+  "phase": "01_思い",
+  "step": 5,
+  "topic": "vision",
+  "persona": [
+   "経営者",
+   "管理者"
+  ],
+  "text": "仕事でよく使う、社内や業界の言葉を教えてください。",
+  "help": "お客様向けには使わない呼び名があれば、そう書いてください。",
+  "intent": "画面や文書に使う言葉と、相手に通じない言葉を分けるための用語を集める",
+  "technique": "具体要求型",
+  "decides": [
+   "画面に出す言葉",
+   "用語集に載せる言葉"
+  ],
+  "slot": "VIS.terms",
+  "input": {
+   "type": "longtext",
+   "placeholder": "例：「A案件」＝紹介経由の依頼、「締め」＝月末の請求確定"
+  },
+  "outputs": [
+   "GLOS"
+  ],
+  "importance": 2,
+  "costSec": 45,
+  "sources": [
+   "D:§4 #6",
+   "zip:Q-SCR-006"
+  ]
+ },
+ {
+  "id": "Q-VIS-009",
+  "phase": "01_思い",
+  "step": 5,
+  "topic": "vision",
+  "persona": [
+   "経営者",
+   "管理者"
+  ],
+  "text": "迷ったとき、何を優先しますか？10点を配ってください。",
+  "help": "全部大事でも、10点しかありません。大事なものほど多く配ってください。",
+  "intent": "速さ・正確さ・使いやすさ・費用・拡張の相対的な優先を、二択にせず配点で知る",
+  "technique": "選択の問い",
+  "decides": [
+   "作り方の選定（早さ重視か堅さ重視か）",
+   "最初の版の範囲",
+   "確認の厳しさ"
+  ],
+  "slot": "VIS.tradeoff",
+  "input": {
+   "type": "points",
+   "total": 10,
+   "options": [
+    {
+     "v": "早く使い始める",
+     "label": "早く使い始める"
+    },
+    {
+     "v": "ミスなく正確",
+     "label": "ミスなく正確にする"
+    },
+    {
+     "v": "使いやすさ",
+     "label": "使いやすくする"
+    },
+    {
+     "v": "費用を抑える",
+     "label": "費用を抑える"
+    },
+    {
+     "v": "あとで広げやすい",
+     "label": "あとで広げやすくしておく"
+    }
+   ]
+  },
+  "patterns": [
+   "1つに6点以上 → その軸を設計の第一条件にする",
+   "均等に配分 → 優先が決まっていないので、あとで再確認"
+  ],
+  "hypothesis": "優先する軸が1つに決まっている",
+  "falsifier": "配点が均等に近い（最大でも3点以下）なら、優先は未決定として扱う",
+  "outputs": [
+   "VIS",
+   "ADR"
+  ],
+  "importance": 4,
+  "costSec": 30,
+  "sources": [
+   "A:14_比較評価",
+   "A:04_発想の問い",
+   "STD:MoSCoW"
+  ]
+ },
+ {
+  "id": "Q-PRB-001",
+  "phase": "02_困りごと",
+  "step": 5,
+  "topic": "problem",
+  "persona": "全員",
+  "presupposes": [
+   "BR.problem"
+  ],
+  "text": "いまの困りごとで、いちばん困っているのは誰ですか？",
+  "intent": "困っている本人を特定し、聞き取りの相手と使う人の優先を決める",
+  "technique": "選択の問い",
+  "decides": [
+   "誰に追加で聞くか",
+   "使う人の優先順位",
+   "立場による見え方の違いを確認するか"
+  ],
+  "slot": "BR.who_suffers",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "自分",
+     "label": "自分"
+    },
+    {
+     "v": "現場の担当者",
+     "label": "現場の担当者"
+    },
+    {
+     "v": "管理者",
+     "label": "管理者"
+    },
+    {
+     "v": "お客様",
+     "label": "お客様"
+    },
+    {
+     "v": "取引先",
+     "label": "取引先"
+    },
+    {
+     "v": "複数",
+     "label": "いくつかの立場に同じくらい"
+    }
+   ]
+  },
+  "mandatory": true,
+  "patterns": [
+   "自分以外 → その人に直接聞く機会を作れるか確認",
+   "複数 → 立場ごとの困りごとの違いを聞く"
+  ],
+  "outputs": [
+   "BR",
+   "ROLE"
+  ],
+  "importance": 4,
+  "costSec": 10,
+  "sources": [
+   "A:08_顧客課題",
+   "C:VS1",
+   "zip:Q-PRB-004"
+  ]
+ },
+ {
+  "id": "Q-PRB-002",
+  "phase": "02_困りごと",
+  "step": 5,
+  "topic": "problem",
+  "persona": "全員",
+  "presupposes": [
+   "BR.problem"
+  ],
+  "text": "その困りごとは、どのくらいの頻度で起きますか？",
+  "intent": "困りごとの重さを頻度で知る（数や量は目盛りで聞く）",
+  "technique": "数量のケタ",
+  "decides": [
+   "対応の優先度",
+   "作る価値があるか（頻度が低いと作らない手も検討）"
+  ],
+  "slot": "BR.frequency",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "一度だけ",
+     "label": "一度だけ"
+    },
+    {
+     "v": "年に数回",
+     "label": "年に数回"
+    },
+    {
+     "v": "毎月",
+     "label": "毎月"
+    },
+    {
+     "v": "毎週",
+     "label": "毎週"
+    },
+    {
+     "v": "毎日",
+     "label": "毎日"
+    }
+   ]
+  },
+  "mandatory": true,
+  "hypothesis": "困りごとは繰り返し起きている",
+  "falsifier": "「一度だけ」「年に数回」なら、作る以外の対応（今回限りの手当て）を先に検討する",
+  "outputs": [
+   "BR"
+  ],
+  "importance": 4,
+  "costSec": 8,
+  "sources": [
+   "A:08_顧客課題",
+   "C:VS1",
+   "zip:Q-ASI-004"
+  ]
+ },
+ {
+  "id": "Q-PRB-003",
+  "phase": "02_困りごと",
+  "step": 5,
+  "topic": "problem",
+  "persona": "全員",
+  "presupposes": [
+   "BR.problem"
+  ],
+  "text": "いちばん最近それが起きたのは、いつ頃ですか？",
+  "intent": "直近の一件があるかで、困りごとが今も続いているか・具体例を聞けるかを判定する（時点の分離）",
+  "technique": "時点の分離",
+  "decides": [
+   "具体的な一件を聞けるか",
+   "困りごとが今も続いているか"
+  ],
+  "slot": "BR.last_case",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "思い出せない",
+     "label": "思い出せない"
+    },
+    {
+     "v": "もっと前",
+     "label": "もっと前"
+    },
+    {
+     "v": "3か月以内",
+     "label": "3か月以内"
+    },
+    {
+     "v": "今月",
+     "label": "今月"
+    },
+    {
+     "v": "今週",
+     "label": "今週"
+    }
+   ]
+  },
+  "hypothesis": "困りごとは最近も起きている",
+  "falsifier": "「もっと前」「思い出せない」なら、今の困りごとではなく過去の記憶や伝聞の可能性が高い",
+  "outputs": [
+   "BR"
+  ],
+  "importance": 3,
+  "costSec": 8,
+  "sources": [
+   "C:原則5",
+   "C:原則8",
+   "zip:Q-PRB-001"
+  ]
+ },
+ {
+  "id": "Q-PRB-004",
+  "phase": "02_困りごと",
+  "step": 5,
+  "topic": "problem",
+  "persona": "全員",
+  "skipIf": {
+   "slot": "BR.problem__evidence",
+   "resolved": true
+  },
+  "presupposes": [
+   "BR.problem"
+  ],
+  "text": "その困りごとは、どうやってわかりましたか？",
+  "intent": "困りごとの根拠が記録・観察・伝聞・感覚のどれかを分ける（本人の言い分を事実と混ぜない）",
+  "technique": "選択の問い",
+  "decides": [
+   "困りごとを根拠として扱うか仮の話として扱うか",
+   "記録を見せてもらうか"
+  ],
+  "slot": "BR.evidence",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "数えた記録がある",
+     "label": "数えた記録がある"
+    },
+    {
+     "v": "自分で何度も見た",
+     "label": "自分で何度も見た"
+    },
+    {
+     "v": "人から聞いた",
+     "label": "人から聞いた"
+    },
+    {
+     "v": "感覚",
+     "label": "なんとなくそう感じる"
+    }
+   ]
+  },
+  "mandatory": true,
+  "followups": [
+   {
+    "when": {
+     "slot": "BR.evidence",
+     "in": [
+      "人から聞いた",
+      "感覚"
+     ]
+    },
+    "ask": "G-EVIDENCE",
+    "why": "根拠が弱い回答 → 確かめたことがあるかを聞く"
+   }
+  ],
+  "patterns": [
+   "「数えた記録がある」→ 記録の入手を頼む",
+   "「感覚」だけ → 未確認の困りごととして扱い、数える方法を後で聞く"
+  ],
+  "hypothesis": "困りごとは観察か記録に基づいている",
+  "falsifier": "根拠が「人から聞いた」「感覚」だけなら、要件の根拠にせず未確認として扱う",
+  "outputs": [
+   "BR"
+  ],
+  "importance": 4,
+  "costSec": 10,
+  "sources": [
+   "C:VS0",
+   "C:原則1",
+   "A:24_品質ゲート",
+   "A:24_品質ゲート"
+  ]
+ },
+ {
+  "id": "Q-PRB-005",
+  "phase": "02_困りごと",
+  "step": 5,
+  "topic": "problem",
+  "persona": "全員",
+  "presupposes": [
+   "BR.problem"
+  ],
+  "text": "今は、その困りごとをどうやってしのいでいますか？",
+  "help": "手間をかけていること、人に頼んでいること、あきらめていることも書いてください。",
+  "intent": "今のしのぎ方（代替手段）から、実際の流れと本人の工夫・限界を知る",
+  "technique": "具体要求型",
+  "decides": [
+   "今の流れの把握",
+   "残すべきやり方",
+   "作らずに済む余地"
+  ],
+  "slot": "BR.workaround",
+  "input": {
+   "type": "longtext",
+   "placeholder": "例：月末は残業して、Excelの表を見ながら手で確認している"
+  },
+  "epistemic": true,
+  "deepdive": [
+   "abstract",
+   "needsEvidence"
+  ],
+  "patterns": [
+   "特定の人が頑張っている → 属人化の可能性",
+   "何もしていない → 困りの強さを再確認"
+  ],
+  "outputs": [
+   "ASIS",
+   "BR"
+  ],
+  "importance": 3,
+  "costSec": 50,
+  "sources": [
+   "A:04_発想の問い",
+   "A:08_顧客課題",
+   "zip:Q-PRB-006"
+  ]
+ },
+ {
+  "id": "Q-PRB-008",
+  "phase": "02_困りごと",
+  "step": 5,
+  "topic": "problem",
+  "persona": "全員",
+  "presupposes": [
+   "BR.problem"
+  ],
+  "text": "今の道具の設定や仕事のやり方を変えて、解決を試したことはありますか？",
+  "intent": "新しく作る以外の手（設定変更・ルール変更・既製サービス）を先に試したか確かめる。作る前の反証",
+  "technique": "選択の問い",
+  "decides": [
+   "新しく作るか、設定やルールの変更で済ませるか",
+   "既製サービスを比べるか"
+  ],
+  "slot": "BR.build_or_not",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "試してだめだった",
+     "label": "試したが解決しなかった"
+    },
+    {
+     "v": "考えたが合わない",
+     "label": "考えたが合わないと判断した"
+    },
+    {
+     "v": "試していない",
+     "label": "試していない"
+    }
+   ]
+  },
+  "patterns": [
+   "試していない → 設定・やり方の変更案を先に出す",
+   "試してだめだった → 何が足りなかったかを聞く"
+  ],
+  "hypothesis": "今の道具やルールの工夫では解決しない（新しく作る必要がある）",
+  "falsifier": "試していない、または設定変更で解消する見込みがあるなら、作る必要は薄い",
+  "outputs": [
+   "ADR",
+   "BR"
+  ],
+  "importance": 4,
+  "costSec": 12,
+  "sources": [
+   "C:原則4",
+   "A:14_比較評価",
+   "zip:Q-PRB-007",
+   "STD:ADR"
+  ]
+ },
+ {
+  "id": "Q-KPI-001",
+  "phase": "03_成果",
+  "step": 5,
+  "topic": "kpi",
+  "persona": "全員",
+  "text": "うまくいったとき、いちばん変わってほしいことは何ですか？",
+  "help": "いちばん近いものを1つ選んでください。ほかは次の問いで聞きます。",
+  "intent": "成果の種類を1つ選んでもらい、測るものと目標の置き方を決める",
+  "technique": "選択の問い",
+  "decides": [
+   "成果の測り方",
+   "優先する機能の方向"
+  ],
+  "slot": "BR.goal_type",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "時間を減らす",
+     "label": "作業の時間が減る"
+    },
+    {
+     "v": "ミスを減らす",
+     "label": "ミスややり直しが減る"
+    },
+    {
+     "v": "売上・集客を増やす",
+     "label": "売上やお客様が増える"
+    },
+    {
+     "v": "満足度を上げる",
+     "label": "お客様や利用者の満足が上がる"
+    },
+    {
+     "v": "状況を見えるようにする",
+     "label": "今どうなっているか見える"
+    },
+    {
+     "v": "新しいことを始める",
+     "label": "今できないことができる"
+    },
+    {
+     "v": "リスクを避ける",
+     "label": "事故や違反を避けられる"
+    }
+   ]
+  },
+  "mandatory": true,
+  "patterns": [
+   "時間・ミス → 現状の数字を数えられるか確認",
+   "新しいことを始める → 事業側の成果の測り方を聞く"
+  ],
+  "outputs": [
+   "BR"
+  ],
+  "importance": 5,
+  "costSec": 12,
+  "sources": [
+   "A:20_KPI",
+   "A:04_発想の問い",
+   "zip:Q-GOL-002"
+  ]
+ },
+ {
+  "id": "Q-KPI-002",
+  "phase": "03_成果",
+  "step": 5,
+  "topic": "kpi",
+  "persona": "全員",
+  "presupposes": [
+   "BR.goal_type"
+  ],
+  "text": "「{{BR.goal_type}}」は、何を見ればわかりますか？",
+  "intent": "成果を測る物差しを決める。測れない成果は目標にしない",
+  "technique": "選択の問い",
+  "decides": [
+   "数字で確かめる完成の基準",
+   "現状の数字の集め方"
+  ],
+  "slot": "BR.kpi_metric",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "作業時間",
+     "label": "かかった時間"
+    },
+    {
+     "v": "ミス・やり直しの件数",
+     "label": "ミスややり直しの件数"
+    },
+    {
+     "v": "件数・人数",
+     "label": "件数や人数"
+    },
+    {
+     "v": "売上・金額",
+     "label": "売上や金額"
+    },
+    {
+     "v": "満足度・評価",
+     "label": "満足度や評価"
+    },
+    {
+     "v": "かかる日数",
+     "label": "完了までにかかる日数"
+    },
+    {
+     "v": "その他",
+     "label": "その他"
+    }
+   ]
+  },
+  "mandatory": true,
+  "patterns": [
+   "「その他」→ 本人の言葉で何を見たいか聞く",
+   "満足度 → 聞く相手と時期を確認"
+  ],
+  "outputs": [
+   "BR",
+   "AC"
+  ],
+  "importance": 5,
+  "costSec": 12,
+  "sources": [
+   "A:20_KPI",
+   "C:VS4",
+   "zip:Q-GOL-002"
+  ]
+ },
+ {
+  "id": "Q-KPI-003",
+  "phase": "03_成果",
+  "step": 5,
+  "topic": "kpi",
+  "persona": "全員",
+  "presupposes": [
+   "BR.kpi_metric"
+  ],
+  "text": "「{{BR.kpi_metric}}」は、いま数えていますか？",
+  "intent": "現状の数字が手に入るかで、成果を確かめる方法と現状の置き方を決める",
+  "technique": "運用の問い",
+  "decides": [
+   "今の数字を調べる手順",
+   "完成後に成果を確かめられるか"
+  ],
+  "slot": "BR.kpi_measurable",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "今も数えている",
+     "label": "今も数えている"
+    },
+    {
+     "v": "数えようと思えば数えられる",
+     "label": "数えようと思えば数えられる"
+    },
+    {
+     "v": "数えられない",
+     "label": "数えられない"
+    }
+   ]
+  },
+  "hypothesis": "成果を測る数字が今すでにある",
+  "falsifier": "数えられないなら、まず数える方法を決めないと成果を確かめられない",
+  "outputs": [
+   "BR",
+   "AC"
+  ],
+  "importance": 3,
+  "costSec": 10,
+  "sources": [
+   "A:20_KPI",
+   "A:13_検証",
+   "C:VS0"
+  ]
+ },
+ {
+  "id": "Q-KPI-004",
+  "phase": "03_成果",
+  "step": 5,
+  "topic": "kpi",
+  "persona": "全員",
+  "trigger": {
+   "slot": "BR.kpi_measurable",
+   "in": [
+    "今も数えている",
+    "数えようと思えば数えられる"
+   ]
+  },
+  "presupposes": [
+   "BR.kpi_metric"
+  ],
+  "text": "いまの「{{BR.kpi_metric}}」は、どのくらいですか？",
+  "help": "正確でなくてかまいません。例：1件あたり30分、月に5件のミス",
+  "intent": "現状の数字（出発点）を得る。ざっくりでよい",
+  "technique": "数量のケタ",
+  "decides": [
+   "目標との差",
+   "効果の大きさ"
+  ],
+  "slot": "BR.kpi_baseline",
+  "input": {
+   "type": "number",
+   "unit": "",
+   "presets": []
+  },
+  "epistemic": true,
+  "outputs": [
+   "BR",
+   "AC"
+  ],
+  "importance": 3,
+  "costSec": 20,
+  "sources": [
+   "A:20_KPI",
+   "zip:Q-GOL-003"
+  ]
+ },
+ {
+  "id": "Q-KPI-005",
+  "phase": "03_成果",
+  "step": 5,
+  "topic": "kpi",
+  "persona": "全員",
+  "trigger": {
+   "slot": "BR.kpi_measurable",
+   "in": [
+    "今も数えている",
+    "数えようと思えば数えられる"
+   ]
+  },
+  "presupposes": [
+   "BR.kpi_metric"
+  ],
+  "text": "「{{BR.kpi_metric}}」は、いくつになれば十分ですか？",
+  "help": "現状と同じ単位で答えてください。例：1件あたり10分、月に1件",
+  "intent": "目標の数字を置く。完成を確かめる基準になる",
+  "technique": "採否テスト",
+  "decides": [
+   "完成の基準",
+   "目標が高すぎないかの見直し"
+  ],
+  "slot": "BR.kpi_target",
+  "input": {
+   "type": "number",
+   "unit": "",
+   "presets": []
+  },
+  "hypothesis": "目標は現状の数字から現実的に届く範囲にある",
+  "falsifier": "現状の半分以下（または2倍以上）など極端な目標なら、前提の見直しを聞く",
+  "outputs": [
+   "BR",
+   "AC"
+  ],
+  "importance": 3,
+  "costSec": 20,
+  "sources": [
+   "A:20_KPI",
+   "C:VS4",
+   "zip:Q-GOL-004"
+  ]
+ },
+ {
+  "id": "Q-KPI-006",
+  "phase": "03_成果",
+  "step": 5,
+  "topic": "kpi",
+  "persona": "全員",
+  "text": "その目標は、いつまでに達成したいですか？",
+  "intent": "成果を確かめる時点を決める",
+  "technique": "時点の分離",
+  "decides": [
+   "成果の確認日",
+   "効果が出る前に止める条件"
+  ],
+  "slot": "BR.kpi_when",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "3か月後",
+     "label": "3か月後"
+    },
+    {
+     "v": "半年後",
+     "label": "半年後"
+    },
+    {
+     "v": "1年後",
+     "label": "1年後"
+    },
+    {
+     "v": "決めていない",
+     "label": "決めていない"
+    }
+   ]
+  },
+  "outputs": [
+   "BR",
+   "CON"
+  ],
+  "importance": 2,
+  "costSec": 8,
+  "sources": [
+   "A:20_KPI",
+   "zip:Q-GOL-004"
+  ]
+ },
+ {
+  "id": "Q-KPI-007",
+  "phase": "03_成果",
+  "step": 5,
+  "topic": "kpi",
+  "persona": "全員",
+  "text": "その作業に、1か月でどのくらい時間がかかっていますか？",
+  "help": "関わる全員の合計で、おおよそのケタを選んでください。",
+  "intent": "作業時間のケタから、手をかける価値（費用の目安）を知る",
+  "technique": "数量のケタ",
+  "decides": [
+   "かけてよい費用の目安",
+   "仕組みを作る価値があるか"
+  ],
+  "slot": "BR.roi_hours",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "月10時間未満",
+     "label": "月10時間未満"
+    },
+    {
+     "v": "月10〜50時間",
+     "label": "月10〜50時間"
+    },
+    {
+     "v": "月50〜200時間",
+     "label": "月50〜200時間"
+    },
+    {
+     "v": "月200時間以上",
+     "label": "月200時間以上"
+    }
+   ]
+  },
+  "hypothesis": "作業時間が月10時間以上かかっている（作る価値の下限）",
+  "falsifier": "月10時間未満なら、作るより今のやり方の整理が先",
+  "outputs": [
+   "BR",
+   "CON"
+  ],
+  "importance": 3,
+  "costSec": 10,
+  "sources": [
+   "A:04_発想の問い",
+   "zip:Q-GOL-005",
+   "A:20_KPI"
+  ]
+ },
+ {
+  "id": "Q-KPI-008",
+  "phase": "03_成果",
+  "step": 5,
+  "topic": "kpi",
+  "persona": "全員",
+  "text": "その作業に関わっているのは、何人くらいですか？",
+  "intent": "関わる人数から、使う人の範囲と費用対効果のケタを知る",
+  "technique": "数量のケタ",
+  "decides": [
+   "使う人の規模",
+   "説明や教育の手間"
+  ],
+  "slot": "BR.roi_people",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "1人",
+     "label": "1人"
+    },
+    {
+     "v": "2〜5人",
+     "label": "2〜5人"
+    },
+    {
+     "v": "6〜20人",
+     "label": "6〜20人"
+    },
+    {
+     "v": "21人以上",
+     "label": "21人以上"
+    }
+   ]
+  },
+  "outputs": [
+   "BR",
+   "NFR"
+  ],
+  "importance": 2,
+  "costSec": 8,
+  "sources": [
+   "zip:Q-GOL-005",
+   "A:04_発想の問い"
+  ]
+ },
+ {
+  "id": "Q-KPI-009",
+  "phase": "03_成果",
+  "step": 5,
+  "topic": "kpi",
+  "persona": "全員",
+  "text": "うまくいったかどうかは、どんな場面を見ればわかりますか？",
+  "help": "数字でなくても、場面で書いてください。",
+  "intent": "成功の場面を具体的に書いてもらい、完成の確認方法（採否の基準）にする",
+  "technique": "採否テスト",
+  "decides": [
+   "完成を確かめる場面",
+   "確認の手順"
+  ],
+  "slot": "BR.success_check",
+  "input": {
+   "type": "longtext",
+   "placeholder": "例：月末の確認が1日で終わり、手直しの連絡が来なくなった"
+  },
+  "epistemic": true,
+  "deepdive": [
+   "abstract"
+  ],
+  "patterns": [
+   "数字・場面がある → 確認の基準に採用",
+   "「楽になる」など → 誰がいつ楽になったとわかるかを聞く"
+  ],
+  "outputs": [
+   "AC",
+   "BR"
+  ],
+  "importance": 3,
+  "costSec": 50,
+  "sources": [
+   "A:13_検証",
+   "A:04_発想の問い",
+   "C:VS4"
+  ]
+ },
+ {
+  "id": "Q-FLW-001",
+  "phase": "04_仕事の流れ",
+  "step": 5,
+  "topic": "flow",
+  "persona": "全員",
+  "text": "いまの仕事では、どんな道具を使っていますか？",
+  "help": "当てはまるものすべてを選んでください。",
+  "intent": "使っている道具の数から、情報の散らばりと書き写しの有無を判定する",
+  "technique": "具体要求型",
+  "decides": [
+   "移しかえ・連携の論点を出すか",
+   "情報が散らばっている仮説の可否"
+  ],
+  "slot": "ASIS.tools",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "紙",
+     "label": "紙"
+    },
+    {
+     "v": "Excel",
+     "label": "Excel"
+    },
+    {
+     "v": "Googleスプレッドシート",
+     "label": "Googleスプレッドシート"
+    },
+    {
+     "v": "既存のサービス・システム",
+     "label": "既存のサービスやシステム"
+    },
+    {
+     "v": "メール",
+     "label": "メール"
+    },
+    {
+     "v": "チャット（LINE・Slack等）",
+     "label": "チャット（LINE・Slackなど）"
+    },
+    {
+     "v": "電話",
+     "label": "電話"
+    },
+    {
+     "v": "頭の中・口頭",
+     "label": "頭の中や口頭"
+    }
+   ]
+  },
+  "mandatory": true,
+  "patterns": [
+   "3つ以上 → 情報の散らばり・書き写しを疑う",
+   "1つだけ → 散らばりは原因ではない可能性が高い"
+  ],
+  "hypothesis": "困りごとの一因は、情報が複数の道具に散らばっていること（HC-SCATTER／HC-REKEY）",
+  "falsifier": "使っている道具が1つだけなら、散らばりや書き写しは原因ではない",
+  "outputs": [
+   "ASIS",
+   "INT",
+   "MIG"
+  ],
+  "importance": 5,
+  "costSec": 20,
+  "sources": [
+   "zip:Q-PRJ-004",
+   "A:08_顧客課題",
+   "D:§4 #3"
+  ]
+ },
+ {
+  "id": "Q-FLW-002",
+  "phase": "04_仕事の流れ",
+  "step": 5,
+  "topic": "flow",
+  "persona": "全員",
+  "text": "その仕事は、何をきっかけに始まりますか？",
+  "intent": "仕事の起点を決める（通知・受付・定期処理の要否に効く）",
+  "technique": "選択の問い",
+  "decides": [
+   "受付の入り口",
+   "決まった日時に動く処理が要るか"
+  ],
+  "slot": "ASIS.trigger",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "お客様からの連絡",
+     "label": "お客様からの連絡"
+    },
+    {
+     "v": "社内からの依頼",
+     "label": "社内からの依頼"
+    },
+    {
+     "v": "決まった日時",
+     "label": "決まった日や時刻"
+    },
+    {
+     "v": "前の作業の完了",
+     "label": "前の作業が終わったとき"
+    },
+    {
+     "v": "その都度思いついたとき",
+     "label": "その都度、思いついたとき"
+    }
+   ]
+  },
+  "patterns": [
+   "決まった日時 → 締め日・定期作業の確認",
+   "お客様からの連絡 → 受付経路を聞く"
+  ],
+  "outputs": [
+   "BP",
+   "INT"
+  ],
+  "importance": 3,
+  "costSec": 10,
+  "sources": [
+   "zip:Q-ASI-001",
+   "A:04_発想の問い"
+  ]
+ },
+ {
+  "id": "Q-FLW-003",
+  "phase": "04_仕事の流れ",
+  "step": 5,
+  "topic": "flow",
+  "persona": "全員",
+  "text": "その仕事は、途中で担当の人が変わりますか？",
+  "intent": "引き継ぎ（担当交代）の有無を知り、待ち・伝え漏れ・書き写しの発生箇所を特定する",
+  "technique": "運用の問い",
+  "decides": [
+   "段階ごとの担当の分け方",
+   "引き継ぎ時に渡す情報",
+   "待ちが長い・書き写しの仮説の可否"
+  ],
+  "slot": "ASIS.handoffs",
+  "input": {
+   "type": "yesno"
+  },
+  "followups": [
+   {
+    "when": {
+     "slot": "ASIS.handoffs",
+     "eq": true
+    },
+    "ask": "Q-FLW-008",
+    "why": "引き継ぎがある → 手間・ミスが出る段階を聞く"
+   }
+  ],
+  "patterns": [
+   "はい → 引き継ぎの場面で手間が出る段階を聞く",
+   "いいえ → 1人で完結するため、承認や待ちの仮説は弱まる"
+  ],
+  "hypothesis": "担当が変わる場面で、情報の書き写しや待ちが生じている（HC-REKEY）",
+  "falsifier": "担当が変わらず1人で完結するなら、引き継ぎ起因の書き写しは起きにくい",
+  "outputs": [
+   "BP",
+   "ROLE"
+  ],
+  "importance": 4,
+  "costSec": 8,
+  "sources": [
+   "zip:Q-ASI-002",
+   "A:08_顧客課題"
+  ]
+ },
+ {
+  "id": "Q-FLW-004",
+  "phase": "04_仕事の流れ",
+  "step": 5,
+  "topic": "flow",
+  "persona": "全員",
+  "text": "その仕事は、1か月に何件くらいありますか？",
+  "help": "多い月と少ない月があるときは、ふつうの月で選んでください。",
+  "intent": "件数のケタを知り、作りの規模と「件数が多すぎる」仮説の可否を判定する",
+  "technique": "数量のケタ",
+  "decides": [
+   "作りの規模（表計算で足りるか）",
+   "件数が原因かの判定"
+  ],
+  "slot": "ASIS.volume",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "月10件未満",
+     "label": "月10件未満"
+    },
+    {
+     "v": "月10〜100件",
+     "label": "月10〜100件"
+    },
+    {
+     "v": "月100〜1000件",
+     "label": "月100〜1000件"
+    },
+    {
+     "v": "月1000件以上",
+     "label": "月1000件以上"
+    }
+   ]
+  },
+  "mandatory": true,
+  "patterns": [
+   "月10件未満 → 件数は主な原因ではない",
+   "月1000件以上 → 一括処理・性能の確認へ"
+  ],
+  "hypothesis": "件数が多いことが困りごとの原因（HC-VOLUME）",
+  "falsifier": "月10件未満なら、量は主な原因ではない",
+  "outputs": [
+   "NFR",
+   "BR"
+  ],
+  "importance": 5,
+  "costSec": 8,
+  "sources": [
+   "zip:Q-ASI-004",
+   "C:VS3",
+   "A:12_仮説"
+  ]
+ },
+ {
+  "id": "Q-FLW-005",
+  "phase": "04_仕事の流れ",
+  "step": 5,
+  "topic": "flow",
+  "persona": "全員",
+  "text": "最近あった1件を、最初から最後まで順番に書いてください。",
+  "help": "「いつもは」ではなく、実際にあった1件の順番で。1行に1つの手順を書きます。誰がやったかも書けると助かります。",
+  "intent": "一般論ではなく実際の一件を時系列でたどり、実際の手順・担当・道具を得る（時系列追跡）",
+  "technique": "時系列追跡",
+  "decides": [
+   "仕事の流れの図",
+   "手間とミスが出る段階",
+   "作る範囲"
+  ],
+  "slot": "ASIS.steps",
+  "input": {
+   "type": "steps",
+   "placeholder": "例：電話で受ける → 紙にメモ → Excelに入力 → 上司に確認",
+   "addLabel": "次の手順を足す"
+  },
+  "mandatory": true,
+  "followups": [
+   {
+    "when": {
+     "slot": "ASIS.steps",
+     "known": true
+    },
+    "ask": "Q-FLW-008",
+    "why": "一件の流れが出たあと、手間やミスが出る段階を聞く"
+   }
+  ],
+  "patterns": [
+   "手順が3つ以下 → 省略されている可能性があるので、途中の確認を聞く",
+   "「担当」「確認」が複数回 → 引き継ぎ・承認の質問へ"
+  ],
+  "hypothesis": "実際の一件の流れは、本人が普段語る手順と同じである",
+  "falsifier": "一件を追うと、普段語る手順にない作業（例外・確認）が出てくるなら、例外の聞き取りを増やす",
+  "outputs": [
+   "BP",
+   "ASIS"
+  ],
+  "importance": 5,
+  "costSec": 120,
+  "sources": [
+   "C:原則5",
+   "C:§3.4",
+   "D:§4 #16",
+   "zip:Q-ASI-002"
+  ]
+ },
+ {
+  "id": "Q-FLW-006",
+  "phase": "04_仕事の流れ",
+  "step": 5,
+  "topic": "flow",
+  "persona": "全員",
+  "text": "その仕事は、1件でどのくらい時間がかかりますか？",
+  "help": "待ち時間を除いて、手を動かす時間で選んでください。",
+  "intent": "1件あたりの時間と件数から、全体の作業量を概算する",
+  "technique": "数量のケタ",
+  "decides": [
+   "作業量の概算",
+   "どの段階を優先して省くか"
+  ],
+  "slot": "ASIS.time_per_case",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "5分未満",
+     "label": "5分未満"
+    },
+    {
+     "v": "5〜30分",
+     "label": "5〜30分"
+    },
+    {
+     "v": "30分〜2時間",
+     "label": "30分〜2時間"
+    },
+    {
+     "v": "2時間以上",
+     "label": "2時間以上"
+    }
+   ]
+  },
+  "outputs": [
+   "BR",
+   "NFR"
+  ],
+  "importance": 3,
+  "costSec": 8,
+  "sources": [
+   "zip:Q-ASI-007",
+   "A:20_KPI"
+  ]
+ },
+ {
+  "id": "Q-FLW-007",
+  "phase": "04_仕事の流れ",
+  "step": 5,
+  "topic": "flow",
+  "persona": "全員",
+  "text": "その仕事のやり方は、人によって違いますか？",
+  "intent": "やり方のばらつきを知る。大きいなら、作る前に手順をそろえる必要がある",
+  "technique": "対置型",
+  "decides": [
+   "手順をそろえる作業が先か",
+   "画面の作りを1つに絞れるか"
+  ],
+  "slot": "ASIS.variation",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "みんな同じ",
+     "label": "みんな同じやり方"
+    },
+    {
+     "v": "少し違う",
+     "label": "少し違う"
+    },
+    {
+     "v": "人によって大きく違う",
+     "label": "人によって大きく違う"
+    }
+   ]
+  },
+  "patterns": [
+   "人によって大きく違う → 誰のやり方を正とするか聞く",
+   "みんな同じ → やり方のばらつきは原因ではない"
+  ],
+  "hypothesis": "人によってやり方が違うことが困りごとの原因（HC-VARIANCE）",
+  "falsifier": "全員が同じ手順でやっているなら、やり方のばらつきは原因ではない",
+  "outputs": [
+   "RULE",
+   "BP"
+  ],
+  "importance": 4,
+  "costSec": 8,
+  "sources": [
+   "C:VS3",
+   "A:12_仮説",
+   "zip:Q-PRB-004"
+  ]
+ },
+ {
+  "id": "Q-FLW-008",
+  "queuedOnly": true,
+  "phase": "04_仕事の流れ",
+  "step": 8,
+  "topic": "flow",
+  "persona": "全員",
+  "presupposes": [
+   "ASIS.steps"
+  ],
+  "text": "その流れの中で、手間やミスがいちばん出るのはどの段階ですか？",
+  "help": "さきほど書いた順番の中から選んでください。",
+  "intent": "流れの中で重点的に直す段階を絞る（具体の一件に紐づけて聞く）",
+  "technique": "時系列追跡",
+  "decides": [
+   "最初の版で直す段階",
+   "作らない段階"
+  ],
+  "slot": "ASIS.pain_step",
+  "input": {
+   "type": "text",
+   "placeholder": "例：Excelに書き写す段階"
+  },
+  "deepdive": [
+   "abstract"
+  ],
+  "outputs": [
+   "BP",
+   "BR"
+  ],
+  "importance": 4,
+  "costSec": 25,
+  "sources": [
+   "C:原則5",
+   "zip:Q-ASI-002",
+   "A:08_顧客課題"
+  ]
+ },
+ {
+  "id": "Q-FLW-009",
+  "phase": "04_仕事の流れ",
+  "step": 5,
+  "topic": "flow",
+  "persona": "全員",
+  "presupposes": [
+   "ASIS.steps"
+  ],
+  "text": "その流れの中で、変わってほしい段階はどこですか？",
+  "intent": "変えたい段階を本人の言葉で得る。手段ではなく段階で聞く",
+  "technique": "具体要求型",
+  "decides": [
+   "作る範囲",
+   "変えない段階との切り分け"
+  ],
+  "slot": "TOBE.change",
+  "input": {
+   "type": "text",
+   "placeholder": "例：電話を受けたあとの入力の段階"
+  },
+  "deepdive": [
+   "solutionOnly",
+   "abstract"
+  ],
+  "patterns": [
+   "手段（ツール名）だけ → その手段で何が楽になるかを聞く"
+  ],
+  "outputs": [
+   "BP",
+   "FR"
+  ],
+  "importance": 3,
+  "costSec": 30,
+  "sources": [
+   "zip:Q-TOB-001",
+   "A:04_発想の問い"
+  ]
+ },
+ {
+  "id": "Q-FLW-010",
+  "phase": "04_仕事の流れ",
+  "step": 5,
+  "topic": "flow",
+  "persona": "全員",
+  "text": "今のやり方で、変えたくないことはありますか？",
+  "help": "ない場合は、そのまま「ない」と書いてください。",
+  "intent": "変えない前提を先に聞き、後からの「それは困る」を防ぐ（除去と維持の対置）",
+  "technique": "対置型",
+  "decides": [
+   "作る範囲の外",
+   "守る手順"
+  ],
+  "slot": "TOBE.keep",
+  "input": {
+   "type": "text",
+   "placeholder": "例：お客様への最後の確認は、必ず電話でする"
+  },
+  "outputs": [
+   "CON",
+   "BP"
+  ],
+  "importance": 3,
+  "costSec": 25,
+  "sources": [
+   "A:04_発想の問い",
+   "zip:Q-TOB-003",
+   "D:§4 #19"
+  ]
+ },
+ {
+  "id": "Q-RUL-001",
+  "phase": "05_決まりごと",
+  "step": 5,
+  "topic": "rules",
+  "persona": "全員",
+  "text": "その仕事には、誰かの許可をもらう段階がありますか？",
+  "intent": "許可（承認）の有無を知り、承認待ちが原因かを判定する",
+  "technique": "運用の問い",
+  "decides": [
+   "承認の流れを作るか",
+   "待ちが長い仮説の可否"
+  ],
+  "slot": "RULE.approval",
+  "input": {
+   "type": "yesno"
+  },
+  "mandatory": {
+   "slot": "PRJ.category",
+   "hasAny": [
+    "申請・承認"
+   ]
+  },
+  "followups": [
+   {
+    "when": {
+     "slot": "RULE.approval",
+     "eq": true
+    },
+    "ask": "Q-RUL-002",
+    "why": "許可がある → 何段あるかを聞く"
+   }
+  ],
+  "patterns": [
+   "はい → 段数と差し戻しの流れを聞く",
+   "いいえ → 承認待ちは原因ではない"
+  ],
+  "hypothesis": "許可を待つ時間が困りごとの原因（HC-WAIT）",
+  "falsifier": "誰の許可もいらない仕事なら、承認待ちは原因ではない",
+  "outputs": [
+   "RULE",
+   "ROLE",
+   "BP"
+  ],
+  "importance": 4,
+  "costSec": 8,
+  "sources": [
+   "zip:Q-RUL-001",
+   "C:VS3",
+   "A:12_仮説"
+  ]
+ },
+ {
+  "id": "Q-RUL-002",
+  "queuedOnly": true,
+  "phase": "05_決まりごと",
+  "step": 8,
+  "topic": "rules",
+  "persona": "全員",
+  "text": "許可は、何段階でもらいますか？",
+  "intent": "許可の段数を知り、画面の流れと待ちの長さを見積もる",
+  "technique": "運用の問い",
+  "decides": [
+   "承認の流れの段数",
+   "条件で段数が変わる場合の分岐"
+  ],
+  "slot": "RULE.approval_levels",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "1段",
+     "label": "1段（1人が許可する）"
+    },
+    {
+     "v": "2段",
+     "label": "2段"
+    },
+    {
+     "v": "3段以上",
+     "label": "3段以上"
+    },
+    {
+     "v": "金額や内容で変わる",
+     "label": "金額や内容によって変わる"
+    }
+   ]
+  },
+  "followups": [
+   {
+    "when": {
+     "slot": "RULE.approval_levels",
+     "in": [
+      "1段",
+      "2段",
+      "3段以上",
+      "金額や内容で変わる"
+     ]
+    },
+    "ask": "Q-RUL-003",
+    "why": "段数がわかった → 差し戻しのときの流れを聞く"
+   }
+  ],
+  "patterns": [
+   "金額や内容で変わる → 分かれ目の条件（金額など）を後で聞く"
+  ],
+  "outputs": [
+   "RULE",
+   "BP",
+   "ROLE"
+  ],
+  "importance": 3,
+  "costSec": 10,
+  "sources": [
+   "zip:Q-RUL-001",
+   "D:§1-3"
+  ]
+ },
+ {
+  "id": "Q-RUL-003",
+  "queuedOnly": true,
+  "phase": "05_決まりごと",
+  "step": 8,
+  "topic": "rules",
+  "persona": "全員",
+  "presupposes": [
+   "RULE.approval_levels"
+  ],
+  "text": "許可がもらえなかったとき、その後はどうなりますか？",
+  "intent": "差し戻しの流れを決める（決まっていなければ後で決める事項にする）",
+  "technique": "運用の問い",
+  "decides": [
+   "差し戻しの流れ",
+   "再提出の記録の残し方"
+  ],
+  "slot": "RULE.reject_flow",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "最初からやり直し",
+     "label": "最初からやり直す"
+    },
+    {
+     "v": "直して同じ人に戻す",
+     "label": "直して、同じ人にもう一度見てもらう"
+    },
+    {
+     "v": "決まっていない",
+     "label": "決まっていない"
+    }
+   ]
+  },
+  "outputs": [
+   "RULE",
+   "BP"
+  ],
+  "importance": 2,
+  "costSec": 10,
+  "sources": [
+   "zip:Q-RUL-001",
+   "D:§4 #14"
+  ]
+ },
+ {
+  "id": "Q-RUL-004",
+  "phase": "05_決まりごと",
+  "step": 5,
+  "topic": "rules",
+  "persona": "全員",
+  "text": "その仕事には、金額の計算や合否の判定の決まりがありますか？",
+  "intent": "計算・判定のルールの有無を知り、決まった式があるか確かめる",
+  "technique": "運用の問い",
+  "decides": [
+   "計算・判定を画面で扱うか",
+   "計算の中身を聞くか"
+  ],
+  "slot": "RULE.calc",
+  "input": {
+   "type": "yesno"
+  },
+  "followups": [
+   {
+    "when": {
+     "slot": "RULE.calc",
+     "eq": true
+    },
+    "ask": "Q-RUL-005",
+    "why": "計算・判定がある → 中身を具体例で聞く"
+   }
+  ],
+  "outputs": [
+   "RULE",
+   "FR"
+  ],
+  "importance": 3,
+  "costSec": 8,
+  "sources": [
+   "zip:Q-RUL-002",
+   "zip:Q-RUL-003"
+  ]
+ },
+ {
+  "id": "Q-RUL-005",
+  "queuedOnly": true,
+  "phase": "05_決まりごと",
+  "step": 8,
+  "topic": "rules",
+  "persona": "全員",
+  "text": "その計算や判定を、実際の1件の数字で教えてください。",
+  "help": "一般的な説明ではなく、実際にあった1件で書いてください。",
+  "intent": "計算・判定の中身を、具体の数字で得る（端数・条件の落とし穴を拾う）",
+  "technique": "具体要求型",
+  "decides": [
+   "計算式",
+   "端数処理",
+   "受け入れの確認例"
+  ],
+  "slot": "RULE.calc_detail",
+  "input": {
+   "type": "longtext",
+   "placeholder": "例：10,000円の注文で、会員なら10%引き。端数は切り捨て"
+  },
+  "epistemic": true,
+  "deepdive": [
+   "abstract"
+  ],
+  "outputs": [
+   "RULE",
+   "AC"
+  ],
+  "importance": 3,
+  "costSec": 60,
+  "sources": [
+   "zip:Q-RUL-003",
+   "C:原則5"
+  ]
+ },
+ {
+  "id": "Q-RUL-006",
+  "phase": "05_決まりごと",
+  "step": 5,
+  "topic": "rules",
+  "persona": "全員",
+  "text": "いつもと違う対応（例外）は、どのくらいありますか？",
+  "intent": "例外の頻度から、ルールの複雑さが困りごとの原因かを判定する",
+  "technique": "数量のケタ",
+  "decides": [
+   "例外を画面で扱うか、人の判断に残すか",
+   "決まりが複雑という仮説の可否"
+  ],
+  "slot": "RULE.exception_freq",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "ほぼない",
+     "label": "ほぼない"
+    },
+    {
+     "v": "月に数回",
+     "label": "月に数回"
+    },
+    {
+     "v": "毎日のようにある",
+     "label": "毎日のようにある"
+    }
+   ]
+  },
+  "patterns": [
+   "毎日のようにある → 例外を種類ごとに具体例で聞く",
+   "ほぼない → 例外は人の判断に任せてよい"
+  ],
+  "hypothesis": "決まりごと・例外の複雑さが困りごとの原因（HC-RULE）",
+  "falsifier": "例外がほぼないなら、決まりの複雑さは原因ではない",
+  "outputs": [
+   "RULE",
+   "BR"
+  ],
+  "importance": 4,
+  "costSec": 8,
+  "sources": [
+   "zip:Q-RUL-005",
+   "C:VS3",
+   "A:12_仮説"
+  ]
+ },
+ {
+  "id": "Q-RUL-007",
+  "phase": "05_決まりごと",
+  "step": 5,
+  "topic": "rules",
+  "persona": "全員",
+  "text": "最近あった「いつもと違う対応」を、1つ教えてください。",
+  "help": "「例外はない」場合は、そのように書いてください。",
+  "intent": "例外の中身を、実際にあった一件で得る（一般論の例外は集めない）",
+  "technique": "具体要求型",
+  "decides": [
+   "例外を扱う範囲",
+   "例外のときの判断者"
+  ],
+  "slot": "RULE.exceptions",
+  "input": {
+   "type": "longtext",
+   "placeholder": "例：先月、取引先の都合で締め日のあとに注文が変わった"
+  },
+  "mandatory": true,
+  "epistemic": true,
+  "deepdive": [
+   "abstract"
+  ],
+  "patterns": [
+   "日付・件名がある → 事実として採用",
+   "「場合による」だけ → 最近の一件を聞く"
+  ],
+  "outputs": [
+   "RULE",
+   "BP"
+  ],
+  "importance": 4,
+  "costSec": 60,
+  "sources": [
+   "zip:Q-RUL-005",
+   "C:原則5",
+   "D:§4 #9"
+  ]
+ },
+ {
+  "id": "Q-RUL-008",
+  "phase": "05_決まりごと",
+  "step": 5,
+  "topic": "rules",
+  "persona": "全員",
+  "text": "その仕事には、期限や締め日の決まりがありますか？",
+  "intent": "締め日・期限の有無を知り、日付のルールと通知の要否を判断する",
+  "technique": "運用の問い",
+  "decides": [
+   "期限の管理や通知を作るか",
+   "日付に関する確認例"
+  ],
+  "slot": "RULE.deadlines",
+  "input": {
+   "type": "yesno"
+  },
+  "outputs": [
+   "RULE",
+   "FR"
+  ],
+  "importance": 2,
+  "costSec": 8,
+  "sources": [
+   "zip:Q-RUL-004"
+  ]
+ },
+ {
+  "id": "Q-RUL-009",
+  "phase": "05_決まりごと",
+  "step": 5,
+  "topic": "rules",
+  "persona": "全員",
+  "text": "入力する項目は、すべて必ず埋める決まりですか？",
+  "intent": "必須項目の範囲を決める。空欄のまま完了する不具合と、書けない人の離脱を防ぐ",
+  "technique": "運用の問い",
+  "decides": [
+   "入力チェックの厳しさ",
+   "空欄のときの案内"
+  ],
+  "slot": "RULE.required_fields",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "全部必須",
+     "label": "全部必ず埋める"
+    },
+    {
+     "v": "一部だけ必須",
+     "label": "一部だけ必ず埋める"
+    },
+    {
+     "v": "空欄でもよい",
+     "label": "空欄でもよい"
+    }
+   ]
+  },
+  "patterns": [
+   "全部必須 → 書けない人が止まらないかを後で確認",
+   "一部だけ → どの項目かを聞く"
+  ],
+  "outputs": [
+   "RULE",
+   "AC"
+  ],
+  "importance": 3,
+  "costSec": 10,
+  "sources": [
+   "D:§4 #9",
+   "D:§3 #16",
+   "D:§3 #26",
+   "zip:Q-RUL-006"
+  ]
+ },
+ {
+  "id": "Q-ACC-001",
+  "phase": "15_優先と完成",
+  "step": 5,
+  "topic": "acceptance",
+  "persona": "全員",
+  "text": "最初の版に入れたいことを、大事な順にタップしてください。",
+  "help": "上位3つまででかまいません。選ばなかったものは「あとで」になります。",
+  "intent": "最初の版に必ず入れることを、順番付きで決める（全部必須にしない）",
+  "technique": "選択の問い",
+  "decides": [
+   "最初の版の範囲",
+   "あとに回すこと"
+  ],
+  "slot": "PRI.must",
+  "input": {
+   "type": "rank",
+   "options": [
+    {
+     "v": "flow",
+     "label": "仕事の流れを順番どおりに進められる"
+    },
+    {
+     "v": "data",
+     "label": "情報を記録して一覧で見られる"
+    },
+    {
+     "v": "roles",
+     "label": "人ごとに見える範囲を分ける"
+    },
+    {
+     "v": "output",
+     "label": "画面・書類・お知らせの出力"
+    },
+    {
+     "v": "integration",
+     "label": "ほかのサービスとのつながり"
+    },
+    {
+     "v": "nfr",
+     "label": "たくさんの人が使っても安全・安定"
+    },
+    {
+     "v": "toc",
+     "label": "一般の利用者が迷わず使える"
+    },
+    {
+     "v": "ai",
+     "label": "AIの機能"
+    },
+    {
+     "v": "migration",
+     "label": "今ある情報の移しかえ"
+    }
+   ],
+   "top": 3
+  },
+  "mandatory": true,
+  "patterns": [
+   "上位が1つだけ明確 → 最初の版をそこに絞る",
+   "全部同じ重さ → 範囲が決まっていないので、最初の版の範囲を聞く"
+  ],
+  "outputs": [
+   "PRI",
+   "FR"
+  ],
+  "importance": 5,
+  "costSec": 40,
+  "sources": [
+   "A:14_比較評価",
+   "STD:MoSCoW",
+   "zip:Q-PRI-001"
+  ]
+ },
+ {
+  "id": "Q-ACC-002",
+  "phase": "15_優先と完成",
+  "step": 5,
+  "topic": "acceptance",
+  "persona": "全員",
+  "text": "最初に使い始める版は、どこまで作りますか？",
+  "intent": "最初の版の大きさを決める。「全部そろえてから」は期限と範囲の衝突を起こしやすい",
+  "technique": "運用の問い",
+  "decides": [
+   "最初の版の範囲",
+   "段階的に出すか"
+  ],
+  "slot": "PRI.first_release",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "一番大事な機能1つだけ",
+     "label": "一番大事な機能1つだけ"
+    },
+    {
+     "v": "主な機能をひととおり",
+     "label": "主な機能をひととおり"
+    },
+    {
+     "v": "全部そろえてから",
+     "label": "全部そろえてから使い始める"
+    }
+   ]
+  },
+  "hypothesis": "全部そろえるより、一番大事な1つから使い始めるほうが早く確かめられる",
+  "falsifier": "1つだけでは仕事が回らない（ほかが揃わないと使えない）なら、ひととおりを最初の版にする",
+  "outputs": [
+   "PRI",
+   "CON"
+  ],
+  "importance": 4,
+  "costSec": 10,
+  "sources": [
+   "zip:Q-PRI-002",
+   "A:04_発想の問い",
+   "D:§4 #19"
+  ]
+ },
+ {
+  "id": "Q-ACC-003",
+  "phase": "15_優先と完成",
+  "step": 5,
+  "topic": "acceptance",
+  "persona": "全員",
+  "text": "「ここまでできたら完成」と言える状態を、書いてください。",
+  "help": "できれば「誰が」「何を」「どうなっていれば」で書いてください。",
+  "intent": "完成の定義を先に言葉にし、範囲が少しずつ増えるのを防ぐ（採否テスト）",
+  "technique": "採否テスト",
+  "decides": [
+   "受け入れの確認項目",
+   "範囲の固定"
+  ],
+  "slot": "AC.done_definition",
+  "input": {
+   "type": "longtext",
+   "placeholder": "例：1件の注文を受けてから請求書を出すまで、手作業なしで通せる"
+  },
+  "mandatory": true,
+  "epistemic": true,
+  "deepdive": [
+   "abstract"
+  ],
+  "patterns": [
+   "確認できる状態 → そのまま確認項目にする",
+   "「使いやすければ」など → 場面で言い直してもらう"
+  ],
+  "hypothesis": "完成の状態は、確かめられる形で言える",
+  "falsifier": "「いい感じになれば」など確かめられない表現なら、完成を確かめる方法が決まっていない",
+  "outputs": [
+   "AC"
+  ],
+  "importance": 5,
+  "costSec": 60,
+  "sources": [
+   "D:§4 #19",
+   "D:§3 #03",
+   "D:§3 #05",
+   "D:§3 #21",
+   "A:13_検証"
+  ]
+ },
+ {
+  "id": "Q-ACC-004",
+  "phase": "15_優先と完成",
+  "step": 5,
+  "topic": "acceptance",
+  "persona": "全員",
+  "text": "完成したかどうかは、どうやって確かめますか？",
+  "intent": "確かめ方を決め、最後の数日に小さな修正が集中するのを防ぐ",
+  "technique": "運用の問い",
+  "decides": [
+   "受け入れの手順",
+   "確認用の例やチェックリストを作るか"
+  ],
+  "slot": "AC.check_method",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "実際に通しで使ってみる",
+     "label": "実際に通しで使ってみる"
+    },
+    {
+     "v": "チェックリストで確認",
+     "label": "チェックリストで確認する"
+    },
+    {
+     "v": "数字で確認",
+     "label": "数字で確認する"
+    },
+    {
+     "v": "決めていない",
+     "label": "まだ決めていない"
+    }
+   ]
+  },
+  "mandatory": true,
+  "outputs": [
+   "AC"
+  ],
+  "importance": 4,
+  "costSec": 10,
+  "sources": [
+   "D:§4 #16",
+   "D:§3 #26",
+   "D:§3 #27",
+   "zip:Q-ACC-002"
+  ]
+ },
+ {
+  "id": "Q-ACC-005",
+  "phase": "15_優先と完成",
+  "step": 5,
+  "topic": "acceptance",
+  "persona": "全員",
+  "text": "直したいところは、どの形で伝えるのが楽ですか？",
+  "intent": "修正の伝え方を決め、依頼の粒度をそろえる（1件1か所にする）",
+  "technique": "運用の問い",
+  "decides": [
+   "修正を受け付ける窓口と形式",
+   "一覧の様式を用意するか"
+  ],
+  "slot": "AC.feedback_style",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "チャットで1件ずつ",
+     "label": "チャットで1件ずつ"
+    },
+    {
+     "v": "一覧にまとめて",
+     "label": "一覧にまとめて"
+    },
+    {
+     "v": "打ち合わせで",
+     "label": "打ち合わせで話す"
+    }
+   ]
+  },
+  "outputs": [
+   "CR"
+  ],
+  "importance": 2,
+  "costSec": 8,
+  "sources": [
+   "D:§3 #01",
+   "D:§3 #26",
+   "D:§4 #16"
+  ]
+ },
+ {
+  "id": "Q-ACC-006",
+  "phase": "15_優先と完成",
+  "step": 5,
+  "topic": "constraints",
+  "persona": "全員",
+  "text": "使い始めたい時期は、いつ頃ですか？",
+  "intent": "使い始めたい時期のおおまかなケタを知る",
+  "technique": "数量のケタ",
+  "decides": [
+   "最初の版の範囲",
+   "作り方の選定（早さ重視か）"
+  ],
+  "slot": "PRJ.deadline",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "1か月以内",
+     "label": "1か月以内"
+    },
+    {
+     "v": "3か月以内",
+     "label": "3か月以内"
+    },
+    {
+     "v": "半年以内",
+     "label": "半年以内"
+    },
+    {
+     "v": "1年以内",
+     "label": "1年以内"
+    },
+    {
+     "v": "決まっていない",
+     "label": "決まっていない"
+    }
+   ]
+  },
+  "mandatory": true,
+  "patterns": [
+   "1か月以内 → 最初の版を小さく絞る",
+   "決まっていない → 理由は聞かない"
+  ],
+  "outputs": [
+   "CON"
+  ],
+  "importance": 4,
+  "costSec": 8,
+  "sources": [
+   "D:§4 #13",
+   "zip:Q-PRJ-005",
+   "D:§3 #17"
+  ]
+ },
+ {
+  "id": "Q-ACC-007",
+  "phase": "15_優先と完成",
+  "step": 5,
+  "topic": "constraints",
+  "persona": "全員",
+  "skipIf": {
+   "slot": "PRJ.deadline",
+   "eq": "決まっていない"
+  },
+  "presupposes": [
+   "PRJ.deadline"
+  ],
+  "text": "その時期にしたい理由は、どれに近いですか？",
+  "intent": "期限の理由を分け、動かせる期限か動かせない期限かを見分ける",
+  "technique": "選択の問い",
+  "decides": [
+   "期限を動かせるか",
+   "段階的に出す案を出すか"
+  ],
+  "slot": "PRJ.deadline_reason",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "制度・法令の開始",
+     "label": "制度や法令の開始"
+    },
+    {
+     "v": "繁忙期・季節",
+     "label": "繁忙期や季節"
+    },
+    {
+     "v": "入学・入社・開講",
+     "label": "入学・入社・開講"
+    },
+    {
+     "v": "イベント・発表",
+     "label": "イベントや発表"
+    },
+    {
+     "v": "社内の計画",
+     "label": "社内の計画"
+    },
+    {
+     "v": "特にない",
+     "label": "特にない"
+    }
+   ]
+  },
+  "followups": [
+   {
+    "when": {
+     "slot": "PRJ.deadline_reason",
+     "in": [
+      "制度・法令の開始",
+      "繁忙期・季節",
+      "入学・入社・開講",
+      "イベント・発表",
+      "社内の計画"
+     ]
+    },
+    "ask": "Q-ACC-008",
+    "why": "理由がある → 間に合わないときの影響を聞く"
+   }
+  ],
+  "outputs": [
+   "CON"
+  ],
+  "importance": 3,
+  "costSec": 10,
+  "sources": [
+   "D:§4 #13",
+   "D:§3 #01",
+   "D:§3 #17"
+  ]
+ },
+ {
+  "id": "Q-ACC-008",
+  "queuedOnly": true,
+  "phase": "15_優先と完成",
+  "step": 8,
+  "topic": "constraints",
+  "persona": "全員",
+  "text": "間に合わなかったら、何が起きますか？",
+  "help": "何も起きなければ、そう書いてください。",
+  "intent": "間に合わない場合の損害を具体で聞き、期限が本物か目安かを判別する",
+  "technique": "具体要求型",
+  "decides": [
+   "範囲を削るか期限を延ばすか",
+   "最低限の完成の線"
+  ],
+  "slot": "PRJ.cost_of_delay",
+  "input": {
+   "type": "text",
+   "placeholder": "例：開講日に使えず、受講生に紙で配ることになる"
+  },
+  "epistemic": true,
+  "deepdive": [
+   "abstract"
+  ],
+  "outputs": [
+   "CON",
+   "PRI"
+  ],
+  "importance": 3,
+  "costSec": 30,
+  "sources": [
+   "D:§4 #13",
+   "A:04_発想の問い",
+   "zip:Q-PRI-003"
+  ]
+ },
+ {
+  "id": "Q-ACC-009",
+  "phase": "15_優先と完成",
+  "step": 5,
+  "topic": "core",
+  "persona": "全員",
+  "text": "従わなければならない資料（台本・規程・手引きなど）はありますか？",
+  "help": "例：授業の台本、社内規程、役所の様式、参考にするサイト",
+  "intent": "準拠すべき資料の有無を最初に確かめる。後からの項目名・順序の作り直しを防ぐ",
+  "technique": "具体要求型",
+  "decides": [
+   "資料と画面・出力の対応表を作るか",
+   "最新版の入手先を聞くか"
+  ],
+  "slot": "PRJ.conformance_docs",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "ある",
+     "label": "ある"
+    },
+    {
+     "v": "ない",
+     "label": "ない"
+    }
+   ]
+  },
+  "mandatory": {
+   "slot": "PRJ.category",
+   "hasAny": [
+    "学習・ワーク",
+    "診断・自己理解",
+    "申請・承認"
+   ]
+  },
+  "followups": [
+   {
+    "when": {
+     "slot": "PRJ.conformance_docs",
+     "eq": "ある"
+    },
+    "ask": "Q-ACC-010",
+    "why": "資料がある → どこまで合わせるかを聞く"
+   }
+  ],
+  "patterns": [
+   "ある → 最新版の場所と、項目名・順序まで合わせるかを聞く",
+   "ない → 用語の統一ルールだけ確認"
+  ],
+  "hypothesis": "従うべき資料があり、最初に共有されていない",
+  "falsifier": "資料がないと本人が確かめて答えるなら、準拠の確認は不要",
+  "outputs": [
+   "CON",
+   "AC"
+  ],
+  "importance": 4,
+  "costSec": 10,
+  "sources": [
+   "D:§4 #7",
+   "D:§3 #05",
+   "D:§3 #07",
+   "D:§3 #22",
+   "zip:Q-GOL-007"
+  ]
+ },
+ {
+  "id": "Q-ACC-010",
+  "queuedOnly": true,
+  "phase": "15_優先と完成",
+  "step": 8,
+  "topic": "core",
+  "persona": "全員",
+  "presupposes": [
+   "PRJ.conformance_docs"
+  ],
+  "text": "その資料に、どこまで合わせる必要がありますか？",
+  "intent": "準拠の度合いを決める。「言葉や順番まで」なら、対応表と変更時の連絡が必要",
+  "technique": "選択の問い",
+  "decides": [
+   "項目名・順序を資料と1対1にするか",
+   "資料が変わったときの更新手順"
+  ],
+  "slot": "PRJ.conformance_level",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "言葉や順番まで合わせる",
+     "label": "言葉や順番まで合わせる"
+    },
+    {
+     "v": "中身が合っていればよい",
+     "label": "中身が合っていればよい"
+    },
+    {
+     "v": "参考程度",
+     "label": "参考程度"
+    }
+   ]
+  },
+  "outputs": [
+   "CON",
+   "AC"
+  ],
+  "importance": 3,
+  "costSec": 10,
+  "sources": [
+   "D:§4 #7",
+   "D:§3 #22",
+   "D:§3 #23"
+  ]
+ },
+ {
+  "id": "Q-CHG-001",
+  "phase": "16_修正依頼",
+  "step": 5,
+  "topic": "change",
+  "persona": "全員",
+  "text": "今回直したいのは、どんな内容ですか？",
+  "help": "当てはまるものすべてを選んでください。",
+  "intent": "直したい内容を種類で仕分け、1か所の修正と構成変更を分ける。まとめて来た依頼を分解する",
+  "technique": "選択の問い",
+  "decides": [
+   "修正の大きさ（1か所の直しか、構成の変更か）",
+   "次に聞くこと"
+  ],
+  "slot": "CR.kind",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "画面の言葉",
+     "label": "画面の言葉（文言・呼び名）"
+    },
+    {
+     "v": "使いやすさ",
+     "label": "使いやすさ（ボタンの場所・見え方）"
+    },
+    {
+     "v": "流れ・構成",
+     "label": "流れや構成（順番・区分）"
+    },
+    {
+     "v": "データの引き継ぎ",
+     "label": "保存や引き継ぎ"
+    },
+    {
+     "v": "出力（PDF等）",
+     "label": "出力（PDFなど）"
+    },
+    {
+     "v": "AIの出力",
+     "label": "AIの出力"
+    },
+    {
+     "v": "期限・費用・公開方法",
+     "label": "期限・費用・公開のしかた"
+    },
+    {
+     "v": "資料との整合",
+     "label": "資料に合わせる"
+    },
+    {
+     "v": "不具合",
+     "label": "不具合（おかしな動き）"
+    }
+   ]
+  },
+  "mandatory": {
+   "slot": "PRJ.kind",
+   "eq": "改修"
+  },
+  "followups": [
+   {
+    "when": {
+     "slot": "CR.kind",
+     "count_gte": 3
+    },
+    "ask": "Q-CHG-005",
+    "why": "種類が多い → 先に直す1か所に絞る"
+   }
+  ],
+  "patterns": [
+   "画面の言葉だけ → 1か所ずつの直し",
+   "流れ・構成／資料との整合 → 過去の決定とぶつからないか確認",
+   "3種類以上 → 1つずつに分けて進める"
+  ],
+  "hypothesis": "直したい内容は、言葉・見え方などの小さな直しが大半である",
+  "falsifier": "流れ・構成や公開方法が含まれるなら、大きな変更として別に見積もる",
+  "outputs": [
+   "CR"
+  ],
+  "importance": 4,
+  "costSec": 20,
+  "sources": [
+   "D:§3",
+   "D:§3 #01",
+   "D:§3 #22",
+   "D:§3 #23"
+  ]
+ },
+ {
+  "id": "Q-CHG-002",
+  "phase": "16_修正依頼",
+  "step": 5,
+  "topic": "change",
+  "persona": "全員",
+  "text": "その修正は、どのくらい急ぎですか？",
+  "intent": "急ぎの度合いを決め、順番を付ける。不具合と言葉の直しを同じ扱いにしない",
+  "technique": "運用の問い",
+  "decides": [
+   "直す順番",
+   "まとめて直すか、すぐ直すか"
+  ],
+  "slot": "CR.urgency",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "手が空いたとき",
+     "label": "手が空いたとき"
+    },
+    {
+     "v": "今週中",
+     "label": "今週中"
+    },
+    {
+     "v": "すぐ",
+     "label": "すぐ"
+    }
+   ]
+  },
+  "patterns": [
+   "すぐ → 不具合か期限の絡みかを確認"
+  ],
+  "outputs": [
+   "CR"
+  ],
+  "importance": 3,
+  "costSec": 8,
+  "sources": [
+   "D:§3 #26",
+   "zip:Q-CHG-002"
+  ]
+ },
+ {
+  "id": "Q-CHG-003",
+  "phase": "16_修正依頼",
+  "step": 5,
+  "topic": "change",
+  "persona": "全員",
+  "text": "直したい場所は、どの画面や段階ですか？",
+  "help": "画面の名前や、どの順番で出てくる画面かを書いてください。",
+  "intent": "修正の対象を1か所に特定する（粒度をそろえる）",
+  "technique": "具体要求型",
+  "decides": [
+   "修正の対象と範囲",
+   "同じ表示がほかにもないかの確認"
+  ],
+  "slot": "CR.where",
+  "input": {
+   "type": "text",
+   "placeholder": "例：申込画面の「確認する」ボタン"
+  },
+  "deepdive": [
+   "abstract"
+  ],
+  "outputs": [
+   "CR"
+  ],
+  "importance": 3,
+  "costSec": 30,
+  "sources": [
+   "D:§3 #01",
+   "D:§3 #26",
+   "zip:Q-CHG-001"
+  ]
+ },
+ {
+  "id": "Q-CHG-004",
+  "phase": "16_修正依頼",
+  "step": 5,
+  "topic": "change",
+  "persona": "全員",
+  "text": "その修正は、これまでに決めたことと、ぶつかりそうですか？",
+  "intent": "過去の決定との衝突を先に確かめる。決定が覆る修正は、別に確認する",
+  "technique": "運用の問い",
+  "decides": [
+   "決めた人に確認するか",
+   "ほかの資料も直すか"
+  ],
+  "slot": "CR.conflict",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "ぶつからない",
+     "label": "ぶつからない"
+    },
+    {
+     "v": "ぶつかるかもしれない",
+     "label": "ぶつかるかもしれない"
+    },
+    {
+     "v": "わからない",
+     "label": "わからない"
+    }
+   ]
+  },
+  "patterns": [
+   "ぶつかるかもしれない → 何と、いつ決めたかを聞く"
+  ],
+  "outputs": [
+   "CR",
+   "ADR"
+  ],
+  "importance": 3,
+  "costSec": 10,
+  "sources": [
+   "D:§3 #06",
+   "D:§3 #22",
+   "zip:Q-CHG-003"
+  ]
+ },
+ {
+  "id": "Q-CHG-005",
+  "queuedOnly": true,
+  "phase": "16_修正依頼",
+  "step": 8,
+  "topic": "change",
+  "persona": "全員",
+  "presupposes": [
+   "CR.kind"
+  ],
+  "text": "いちばん先に直したい場所を、1つだけ教えてください。",
+  "intent": "複数の種類が一度に来たとき、先に直す1か所へ絞る（1件1か所にそろえる）",
+  "technique": "選択の問い",
+  "decides": [
+   "最初に直す場所",
+   "残りの依頼を分ける順番"
+  ],
+  "slot": "CR.where",
+  "input": {
+   "type": "text",
+   "placeholder": "例：申込画面の「確認する」ボタン"
+  },
+  "outputs": [
+   "CR"
+  ],
+  "importance": 3,
+  "costSec": 25,
+  "sources": [
+   "D:§3 #01",
+   "D:§3 #26"
+  ]
+ }
+]
