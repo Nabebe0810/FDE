@@ -1,84 +1,515 @@
 [
-  {"id": "Q-INT-001", "order": 1, "phase": "00_受付", "step": 1, "topic": "core", "persona": "全員",
-   "text": "今回、どんなことを相談したいですか？思いつくまま書いてください。",
-   "help": "うまくまとめなくて大丈夫です。例：「申込の受付を電話でしていて、聞き間違いが多い」",
-   "intent": "相談の原文を得る（以後の分類・深掘りの起点。原文は書き換えない）", "technique": "契約の問い",
-   "decides": ["以後の深掘りの方向（困りごと／手段／成果）"],
-   "slot": "PRJ.request_raw", "input": {"type": "longtext", "placeholder": "自由に書いてください", "minChars": 0},
-   "epistemic": true, "deepdive": ["solutionOnly", "abstract"], "copyTo": [{"det": "solutionOnly", "slot": "BR.means"}],
-   "patterns": ["困りごとが書かれている → 困りごとの種類へ", "手段（アプリ・自動化など）だけ → 元の困りごとを聞く", "短い・抽象的 → 最近の一件を聞く"],
-   "hypothesis": "相談の中に、困りごと・原因・期待する成果・手段が混ざっている", "falsifier": "困りごとと成果が具体的に書かれていれば、手段の深掘りは不要",
-   "outputs": ["BR.problem", "BR.means"], "importance": 5, "mandatory": true, "costSec": 120,
-   "sources": ["C:VS1", "C:原則4", "A:04_発想の問い", "zip:Q-PRJ-001"]},
-  {"id": "Q-INT-002", "order": 2, "phase": "00_受付", "step": 1, "topic": "core", "persona": "全員",
-   "text": "今回は、新しく作る話と今あるものを直す話のどちらに近いですか？",
-   "intent": "新規か改修かで、聞く範囲（移行・修正依頼）を切り替える", "technique": "選択の問い",
-   "decides": ["移行・修正依頼の論点を出すか"], "slot": "PRJ.kind",
-   "input": {"type": "single", "options": [{"v": "新規", "label": "新しく作りたい"}, {"v": "改修", "label": "今あるものを直したい・足したい"}, {"v": "未定", "label": "まだ決めていない"}]},
-   "outputs": ["PRJ.kind"], "importance": 4, "mandatory": true, "costSec": 8, "sources": ["D:§3", "zip:15_変更要求"]},
-  {"id": "Q-INT-003", "order": 3, "phase": "00_受付", "step": 1, "topic": "core", "persona": "全員",
-   "text": "これを使うのは、どんな人ですか？",
-   "intent": "社内業務／社外／一般の個人（toC）を判定し、以降の分岐を決める", "technique": "選択の問い",
-   "decides": ["ログイン・公開方法の候補", "利用者体験の論点を出すか"], "slot": "PRJ.audience",
-   "input": {"type": "single", "options": [{"v": "社内", "label": "社内の人だけ"}, {"v": "社外の取引先", "label": "取引先など、決まった社外の人"}, {"v": "一般の個人", "label": "一般の人（お客様・受講生など）"}, {"v": "社内と社外", "label": "社内と社外の両方"}]},
-   "outputs": ["PRJ.audience", "NFR"], "importance": 5, "mandatory": true, "costSec": 10, "sources": ["zip:Q-PRJ-002", "D:§5"]},
-  {"id": "Q-INT-004", "order": 4, "phase": "00_受付", "step": 1, "topic": "core", "persona": "全員",
-   "text": "作りたいものに近いものを、すべて選んでください。", "help": "例：「予約を受け付けて、一覧で見たい」「請求書の作成を楽にしたい」",
-   "intent": "案件の型を決め、関係する論点を自動で有効にする", "technique": "選択の問い",
-   "decides": ["有効にする論点（仕事の流れ・決まりごと等）"], "slot": "PRJ.category",
-   "input": {"type": "multi", "options": [
-     {"v": "記録・一覧・集計", "label": "記録をつけて一覧・集計する"}, {"v": "申請・承認", "label": "申請して許可をもらう"},
-     {"v": "予約・受付", "label": "予約や申込を受け付ける"}, {"v": "顧客管理・営業", "label": "お客様や営業の管理"},
-     {"v": "学習・ワーク", "label": "学ぶ・ワークに取り組む"}, {"v": "診断・自己理解", "label": "診断・自分を知るツール"},
-     {"v": "データ分析・レポート", "label": "数字を集めて、グラフや報告にまとめる"}, {"v": "情報発信・集客", "label": "ホームページやSNSで知らせて、お客様を集める"},
-     {"v": "在庫・発注", "label": "在庫や発注の管理"}, {"v": "その他", "label": "どれでもない"}]},
-   "outputs": ["PRJ.category"], "importance": 5, "mandatory": true, "costSec": 20, "sources": ["D:§5", "B:§2"]},
-  {"id": "Q-INT-005", "order": 6, "phase": "00_受付", "step": 2, "topic": "problem", "persona": "全員",
-   "text": "いま困っていることに近いものを、すべて選んでください。",
-   "intent": "困りごとを選択式で確実に分類する（自由記述の意味推定はしない）", "technique": "選択の問い",
-   "decides": ["原因の仮説群を立てるか", "成果の測り方の候補"], "slot": "BR.problem_type",
-   "input": {"type": "multi", "options": [
-     {"v": "時間がかかる", "label": "時間がかかる"}, {"v": "ミス・漏れがある", "label": "ミスや漏れがある"}, {"v": "情報が散らばっている", "label": "情報があちこちにある"},
-     {"v": "人に頼っている", "label": "特定の人しかできない"}, {"v": "連絡・確認が遅い", "label": "連絡や確認が遅い"}, {"v": "お客様が増えない・離れる", "label": "お客様が増えない・離れる"},
-     {"v": "状況が見えない", "label": "今どうなっているか見えない"}, {"v": "新しいことができない", "label": "やりたいことが今の道具でできない"}, {"v": "その他", "label": "どれでもない"}]},
-   "outputs": ["BR.problem_type"], "importance": 5, "mandatory": true, "costSec": 20, "sources": ["A:08_顧客課題", "C:VS1"]},
-  {"id": "Q-INT-006", "order": 7, "phase": "00_受付", "step": 2, "topic": "problem", "persona": "全員",
-   "text": "その中でいちばん困っていることを、具体的に書いてください。",
-   "help": "例：「月末に請求書を3人で作っていて、毎回2〜3件まちがいが見つかる」",
-   "intent": "困りごとの原文。事実か推測かは本人に分けてもらう", "technique": "具体要求型",
-   "decides": ["事業要求（BR）の中身", "深掘りの方向"], "slot": "BR.problem",
-   "input": {"type": "longtext", "placeholder": "いつ・誰が・何に困るか"},
-   "epistemic": true, "deepdive": ["solutionOnly", "abstract", "needsEvidence", "speculative"], "copyTo": [{"det": "solutionOnly", "slot": "BR.means"}],
-   "patterns": ["数字・時期がある → 事実の候補", "「たぶん」「と思う」→ 根拠を聞く", "抽象語だけ → 最近の一件"],
-   "hypothesis": "困りごとは観察された事実に基づいている", "falsifier": "根拠が「感覚」だけなら、要件の根拠には使わず未確認として扱う",
-   "outputs": ["BR.problem"], "importance": 5, "mandatory": true, "costSec": 90, "sources": ["C:原則1", "C:原則5", "A:08_顧客課題"]},
-  {"id": "Q-INT-007", "order": 5, "phase": "00_受付", "step": 3, "topic": "core", "persona": "全員",
-   "text": "今回の話に関係がありそうか、カードを仕分けてください。",
-   "help": "右：関係ある／左：関係ない／上：わからない。迷ったら「わからない」で大丈夫です。",
-   "intent": "論点候補を本人に仕分けてもらい、聞く範囲を絞る（全質問を出さない）", "technique": "契約の問い",
-   "decides": ["どの論点の質問を出すか"], "slot": "ISS.topics",
-   "input": {"type": "cards", "optionsFrom": "topics", "labels": {"yes": "関係ある", "no": "関係ない", "unknown": "わからない"}},
-   "outputs": ["ISS.topics"], "importance": 4, "mandatory": true, "costSec": 40, "sources": ["C:VS2", "C:§3.1 契約の問い", "D:参考ツール（自己理解） 2段階選択"]},
-  {"id": "Q-HYP-001", "order": 8, "phase": "00_受付", "step": 4, "topic": "problem", "persona": "全員",
-   "trigger": {"slot": "BR.problem_type", "known": true},
-   "text": "困りごとの原因として、当てはまりそうかカードを仕分けてください。",
-   "help": "右：当てはまる／左：当てはまらない／上：わからない。複数あってかまいません。",
-   "intent": "原因の競合仮説を同時に置き、本人の見立てで一次の絞り込みをする（確定ではない）", "technique": "仮置き型",
-   "decides": ["どの機能を優先するか", "作るか・作らないか"], "slot": "BR.cause_yes",
-   "input": {"type": "cards", "optionsFrom": "hyp:HF-CAUSE", "labels": {"yes": "当てはまる", "no": "当てはまらない", "unknown": "わからない"}},
-   "hypothesis": "原因は複数あり得る（HF-CAUSE の7仮説）", "falsifier": "各仮説の反証条件（仮説辞書）を後続の事実質問で確かめる",
-   "outputs": ["BR.cause_yes"], "importance": 4, "mandatory": true, "costSec": 45, "sources": ["C:VS3", "C:原則6", "A:12_仮説"]},
-  {"id": "Q-INT-008", "order": 9, "phase": "00_受付", "step": 1, "topic": "core", "persona": "全員",
-   "text": "最終的に「これでOK」と決めるのは、どなたですか？",
-   "intent": "決裁者を特定し、合意と確認の経路を決める", "technique": "選択の問い",
-   "decides": ["顧客確認の相手", "修正を確定する人"], "slot": "PRJ.decision_maker",
-   "input": {"type": "single", "options": [{"v": "自分", "label": "自分"}, {"v": "上司・経営者", "label": "上司・経営者"}, {"v": "複数人で合議", "label": "複数人で話し合って"}, {"v": "社外の発注者", "label": "社外の発注者"}]},
-   "followups": [{"when": {"slot": "PRJ.decision_maker", "in": ["上司・経営者", "複数人で合議", "社外の発注者"]}, "ask": "Q-INT-009", "why": "決める人と確認する人が別のとき、優先を決める"}],
-   "outputs": ["STK.decision_maker"], "importance": 4, "mandatory": true, "costSec": 10, "sources": ["zip:Q-PRJ-006", "D:§4 #14"]},
-  {"id": "Q-INT-009", "queuedOnly": true, "phase": "00_受付", "step": 8, "topic": "core", "persona": "全員",
-   "text": "途中で画面を確かめる人と決める人の意見が違ったら、どちらを優先しますか？",
-   "intent": "確認者と決裁者の優先順位（修正の確定ルール）", "technique": "運用の問い",
-   "decides": ["修正依頼を確定する手順"], "slot": "PRJ.review_priority",
-   "input": {"type": "single", "options": [{"v": "決める人", "label": "決める人"}, {"v": "確認する人", "label": "確認する人"}, {"v": "その都度話し合う", "label": "その都度話し合う"}]},
-   "outputs": ["STK"], "importance": 3, "costSec": 10, "sources": ["D:§4 #14", "zip:Q-PRJ-006"]}
+ {
+  "id": "Q-INT-001",
+  "order": 1,
+  "phase": "00_受付",
+  "step": 1,
+  "topic": "core",
+  "persona": "全員",
+  "text": "今回、どんなことを相談したいですか？思いつくまま書いてください。",
+  "help": "うまくまとめなくて大丈夫です。例：「申込の受付を電話でしていて、聞き間違いが多い」",
+  "intent": "相談の原文を得る（以後の分類・深掘りの起点。原文は書き換えない）",
+  "technique": "契約の問い",
+  "decides": [
+   "以後の深掘りの方向（困りごと／手段／成果）"
+  ],
+  "slot": "PRJ.request_raw",
+  "input": {
+   "type": "longtext",
+   "placeholder": "自由に書いてください",
+   "minChars": 0
+  },
+  "epistemic": true,
+  "deepdive": [
+   "solutionOnly",
+   "abstract"
+  ],
+  "copyTo": [
+   {
+    "det": "solutionOnly",
+    "slot": "BR.means"
+   }
+  ],
+  "patterns": [
+   "困りごとが書かれている → 困りごとの種類へ",
+   "手段（アプリ・自動化など）だけ → 元の困りごとを聞く",
+   "短い・抽象的 → 最近の一件を聞く"
+  ],
+  "hypothesis": "相談の中に、困りごと・原因・期待する成果・手段が混ざっている",
+  "falsifier": "困りごとと成果が具体的に書かれていれば、手段の深掘りは不要",
+  "outputs": [
+   "BR.problem",
+   "BR.means"
+  ],
+  "importance": 5,
+  "mandatory": true,
+  "costSec": 120,
+  "sources": [
+   "C:VS1",
+   "C:原則4",
+   "A:04_発想の問い",
+   "zip:Q-PRJ-001"
+  ]
+ },
+ {
+  "id": "Q-INT-002",
+  "order": 2,
+  "phase": "00_受付",
+  "step": 1,
+  "topic": "core",
+  "persona": "全員",
+  "text": "今回は、新しく作る話と今あるものを直す話のどちらに近いですか？",
+  "intent": "新規か改修かで、聞く範囲（移行・修正依頼）を切り替える",
+  "technique": "選択の問い",
+  "decides": [
+   "移行・修正依頼の論点を出すか"
+  ],
+  "slot": "PRJ.kind",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "新規",
+     "label": "新しく作りたい"
+    },
+    {
+     "v": "改修",
+     "label": "今あるものを直したい・足したい"
+    },
+    {
+     "v": "未定",
+     "label": "まだ決めていない"
+    }
+   ]
+  },
+  "outputs": [
+   "PRJ.kind"
+  ],
+  "importance": 4,
+  "mandatory": true,
+  "costSec": 8,
+  "sources": [
+   "D:§3",
+   "zip:15_変更要求"
+  ]
+ },
+ {
+  "id": "Q-INT-003",
+  "order": 3,
+  "phase": "00_受付",
+  "step": 1,
+  "topic": "core",
+  "persona": "全員",
+  "text": "これを使うのは、どんな人ですか？",
+  "intent": "社内業務／社外／一般の個人（toC）を判定し、以降の分岐を決める",
+  "technique": "選択の問い",
+  "decides": [
+   "ログイン・公開方法の候補",
+   "利用者体験の論点を出すか"
+  ],
+  "slot": "PRJ.audience",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "社内",
+     "label": "社内の人だけ"
+    },
+    {
+     "v": "社外の取引先",
+     "label": "取引先など、決まった社外の人"
+    },
+    {
+     "v": "一般の個人",
+     "label": "一般の人（お客様・受講生など）"
+    },
+    {
+     "v": "社内と社外",
+     "label": "社内と社外の両方"
+    }
+   ]
+  },
+  "outputs": [
+   "PRJ.audience",
+   "NFR"
+  ],
+  "importance": 5,
+  "mandatory": true,
+  "costSec": 10,
+  "sources": [
+   "zip:Q-PRJ-002",
+   "D:§5"
+  ]
+ },
+ {
+  "id": "Q-INT-004",
+  "order": 4,
+  "phase": "00_受付",
+  "step": 1,
+  "topic": "core",
+  "persona": "全員",
+  "text": "作りたいものに近いものを、すべて選んでください。",
+  "help": "例：「予約を受け付けて、一覧で見たい」「請求書の作成を楽にしたい」",
+  "intent": "案件の型を決め、関係する論点を自動で有効にする",
+  "technique": "選択の問い",
+  "decides": [
+   "有効にする論点（仕事の流れ・決まりごと等）"
+  ],
+  "slot": "PRJ.category",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "記録・一覧・集計",
+     "label": "記録をつけて一覧・集計する"
+    },
+    {
+     "v": "申請・承認",
+     "label": "申請して許可をもらう"
+    },
+    {
+     "v": "予約・受付",
+     "label": "予約や申込を受け付ける"
+    },
+    {
+     "v": "顧客管理・営業",
+     "label": "お客様や営業の管理"
+    },
+    {
+     "v": "学習・ワーク",
+     "label": "学ぶ・ワークに取り組む"
+    },
+    {
+     "v": "診断・自己理解",
+     "label": "診断・自分を知るツール"
+    },
+    {
+     "v": "データ分析・レポート",
+     "label": "数字を集めて、グラフや報告にまとめる"
+    },
+    {
+     "v": "情報発信・集客",
+     "label": "ホームページやSNSで知らせて、お客様を集める"
+    },
+    {
+     "v": "在庫・発注",
+     "label": "在庫や発注の管理"
+    },
+    {
+     "v": "その他",
+     "label": "どれでもない"
+    }
+   ]
+  },
+  "outputs": [
+   "PRJ.category"
+  ],
+  "importance": 5,
+  "mandatory": true,
+  "costSec": 20,
+  "sources": [
+   "D:§5",
+   "B:§2"
+  ]
+ },
+ {
+  "id": "Q-INT-005",
+  "order": 6,
+  "phase": "00_受付",
+  "step": 2,
+  "topic": "problem",
+  "persona": "全員",
+  "text": "いま困っていることに近いものを、すべて選んでください。",
+  "intent": "困りごとを選択式で確実に分類する（自由記述の意味推定はしない）",
+  "technique": "選択の問い",
+  "decides": [
+   "原因の仮説群を立てるか",
+   "成果の測り方の候補"
+  ],
+  "slot": "BR.problem_type",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "時間がかかる",
+     "label": "時間がかかる"
+    },
+    {
+     "v": "ミス・漏れがある",
+     "label": "ミスや漏れがある"
+    },
+    {
+     "v": "情報が散らばっている",
+     "label": "情報があちこちにある"
+    },
+    {
+     "v": "人に頼っている",
+     "label": "特定の人しかできない"
+    },
+    {
+     "v": "連絡・確認が遅い",
+     "label": "連絡や確認が遅い"
+    },
+    {
+     "v": "お客様が増えない・離れる",
+     "label": "お客様が増えない・離れる"
+    },
+    {
+     "v": "状況が見えない",
+     "label": "今どうなっているか見えない"
+    },
+    {
+     "v": "新しいことができない",
+     "label": "やりたいことが今の道具でできない"
+    },
+    {
+     "v": "その他",
+     "label": "どれでもない"
+    }
+   ]
+  },
+  "outputs": [
+   "BR.problem_type"
+  ],
+  "importance": 5,
+  "mandatory": true,
+  "costSec": 20,
+  "sources": [
+   "A:08_顧客課題",
+   "C:VS1"
+  ]
+ },
+ {
+  "id": "Q-INT-006",
+  "order": 7,
+  "phase": "00_受付",
+  "step": 2,
+  "topic": "problem",
+  "persona": "全員",
+  "text": "その中でいちばん困っていることを、具体的に書いてください。",
+  "help": "例：「月末に請求書を3人で作っていて、毎回2〜3件まちがいが見つかる」",
+  "intent": "困りごとの原文。事実か推測かは本人に分けてもらう",
+  "technique": "具体要求型",
+  "decides": [
+   "事業要求（BR）の中身",
+   "深掘りの方向"
+  ],
+  "slot": "BR.problem",
+  "input": {
+   "type": "longtext",
+   "placeholder": "いつ・誰が・何に困るか"
+  },
+  "epistemic": true,
+  "deepdive": [
+   "solutionOnly",
+   "abstract",
+   "needsEvidence",
+   "speculative"
+  ],
+  "copyTo": [
+   {
+    "det": "solutionOnly",
+    "slot": "BR.means"
+   }
+  ],
+  "patterns": [
+   "数字・時期がある → 事実の候補",
+   "「たぶん」「と思う」→ 根拠を聞く",
+   "抽象語だけ → 最近の一件"
+  ],
+  "hypothesis": "困りごとは観察された事実に基づいている",
+  "falsifier": "根拠が「感覚」だけなら、要件の根拠には使わず未確認として扱う",
+  "outputs": [
+   "BR.problem"
+  ],
+  "importance": 5,
+  "mandatory": true,
+  "costSec": 90,
+  "sources": [
+   "C:原則1",
+   "C:原則5",
+   "A:08_顧客課題"
+  ]
+ },
+ {
+  "id": "Q-INT-007",
+  "order": 5,
+  "phase": "00_受付",
+  "step": 3,
+  "topic": "core",
+  "persona": "全員",
+  "text": "今回の話に関係がありそうか、当てはまるものをすべて選んでください。",
+  "help": "当てはまらないものは選ばなくて大丈夫です。",
+  "intent": "論点候補を本人に仕分けてもらい、聞く範囲を絞る（全質問を出さない）",
+  "technique": "契約の問い",
+  "decides": [
+   "どの論点の質問を出すか"
+  ],
+  "slot": "ISS.topics",
+  "input": {
+   "type": "cards",
+   "optionsFrom": "topics",
+   "labels": {
+    "yes": "関係ある",
+    "no": "関係ない",
+    "unknown": "わからない"
+   }
+  },
+  "outputs": [
+   "ISS.topics"
+  ],
+  "importance": 4,
+  "mandatory": true,
+  "costSec": 40,
+  "sources": [
+   "C:VS2",
+   "C:§3.1 契約の問い",
+   "D:参考ツール（自己理解） 2段階選択"
+  ]
+ },
+ {
+  "id": "Q-HYP-001",
+  "order": 8,
+  "phase": "00_受付",
+  "step": 4,
+  "topic": "problem",
+  "persona": "全員",
+  "trigger": {
+   "slot": "BR.problem_type",
+   "known": true
+  },
+  "text": "困りごとの原因として、当てはまりそうか当てはまるものをすべて選んでください。",
+  "help": "当てはまらないものは選ばなくて大丈夫です。",
+  "intent": "原因の競合仮説を同時に置き、本人の見立てで一次の絞り込みをする（確定ではない）",
+  "technique": "仮置き型",
+  "decides": [
+   "どの機能を優先するか",
+   "作るか・作らないか"
+  ],
+  "slot": "BR.cause_yes",
+  "input": {
+   "type": "cards",
+   "optionsFrom": "hyp:HF-CAUSE",
+   "labels": {
+    "yes": "当てはまる",
+    "no": "当てはまらない",
+    "unknown": "わからない"
+   }
+  },
+  "hypothesis": "原因は複数あり得る（HF-CAUSE の7仮説）",
+  "falsifier": "各仮説の反証条件（仮説辞書）を後続の事実質問で確かめる",
+  "outputs": [
+   "BR.cause_yes"
+  ],
+  "importance": 4,
+  "mandatory": true,
+  "costSec": 45,
+  "sources": [
+   "C:VS3",
+   "C:原則6",
+   "A:12_仮説"
+  ]
+ },
+ {
+  "id": "Q-INT-008",
+  "order": 9,
+  "phase": "00_受付",
+  "step": 1,
+  "topic": "core",
+  "persona": "全員",
+  "text": "最終的に「これでOK」と決めるのは、どなたですか？",
+  "intent": "決裁者を特定し、合意と確認の経路を決める",
+  "technique": "選択の問い",
+  "decides": [
+   "顧客確認の相手",
+   "修正を確定する人"
+  ],
+  "slot": "PRJ.decision_maker",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "自分",
+     "label": "自分"
+    },
+    {
+     "v": "上司・経営者",
+     "label": "上司・経営者"
+    },
+    {
+     "v": "複数人で合議",
+     "label": "複数人で話し合って"
+    },
+    {
+     "v": "社外の発注者",
+     "label": "社外の発注者"
+    }
+   ]
+  },
+  "followups": [
+   {
+    "when": {
+     "slot": "PRJ.decision_maker",
+     "in": [
+      "上司・経営者",
+      "複数人で合議",
+      "社外の発注者"
+     ]
+    },
+    "ask": "Q-INT-009",
+    "why": "決める人と確認する人が別のとき、優先を決める"
+   }
+  ],
+  "outputs": [
+   "STK.decision_maker"
+  ],
+  "importance": 4,
+  "mandatory": true,
+  "costSec": 10,
+  "sources": [
+   "zip:Q-PRJ-006",
+   "D:§4 #14"
+  ]
+ },
+ {
+  "id": "Q-INT-009",
+  "queuedOnly": true,
+  "phase": "00_受付",
+  "step": 8,
+  "topic": "core",
+  "persona": "全員",
+  "text": "途中で画面を確かめる人と決める人の意見が違ったら、どちらを優先しますか？",
+  "intent": "確認者と決裁者の優先順位（修正の確定ルール）",
+  "technique": "運用の問い",
+  "decides": [
+   "修正依頼を確定する手順"
+  ],
+  "slot": "PRJ.review_priority",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "決める人",
+     "label": "決める人"
+    },
+    {
+     "v": "確認する人",
+     "label": "確認する人"
+    },
+    {
+     "v": "その都度話し合う",
+     "label": "その都度話し合う"
+    }
+   ]
+  },
+  "outputs": [
+   "STK"
+  ],
+  "importance": 3,
+  "costSec": 10,
+  "sources": [
+   "D:§4 #14",
+   "zip:Q-PRJ-006"
+  ]
+ }
 ]
