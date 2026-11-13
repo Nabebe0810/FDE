@@ -156,3 +156,66 @@ body { line-height: 1.8; letter-spacing: .02em; }
 .nav .go, .primary { border-radius: 8px; font-weight: 700; letter-spacing: .04em; }
 .nav .go:hover, .primary:hover { background: #154843; }
 .progress > i { background: #1d5c56; }
+
+/* ===== 2026-11 刷新：明るい配色・タイル型の選択肢・余白と文字 ===== */
+:root {
+  --bg: #f5f6fb; --surface: #ffffff; --surface-2: #f1f3f9; --ink: #1c2033; --ink-2: #5b6178; --line: #e4e7f0;
+  --accent: #4f5bd5; --accent-ink: #ffffff; --accent-soft: #eef0ff; --accent-line: #c7ccf6;
+  --go: #4f5bd5; --go-ink: #ffffff; --focus: #4f5bd5; --radius: 20px; --shadow: 0 10px 30px rgba(40, 52, 120, .08);
+  font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+}
+html, body { background: linear-gradient(180deg, #eef1ff 0, #f5f6fb 260px); }
+body { line-height: 1.75; letter-spacing: .01em; font-feature-settings: "palt"; }
+.wrap { padding: 20px 20px 120px; max-width: 600px; }
+.top { margin-bottom: 14px; }
+.brand { font-size: 15px; letter-spacing: .04em; color: var(--accent); }
+.link-btn { background: none; border: none; color: var(--ink-2); font-size: 13px; text-decoration: underline; padding: 6px; }
+.progress { height: 6px; background: #e3e6f3; border-radius: 99px; }
+.progress > i { background: linear-gradient(90deg, #6b78ec, var(--accent)); border-radius: 99px; }
+.meta { font-size: 12px; margin: 8px 2px 18px; }
+.card { padding: 28px 24px 24px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid #edf0f7; }
+.card .stage { color: var(--accent); font-family: inherit; text-transform: none; font-size: 12px; font-weight: 700; letter-spacing: .08em; margin-bottom: 10px; }
+.card h1 { font-size: 22px; line-height: 1.5; font-weight: 700; letter-spacing: .02em; margin-bottom: 10px; }
+.card .help { font-size: 14px; line-height: 1.7; margin-bottom: 18px; color: var(--ink-2); }
+.note { font-size: 13px; color: var(--ink-2); margin: 0 0 10px; }
+.opts { gap: 10px; }
+.opt { min-height: 58px; padding: 14px 18px; border: 1.5px solid var(--line); border-radius: 14px; background: #fff; font-size: 16px; justify-content: space-between; flex-direction: row-reverse; }
+.opt:hover { border-color: var(--accent-line); }
+.opt .k { width: 22px; height: 22px; border: 2px solid #c5cad8; border-radius: 50%; }
+.opt[aria-pressed="true"], .opt.sel { background: var(--accent-soft); border-color: var(--accent); }
+.opt[aria-pressed="true"] .k { border: 7px solid var(--accent); }
+.rank .opt .k { font-size: 12px; border-width: 2px; display: grid; place-items: center; color: var(--accent); }
+.chips { gap: 10px; }
+.chip { border: 1.5px solid var(--line); background: #fff; padding: 9px 16px; font-size: 15px; border-radius: 999px; }
+.chip[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); font-weight: 600; }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tile { position: relative; text-align: left; background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 14px 40px 14px 14px; min-height: 76px; display: flex; flex-direction: column; gap: 2px; }
+.tile-t { font-weight: 600; font-size: 15px; line-height: 1.45; }
+.tile-h { font-size: 12px; color: var(--ink-2); line-height: 1.5; }
+.tile .tick { position: absolute; right: 12px; top: 14px; width: 20px; height: 20px; border-radius: 6px; border: 2px solid #c5cad8; }
+.tile[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.tile[aria-pressed="true"] .tick { background: var(--accent); border-color: var(--accent); box-shadow: inset 0 0 0 3px var(--accent-soft); }
+.yn { gap: 12px; }
+.yn button { min-height: 58px; border-radius: 14px; font-size: 17px; border-width: 1.5px; background: #fff; }
+.yn .y { border-color: var(--accent); color: var(--accent); }
+.yn .n { border-color: var(--line); color: var(--ink); }
+.yn .m { border-style: dashed; color: var(--ink-2); }
+input.other { margin-top: 10px; }
+.primary.small { min-height: 46px; margin-top: 10px; }
+input[type=text], input[type=number], input[type=month], textarea, select { border-radius: 12px; border: 1.5px solid var(--line); padding: 14px; background: #fff; }
+input:focus, textarea:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.slider input[type=range] { accent-color: var(--accent); }
+.ticks button.on { color: var(--accent); }
+.special { gap: 8px; margin-top: 18px; }
+.special button { border: none; background: var(--surface-2); color: var(--ink-2); border-radius: 999px; font-size: 13px; padding: 9px 12px; }
+.decides { font-size: 12px; border-top: 1px solid var(--line); margin-top: 18px; padding-top: 12px; }
+.nav { position: fixed; left: 0; right: 0; bottom: 0; margin: 0; padding: 12px 20px calc(12px + env(safe-area-inset-bottom)); background: rgba(255,255,255,.92); backdrop-filter: blur(8px); border-top: 1px solid var(--line); grid-template-columns: 1fr 2.2fr; z-index: 5; }
+@media (min-width: 640px) { .nav { position: static; background: none; border: none; padding: 0; margin-top: 18px; backdrop-filter: none; } .wrap { padding-bottom: 40px; } }
+.nav button { min-height: 54px; border-radius: 14px; font-size: 16px; }
+.nav .go { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 6px 16px rgba(79,91,213,.28); }
+.nav .go:hover, .primary:hover { background: #3f4ac2; }
+.nav .go:disabled { box-shadow: none; opacity: .35; }
+.primary { background: var(--accent); border-radius: 14px; min-height: 54px; }
+.panel { border-radius: var(--radius); padding: 28px 24px; box-shadow: var(--shadow); border: 1px solid #edf0f7; }
+.panel h1 { font-size: 24px; }
+@media (max-width: 480px) { .tiles { grid-template-columns: 1fr; } .tile { min-height: 0; } .card { padding: 22px 18px; } .card h1 { font-size: 20px; } .wrap { padding-left: 14px; padding-right: 14px; } }

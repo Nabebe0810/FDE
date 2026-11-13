@@ -107,6 +107,19 @@
   }
   function back() { const p = prevReview(); if (p != null) { view.reviewSeq = p; view.draft = null; render(); } }
 
+  // 担当者（FDE）画面は合言葉で開く。※画面のコードは公開されているため、見せたくない情報を守る仕組みではない
+  function openFde() {
+    let ok = false;
+    try { ok = sessionStorage.getItem(STORE + 'fde') === '1'; } catch (e) { /* 使えない環境 */ }
+    if (!ok) {
+      const p = window.prompt('担当者用の合言葉を入力してください');
+      if (p === null) return;
+      if (p.trim() !== '2407') { toast('合言葉が違います'); return; }
+      try { sessionStorage.setItem(STORE + 'fde', '1'); } catch (e) { /* 使えない環境 */ }
+    }
+    view.mode = 'fde'; render();
+  }
+
   // ---------- 描画 ----------
   function render() {
     $app.innerHTML = '';
@@ -125,7 +138,7 @@
         h('div', { class: 'brand' }, '要件ヒアリング'),
         h('div', { class: 'actions' },
           view.reviewSeq != null ? h('button', { class: 'chip-btn', onclick: () => { view.reviewSeq = null; render(); } }, '最新へ') : null,
-          h('button', { class: 'chip-btn', onclick: () => { view.mode = 'fde'; render(); }, title: '開発者（FDE）向けの画面' }, 'FDE'))),
+          h('button', { class: 'link-btn', onclick: openFde, title: '担当者用' }, '担当者用'))),
       h('div', { class: 'progress', role: 'progressbar', 'aria-valuenow': pct, 'aria-valuemin': 0, 'aria-valuemax': 100, 'aria-label': '重要な点の確認状況' }, h('i', { style: 'width:' + pct + '%' })),
       h('div', { class: 'meta' },
         h('span', {}, '大事な点 ' + est.criticalResolved + '/' + est.criticalTotal + ' わかった'),
@@ -264,9 +277,9 @@
         send(false);
       };
       W.el = h('div', { class: 'yn' },
-        h('button', { class: 'n', onclick: doNo, 'aria-pressed': pv === false }, '← ' + no),
-        h('button', { class: 'y', onclick: () => send(true), 'aria-pressed': pv === true }, yes + ' →'),
-        h('button', { class: 'm', onclick: () => submit(q.iid, { kind: q.type === 'confirm' ? 'later' : 'dontknow', note: neither }) }, '↑ ' + neither));
+        h('button', { class: 'n', onclick: doNo, 'aria-pressed': pv === false }, no),
+        h('button', { class: 'y', onclick: () => send(true), 'aria-pressed': pv === true }, yes),
+        h('button', { class: 'm', onclick: () => submit(q.iid, { kind: q.type === 'confirm' ? 'later' : 'dontknow', note: neither }) }, neither));
       W.right = () => send(true); W.left = doNo; W.rightLabel = yes; W.leftLabel = no; W.upLabel = neither;
       W.up = () => submit(q.iid, { kind: q.type === 'confirm' ? 'later' : 'dontknow', note: neither });
       W.submit = () => {}; W.hideNav = q.type !== 'confirm' && !prev; W.noSpecial = q.type === 'confirm';
@@ -274,9 +287,14 @@
       return W;
     }
 
+    const isOther = (o) => /その他|どれでもない|ほかにある/.test(o.v + ' ' + o.label);
+    const otherBox = h('input', { type: 'text', class: 'other', placeholder: '具体的に書いてください', 'aria-label': 'その他の内容' });
+    if (prev && prev.note) otherBox.value = prev.note;
+
     if (t === 'single') {
       const el = h('div', { class: 'opts', role: 'radiogroup' });
-      opts.forEach((o, i) => el.append(h('button', { class: 'opt', role: 'radio', 'aria-checked': pv === o.v, 'aria-pressed': pv === o.v, onclick: () => send(o.v) },
+      const pickOther = (o) => { if (!otherBox.isConnected) { el.after(otherBox, h('button', { class: 'primary small', onclick: () => send(o.v, { note: otherBox.value.trim() }) }, 'これで次へ')); } otherBox.focus(); };
+      opts.forEach((o, i) => el.append(h('button', { class: 'opt', role: 'radio', 'aria-checked': pv === o.v, 'aria-pressed': pv === o.v, onclick: () => (isOther(o) ? pickOther(o) : send(o.v)) },
         h('span', { class: 'k' }, i + 1), h('span', {}, o.label, o.hint ? h('span', { class: 'h' }, o.hint) : null))));
       W.el = el; W.digits = (i) => opts[i] && send(opts[i].v); W.submit = () => pv !== undefined && send(pv);
       return W;
@@ -313,49 +331,34 @@
       opts.forEach((o) => {
         const b = h('button', { class: 'chip', 'aria-pressed': chosen.has(o.v), onclick: () => {
           if (chosen.has(o.v)) chosen.delete(o.v); else chosen.add(o.v);
-          b.setAttribute('aria-pressed', chosen.has(o.v)); W.onChange && W.onChange();
+          b.setAttribute('aria-pressed', chosen.has(o.v));
+          if (isOther(o)) { if (chosen.has(o.v)) { el.after(otherBox); otherBox.focus(); } else otherBox.remove(); }
+          W.onChange && W.onChange();
         } }, o.label);
         el.append(b);
       });
       W.el = h('div', {}, h('p', { class: 'note' }, '当てはまるものをすべて選んでください'), el);
       W.validate = () => chosen.size > 0;
-      W.submit = () => chosen.size && send(opts.map((o) => o.v).filter((v) => chosen.has(v)));
+      W.submit = () => chosen.size && send(opts.map((o) => o.v).filter((v) => chosen.has(v)), otherBox.isConnected && otherBox.value.trim() ? { note: otherBox.value.trim() } : {});
       W.digits = (i) => opts[i] && el.children[i].click();
       return W;
     }
 
     if (t === 'cards') {
-      const res = pv && typeof pv === 'object' ? { yes: pv.yes.slice(), no: pv.no.slice(), unknown: pv.unknown.slice() } : { yes: [], no: [], unknown: [] };
-      let i = prev ? opts.length : 0;
-      const labels = q.input.labels || { yes: '当てはまる', no: 'ちがう', unknown: 'わからない' };
-      const box = h('div', { class: 'deck' });
-      const draw = () => {
-        box.innerHTML = '';
-        if (i >= opts.length) {
-          box.append(h('p', {}, 'すべて仕分けました。'),
-            h('div', { class: 'sorted' }, res.yes.map((v) => h('span', {}, '✓ ' + labelOf(v)))),
-            h('button', { class: 'secondary', onclick: () => { i = 0; res.yes = []; res.no = []; res.unknown = []; draw(); } }, '最初から仕分け直す'));
-          W.onChange && W.onChange();
-          return;
-        }
-        const o = opts[i];
-        const mini = h('div', { class: 'mini', tabindex: 0 }, h('b', {}, o.label), o.hint ? h('span', {}, o.hint) : null);
-        swipeMini(mini, (d) => put(d === 'r' ? 'yes' : d === 'l' ? 'no' : 'unknown'));
-        box.append(...[h('div', { class: 'count' }, (i + 1) + ' / ' + opts.length), mini,
-          h('div', { class: 'three' },
-            h('button', { class: 'n', onclick: () => put('no') }, '← ' + labels.no),
-            h('button', { onclick: () => put('unknown') }, labels.unknown),
-            h('button', { class: 'y', onclick: () => put('yes') }, labels.yes + ' →')),
-          i > 0 ? h('button', { class: 'chip-btn', style: 'margin-top:8px', onclick: () => { i--; const v = opts[i].v; ['yes', 'no', 'unknown'].forEach((k) => { res[k] = res[k].filter((x) => x !== v); }); draw(); } }, 'ひとつ戻す') : null].filter(Boolean));
-        W.onChange && W.onChange();
-      };
-      const labelOf = (v) => (opts.find((o) => o.v === v) || {}).label || v;
-      const put = (k) => { res[k].push(opts[i].v); i++; draw(); };
-      draw();
-      W.el = box; W.validate = () => i >= opts.length;
-      W.submit = () => i >= opts.length && send(res);
-      W.right = () => (i < opts.length ? put('yes') : W.submit()); W.left = () => (i < opts.length ? put('no') : back()); W.up = () => (i < opts.length ? put('unknown') : null);
-      W.rightLabel = labels.yes; W.leftLabel = labels.no; W.upLabel = labels.unknown; W.noSpecial = true;
+      // 当てはまるものを選ぶだけ。選ばなかったもの＝当てはまらない。「わからない」は下の欄で
+      const yes = new Set(pv && pv.yes ? pv.yes : []);
+      const unk = new Set(pv && pv.unknown ? pv.unknown : []);
+      const el = h('div', { class: 'tiles', role: 'group', 'aria-labelledby': 'qtext' });
+      opts.forEach((o) => {
+        const b = h('button', { class: 'tile', 'aria-pressed': yes.has(o.v), onclick: () => {
+          if (yes.has(o.v)) yes.delete(o.v); else { yes.add(o.v); unk.delete(o.v); }
+          b.setAttribute('aria-pressed', yes.has(o.v)); W.onChange && W.onChange();
+        } }, h('span', { class: 'tile-t' }, o.label), o.hint ? h('span', { class: 'tile-h' }, o.hint) : null, h('span', { class: 'tick', 'aria-hidden': 'true' }));
+        el.append(b);
+      });
+      W.el = h('div', {}, h('p', { class: 'note' }, '当てはまるものをすべて選んでください（なければ「次へ」）'), el);
+      W.validate = () => true;
+      W.submit = () => send({ yes: opts.map((o) => o.v).filter((v) => yes.has(v)), no: opts.map((o) => o.v).filter((v) => !yes.has(v) && !unk.has(v)), unknown: [...unk] });
       return W;
     }
 

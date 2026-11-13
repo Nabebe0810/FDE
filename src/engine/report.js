@@ -25,6 +25,10 @@
   const esc = (s) => String(s == null ? '' : s).replace(/\|/g, '｜').replace(/\n/g, ' ');
 
   function answerText(db, state, a) {
+    const t = answerText0(db, state, a);
+    return a.note ? t + '（' + a.note + '）' : t;
+  }
+  function answerText0(db, state, a) {
     if (a.kind !== 'value') return '［' + engine.SPECIAL[a.kind] + '］';
     const q = engine.resolveQuestion(db, state, a.iid);
     if (q && q.input && q.input.options && !Array.isArray(a.value) && typeof a.value !== 'object') {
