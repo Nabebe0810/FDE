@@ -45,9 +45,9 @@ function setupDoc() {
   sh.clear();
   sh.setHiddenGridlines(true);
   // A4縦に収まる幅（合計 約 680px）
-  [96, 400, 104, 80].forEach(function (w, i) { sh.setColumnWidth(i + 1, w); });
-  sh.getRange('A1:D1').merge().setValue('要件定義書（RFP）').setFontSize(18).setFontWeight('bold').setFontColor('#1c2033');
-  sh.getRange('A2').setValue('案件ID').setFontWeight('bold');
+  [200, 480, 10, 10].forEach(function (w, i) { sh.setColumnWidth(i + 1, w); });
+  sh.getRange('A1:B1').merge().setValue('要件定義書').setFontSize(18).setFontWeight('bold').setFontColor('#1c2033');
+  sh.getRange('A2').setValue('案件を選ぶ ▶').setFontWeight('bold').setFontColor('#4f5bd5');
   sh.getRange('B2').setBackground('#eef0ff').setNote('▼ ここで案件IDを選ぶと内容が切り替わります');
   refreshList_();
 }
@@ -56,33 +56,57 @@ function setupDoc() {
 function refreshList_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var doc = ss.getSheetByName(DOC); if (!doc) return;
-  var ids = {};
-  ['案件一覧', '回答', '要件'].forEach(function (n) {
-    var sh = ss.getSheetByName(n); if (!sh || sh.getLastRow() < 2) return;
-    sh.getRange(2, 1, sh.getLastRow() - 1, 1).getValues().forEach(function (r) { if (r[0]) ids[r[0]] = true; });
-  });
-  var list = Object.keys(ids);
+  var list = Object.keys(caseMap_());
   if (!list.length) list = ['（まだ回答がありません）'];
   doc.getRange('B2').setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(list, true).setAllowInvalid(false).build());
+}
+
+/** プルダウンに出す名前 → 案件ID（案件名があれば案件名＋日付、なければID） */
+function caseMap_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet(), map = {}, named = {};
+  var cs = ss.getSheetByName('案件一覧');
+  if (cs && cs.getLastRow() > 1) cs.getRange(2, 1, cs.getLastRow() - 1, 3).getValues().forEach(function (r) {
+    if (!r[0]) return; named[r[0]] = true;
+    map[(r[1] || '名称なし') + '（' + String(r[2]).slice(0, 10) + '）'] = String(r[0]);
+  });
+  ['回答', '要件'].forEach(function (n) {
+    var sh = ss.getSheetByName(n); if (!sh || sh.getLastRow() < 2) return;
+    sh.getRange(2, 1, sh.getLastRow() - 1, 1).getValues().forEach(function (r) { if (r[0] && !named[r[0]]) map[String(r[0])] = String(r[0]); });
+  });
+  return map;
 }
 
 function onEdit(e) {
   if (!e || !e.range) return;
   var sh = e.range.getSheet();
-  if (sh.getName() === DOC && e.range.getA1Notation() === 'B2') render_(String(e.value || ''));
+  if (sh.getName() === DOC && e.range.getA1Notation() === 'B2') render_(caseMap_()[String(e.value || '')] || String(e.value || ''));
 }
 
-// ---------- 本文の生成 ----------
-var SECTIONS = [
-  ['1. 目的と事業要求', ['事業の思い', '事業要求']],
-  ['2. 業務の流れと決まりごと', ['業務プロセス', '業務ルール', '状態']],
-  ['3. 機能要件', ['機能要件']],
-  ['4. 扱う情報（データ）', ['データ（まとまり）', 'データ（項目）', 'データ（関係）']],
-  ['5. 使う人と見える範囲', ['立場', '見える範囲・できること']],
-  ['6. 外部連携・移行', ['外部連携', '移行']],
-  ['7. 非機能要件（規模・安全・止まったとき）', ['非機能要件']],
-  ['8. 制約・技術方針・完成の基準', ['制約', '技術・方針の決定', '受け入れ条件', '変更要求']]
-];
+// ---------- 本文の生成（15章。IDは出さず「項目」と「内容」だけ） ----------
+var CHAPTERS = [
+  '1. プロジェクト概要', '2. 背景・目的・ゴール', '3. ステークホルダー・利用者', '4. システム化の対象範囲', '5. 業務要件',
+  '6. 機能要件', '7. 非機能要件', '8. 画面・UI/UX要件', '9. データ要件', '10. 外部システム連携要件',
+  '11. 制約条件・前提条件', '12. スケジュール・体制', '13. 受入条件・検収基準', '14. リスク・未決事項', '15. 用語集・参考資料'];
+// 質問ID → 章（個別の指定が先、なければ接頭辞）
+var Q_EXACT = { 'Q-INT-008': 12, 'Q-INT-009': 12, 'Q-ACC-001': 4, 'Q-ACC-002': 4, 'Q-ACC-003': 13, 'Q-ACC-004': 13, 'Q-ACC-005': 12,
+  'Q-ACC-006': 12, 'Q-ACC-007': 12, 'Q-ACC-008': 12, 'Q-ACC-009': 11, 'Q-ACC-010': 11, 'Q-VIS-006': 4, 'Q-VIS-008': 15,
+  'Q-CON-005': 12, 'Q-DEL-001': 4, 'Q-DEL-005': 12, 'Q-DEL-006': 15, 'Q-OUT-006': 15, 'Q-OUT-011': 6, 'Q-INT-005': 2, 'Q-INT-006': 2, 'Q-HYP-001': 2 };
+var Q_PREFIX = { 'Q-INT': 1, 'Q-VIS': 2, 'Q-PRB': 2, 'Q-KPI': 2, 'Q-ROL': 3, 'Q-ACC': 13, 'Q-CHG': 4, 'Q-FLW': 5, 'Q-RUL': 5, 'Q-MIG': 5,
+  'Q-NFR': 7, 'Q-AIF': 6, 'Q-OUT': 8, 'Q-TOC': 8, 'Q-DAT': 9, 'Q-LNK': 10, 'Q-CON': 11, 'Q-DEL': 11, 'G-': 2 };
+// 要件の種類 → 章
+var R_TYPE = { '事業の思い': 2, '事業要求': 2, '立場': 3, '見える範囲・できること': 3, '業務プロセス': 5, '業務ルール': 5, '状態': 9, '移行': 5,
+  '機能要件': 6, '非機能要件': 7, 'データ（まとまり）': 9, 'データ（項目）': 9, 'データ（関係）': 9, '外部連携': 10,
+  '制約': 11, '技術・方針の決定': 11, '受け入れ条件': 13, '変更要求': 4 };
+var LEAD = { 2: '何のために開発し、何を改善するか', 4: 'どこまで作り、何を作らないか', 6: 'システムが何をできる必要があるか',
+  7: '機能以外の品質・運用の条件', 13: 'どうなれば完成と判断するか', 14: '決めないと進めない点・確認が必要な点' };
+
+function chapterOfQ_(qid) {
+  var base = String(qid).split('@')[0];
+  if (Q_EXACT[base]) return Q_EXACT[base];
+  if (base === 'EPI' || base === 'CONFIRM' || base === 'C') return 0;
+  for (var p in Q_PREFIX) if (base.indexOf(p) === 0) return Q_PREFIX[p];
+  return 2;
+}
 
 function rowsOf_(name, id) {
   var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name);
@@ -92,47 +116,51 @@ function rowsOf_(name, id) {
 
 function render_(id) {
   var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DOC);
-  var last = Math.max(sh.getMaxRows(), 4);
-  sh.getRange(3, 1, last - 2, 4).breakApart().clear();
+  sh.getRange(3, 1, Math.max(sh.getMaxRows() - 2, 1), 4).breakApart().clear();
+  sh.setColumnWidth(1, 200); sh.setColumnWidth(2, 480); sh.setColumnWidth(3, 10); sh.setColumnWidth(4, 10);
   if (!id) return;
-  var out = [], fmt = [];
-  var push = function (row, kind) { out.push(row); fmt.push(kind); };
+  var body = {}; for (var i = 1; i <= 15; i++) body[i] = [];
   var c = rowsOf_('案件一覧', id)[0];
-  push(['', '', '', ''], 'gap');
-  push(['案件名', c ? c[1] : '', '判定', c ? c[6] : ''], 'info');
-  push(['回答日時', c ? String(c[2]).slice(0, 16).replace('T', ' ') : '', '回答者', c ? c[3] : ''], 'info');
-  push(['技術の候補', c ? c[9] : '（未確認）', '要件数', c ? c[7] : ''], 'info');
-  push(['', '「未確認（推定）」はお客様の合意前の仮の内容です。開発仕様として扱う前に確認してください。', '', ''], 'note');
-  var reqs = rowsOf_('要件', id);
-  SECTIONS.forEach(function (s) {
-    var rs = reqs.filter(function (r) { return s[1].indexOf(String(r[2])) >= 0; });
-    push(['', '', '', ''], 'gap');
-    push([s[0], '', '', ''], 'h');
-    push(['ID', '内容', '状態', '優先'], 'th');
-    if (!rs.length) push(['', '（なし）', '', ''], 'td');
-    rs.forEach(function (r) {
-      var text = String(r[3]) + (r[9] ? '\n受け入れ条件：' + r[9] : '');
-      push([r[1], text, r[5], r[8] || ''], 'td');
-    });
+  if (c) {
+    body[1].push(['案件名', c[1]], ['回答日時', String(c[2]).slice(0, 16).replace('T', ' ')], ['回答者', c[3]], ['ヒアリングの判定', c[6]]);
+    if (c[9]) body[11].push(['作り方の第一候補（推定）', c[9]]);
+  }
+  // 回答（質問と回答をそのまま。ドメイン理解・思いなど独自に聞いた情報もここに入る）
+  rowsOf_('回答', id).forEach(function (r) {
+    var ch = chapterOfQ_(r[2]); if (!ch || !r[3]) return;
+    var label = String(r[3]).replace(/[？?。]$/, '');
+    body[ch].push([label, String(r[6])]);
   });
-  var oi = rowsOf_('未決定', id);
-  push(['', '', '', ''], 'gap');
-  push(['9. 未決定事項（決めないと進めない点）', '', '', ''], 'h');
-  push(['ID', '内容（理由）', '確認する人', '止める'], 'th');
-  if (!oi.length) push(['', '（なし）', '', ''], 'td');
-  oi.forEach(function (r) { push([r[1], '【' + r[2] + '】' + r[3] + (r[6] ? '（' + r[6] + '）' : ''), r[5], r[4] ? '止める' : ''], 'td'); });
+  // ルールで整理した要件（未確認は明記）
+  rowsOf_('要件', id).forEach(function (r) {
+    var ch = R_TYPE[String(r[2])] || 11;
+    var text = String(r[4] || r[3]);
+    if (String(r[5]) !== '確認済み') text += '　［' + r[5] + '］';
+    body[ch].push([String(r[2]), text]);
+    if (r[9]) body[13].push([String(r[4] || r[3]).slice(0, 40), r[9]]);
+  });
+  rowsOf_('未決定', id).forEach(function (r) { body[14].push(['【' + r[2] + '】' + r[3], (r[6] || '') + (r[5] ? '（確認する人：' + r[5] + '）' : '') + (r[4] ? '　※実装を止める' : '')]); });
 
+  var out = [], fmt = [];
+  out.push(['', '']); fmt.push('gap');
+  out.push(['この文書について', 'ヒアリングの回答をもとに自動で作った下書きです。［未確認（推定）］の内容は、合意してから確定します。']); fmt.push('note');
+  CHAPTERS.forEach(function (t, k) {
+    var n = k + 1;
+    out.push(['', '']); fmt.push('gap');
+    out.push([t, '']); fmt.push('h');
+    if (LEAD[n]) { out.push([LEAD[n], '']); fmt.push('lead'); }
+    if (!body[n].length) { out.push(['', '（回答なし・要確認）']); fmt.push('td'); }
+    body[n].forEach(function (r) { out.push([r[0], r[1]]); fmt.push('td'); });
+  });
   var start = 3;
   if (sh.getMaxRows() < start + out.length) sh.insertRowsAfter(sh.getMaxRows(), start + out.length - sh.getMaxRows());
-  var rg = sh.getRange(start, 1, out.length, 4);
-  rg.setValues(out).setWrap(true).setVerticalAlignment('top').setFontSize(10).setFontColor('#1c2033');
+  sh.getRange(start, 1, out.length, 2).setValues(out).setWrap(true).setVerticalAlignment('top').setFontSize(10).setFontColor('#1c2033').setFontFamily('Noto Sans JP');
   fmt.forEach(function (k, i) {
-    var r = sh.getRange(start + i, 1, 1, 4);
-    if (k === 'h') { r.merge().setFontSize(12).setFontWeight('bold').setFontColor('#4f5bd5').setBorder(null, null, true, null, null, null, '#4f5bd5', SpreadsheetApp.BorderStyle.SOLID_MEDIUM); }
-    else if (k === 'th') { r.setBackground('#eef0ff').setFontWeight('bold'); }
-    else if (k === 'td') { r.setBorder(null, null, true, null, null, null, '#e4e7f0', SpreadsheetApp.BorderStyle.SOLID); }
-    else if (k === 'info') { sh.getRange(start + i, 1).setFontWeight('bold'); sh.getRange(start + i, 3).setFontWeight('bold'); }
-    else if (k === 'note') { sh.getRange(start + i, 2, 1, 3).merge().setFontColor('#5b6178').setFontSize(9); }
+    var row = start + i, r = sh.getRange(row, 1, 1, 2);
+    if (k === 'h') r.merge().setFontSize(12).setFontWeight('bold').setFontColor('#4f5bd5').setBorder(null, null, true, null, null, null, '#4f5bd5', SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
+    else if (k === 'lead') r.merge().setFontColor('#5b6178').setFontSize(9);
+    else if (k === 'td') { r.setBorder(null, null, true, null, null, null, '#e4e7f0', SpreadsheetApp.BorderStyle.SOLID); sh.getRange(row, 1).setFontColor('#5b6178'); }
+    else if (k === 'note') { r.setFontColor('#5b6178').setFontSize(9); }
   });
 }
 
