@@ -485,7 +485,16 @@
   }
 
   // ---------- 完了 ----------
+  function sendSheet() {
+    const url = window.FDE_CONFIG && window.FDE_CONFIG.gasUrl;
+    if (!url || session.meta.sentAt) return;
+    const sh = F.report.sheets(db, state, session);
+    fetch(url, { method: 'POST', mode: 'no-cors', body: JSON.stringify(sh) })
+      .then(() => { session.meta.sentAt = new Date().toISOString(); save(); toast('担当者に送信しました'); })
+      .catch(() => toast('送信できませんでした。ファイルを保存してください'));
+  }
   function renderDone() {
+    sendSheet();
     const rd = F.quality.readiness(db, state);
     const json = JSON.stringify(session, null, 1);
     $app.append(h('div', { class: 'wrap' }, header(),

@@ -1,7 +1,7 @@
 :root {
-  --bg: #f6f5f2; --surface: #ffffff; --surface-2: #efede8; --ink: #1d1d1b; --ink-2: #5d5b55; --line: #dcd9d1;
-  --accent: #2f5d50; --accent-ink: #ffffff; --yes: #2f6f4f; --no: #9a3b32; --neutral: #6b6a64; --warn: #8a5a00;
-  --focus: #1f6feb; --radius: 16px; --shadow: 0 6px 24px rgba(0,0,0,.08);
+  --bg: linear-gradient(160deg,#ece8ff 0%,#f7e9f0 55%,#ffe9e2 100%); --surface: #ffffff; --surface-2: #efede8; --ink: #1d1d1b; --ink-2: #5d5b55; --line: #dcd9d1;
+  --accent: #5b4fc4; --accent-ink: #ffffff; --go: #c6f36d; --go-ink: #1b2a05; --yes: #2f6f4f; --no: #9a3b32; --neutral: #6b6a64; --warn: #8a5a00;
+  --focus: #1f6feb; --radius: 24px; --shadow: 0 12px 40px rgba(60,40,120,.12);
   font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", "Yu Gothic UI", sans-serif;
   color-scheme: light;
 }
@@ -18,7 +18,7 @@
   --shadow: 0 6px 24px rgba(0,0,0,.4); color-scheme: dark;
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; background: var(--bg); color: var(--ink); }
+html, body { margin: 0; background: var(--bg); background-attachment: fixed; color: var(--ink); }
 body { min-height: 100dvh; line-height: 1.6; -webkit-text-size-adjust: 100%; }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
@@ -136,3 +136,17 @@ pre.md { white-space: pre-wrap; font-size: 12px; background: var(--surface-2); p
 .grid2 { display: grid; grid-template-columns: 1fr; gap: 12px; }
 @media (min-width: 900px) { .grid2 { grid-template-columns: 1fr 1fr; } }
 @media (prefers-reduced-motion: reduce) { .card, .deck .mini, .progress > i { transition: none; } }
+
+/* 刷新：参考デザイン（カード型・選択肢カード・ピル・ライムの次へ） */
+.card h1 { font-size: 24px; letter-spacing: .01em; }
+.card .stage { text-transform: uppercase; letter-spacing: .12em; font-family: ui-monospace, monospace; }
+.opt { border-radius: 16px; padding: 16px; transition: border-color .15s, background .15s, transform .1s; }
+.opt:active { transform: scale(.98); }
+.opt .k { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line); font-size: 0; flex: none; }
+.opt[aria-pressed="true"] .k { border: 7px solid var(--accent); }
+.chip { padding: 10px 18px; transition: all .15s; }
+.nav .go { background: var(--go); color: var(--go-ink); border-color: var(--go); border-radius: 999px; }
+.nav button { border-radius: 999px; }
+.progress { height: 6px; }
+.primary { background: var(--accent); border-radius: 999px; }
+.yn button, .deck .three button, .special button { border-radius: 16px; }
