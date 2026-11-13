@@ -1,0 +1,275 @@
+[
+ {
+  "phase": "08_画面と出力",
+  "step": 5,
+  "topic": "output",
+  "persona": "全員",
+  "technique": "選択の問い",
+  "sources": [
+   "D:§4 #1-#3",
+   "zip:04_tech_selection_matrix"
+  ],
+  "id": "Q-DEL-001",
+  "text": "作りたいものは、どの形に近いですか？",
+  "help": "例：ブラウザで開く申込画面、Excelのような表、社内だけで使う入力ツール",
+  "intent": "成果物の形を決める",
+  "decides": [
+   "作り方の候補",
+   "画面の数"
+  ],
+  "slot": "DEL.form",
+  "input": {
+   "type": "multi",
+   "options": [
+    {
+     "v": "Webの画面",
+     "label": "Webの画面"
+    },
+    {
+     "v": "スマホアプリ",
+     "label": "スマホアプリ"
+    },
+    {
+     "v": "スプレッドシート・表",
+     "label": "スプレッドシート・表"
+    },
+    {
+     "v": "社内の作業ツール",
+     "label": "社内の作業ツール"
+    },
+    {
+     "v": "紹介ページ",
+     "label": "紹介ページ"
+    },
+    {
+     "v": "資料・マニュアル",
+     "label": "資料・マニュアル"
+    },
+    {
+     "v": "その他",
+     "label": "その他"
+    }
+   ]
+  },
+  "outputs": [
+   "ADR"
+  ],
+  "importance": 5,
+  "mandatory": true,
+  "costSec": 15
+ },
+ {
+  "phase": "08_画面と出力",
+  "step": 5,
+  "topic": "output",
+  "persona": "全員",
+  "technique": "選択の問い",
+  "sources": [
+   "D:§4 #1-#3",
+   "zip:04_tech_selection_matrix"
+  ],
+  "id": "Q-DEL-002",
+  "text": "できあがったものは、どこで使いますか？",
+  "help": "例：自分のパソコンだけで使う／URLをお客様に送って開いてもらう",
+  "intent": "ローカルで足りるか、URL共有が要るかを決める",
+  "decides": [
+   "公開のしかた",
+   "サーバーの要否"
+  ],
+  "slot": "DEL.run",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "自分のパソコンで動けばよい",
+     "label": "自分のパソコンで動けばよい"
+    },
+    {
+     "v": "URLを送って誰でも開ける",
+     "label": "URLを送って誰でも開ける"
+    },
+    {
+     "v": "社内の人だけURLで開ける",
+     "label": "社内の人だけURLで開ける"
+    },
+    {
+     "v": "まだわからない",
+     "label": "まだわからない"
+    }
+   ]
+  },
+  "outputs": [
+   "ADR"
+  ],
+  "importance": 5,
+  "mandatory": true,
+  "costSec": 10
+ },
+ {
+  "phase": "08_画面と出力",
+  "step": 5,
+  "topic": "output",
+  "persona": "全員",
+  "technique": "選択の問い",
+  "sources": [
+   "D:§4 #1-#3",
+   "zip:04_tech_selection_matrix"
+  ],
+  "id": "Q-DEL-003",
+  "text": "入力された内容は、どこかに集めて残しますか？",
+  "help": "例：全員の申込を1つの表で見たい→集める／本人が見られればよい→端末に残す",
+  "intent": "保存先（データベース・スプレッドシート）の要否を決める",
+  "decides": [
+   "データベースの要否",
+   "技術構成"
+  ],
+  "slot": "DEL.save",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "保存しなくてよい",
+     "label": "保存しなくてよい"
+    },
+    {
+     "v": "使う人の端末に残ればよい",
+     "label": "使う人の端末に残ればよい"
+    },
+    {
+     "v": "みんなの入力を1か所に集めたい",
+     "label": "みんなの入力を1か所に集めたい"
+    },
+    {
+     "v": "今あるシートやサービスに入れたい",
+     "label": "今あるシートやサービスに入れたい"
+    }
+   ]
+  },
+  "outputs": [
+   "ADR",
+   "NFR"
+  ],
+  "importance": 5,
+  "mandatory": true,
+  "costSec": 12
+ },
+ {
+  "phase": "08_画面と出力",
+  "step": 5,
+  "topic": "output",
+  "persona": "全員",
+  "technique": "選択の問い",
+  "sources": [
+   "D:§4 #1-#3",
+   "zip:04_tech_selection_matrix"
+  ],
+  "id": "Q-DEL-004",
+  "text": "GitHub（作ったものの置き場）は用意できますか？",
+  "help": "わからなければ「任せたい」で大丈夫です",
+  "intent": "納品先と保守の置き場を決める",
+  "decides": [
+   "納品方法",
+   "公開の手順"
+  ],
+  "slot": "DEL.github",
+  "input": {
+   "type": "single",
+   "options": [
+    {
+     "v": "会社のGitHubがある",
+     "label": "会社のGitHubがある"
+    },
+    {
+     "v": "持っていない",
+     "label": "持っていない"
+    },
+    {
+     "v": "任せたい",
+     "label": "任せたい"
+    }
+   ]
+  },
+  "outputs": [
+   "CON"
+  ],
+  "importance": 3,
+  "mandatory": false,
+  "costSec": 8
+ },
+ {
+  "phase": "08_画面と出力",
+  "step": 5,
+  "topic": "output",
+  "persona": "全員",
+  "technique": "選択の問い",
+  "sources": [
+   "D:§4 #1-#3",
+   "zip:04_tech_selection_matrix"
+  ],
+  "id": "Q-DEL-005",
+  "text": "最初の版は、どのくらいの期間で作りたいですか？",
+  "help": "作る側の作業量の目安になります",
+  "intent": "想定工数と最初の版の範囲を合わせる",
+  "decides": [
+   "最初の版の範囲",
+   "想定工数"
+  ],
+  "slot": "DEL.effort",
+  "input": {
+   "type": "slider",
+   "options": [
+    {
+     "v": "1日くらい",
+     "label": "1日くらい"
+    },
+    {
+     "v": "1週間くらい",
+     "label": "1週間くらい"
+    },
+    {
+     "v": "1か月くらい",
+     "label": "1か月くらい"
+    },
+    {
+     "v": "3か月以上",
+     "label": "3か月以上"
+    }
+   ]
+  },
+  "outputs": [
+   "CON"
+  ],
+  "importance": 4,
+  "mandatory": true,
+  "costSec": 8
+ },
+ {
+  "phase": "08_画面と出力",
+  "step": 5,
+  "topic": "output",
+  "persona": "全員",
+  "technique": "選択の問い",
+  "sources": [
+   "D:§4 #1-#3",
+   "zip:04_tech_selection_matrix"
+  ],
+  "id": "Q-DEL-006",
+  "text": "参考にしたいサイトや資料のリンクを貼ってください。",
+  "help": "ファイルは不要です。リンクだけで大丈夫です（複数なら改行）",
+  "intent": "参考資料・準拠資料を集める",
+  "decides": [
+   "見た目と中身の基準"
+  ],
+  "slot": "DEL.refs",
+  "input": {
+   "type": "longtext",
+   "placeholder": "https://..."
+  },
+  "outputs": [
+   "CON"
+  ],
+  "importance": 3,
+  "mandatory": false,
+  "costSec": 30
+ }
+]

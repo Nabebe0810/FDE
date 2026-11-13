@@ -115,3 +115,14 @@ m("M-CR", {"slot": "CR.kind", "has": "$param"}, [{"type": "CR", "key": "CR-{{par
 
 json.dump(M, open(os.path.join(ROOT, 'data/rules/mappings.json'), 'w'), ensure_ascii=False, indent=1)
 print(len(M), 'mappings')
+
+# ---- 成果物・技術要件（追記） ----
+m("M-DEL-01", K("DEL.form"), [{"type": "ADR", "key": "ADR-FORM", "title": "作るものの形：{{DEL.form}}", "plain": "作るのは「{{DEL.form}}」", "origin": "customer", "confirm": True}], ["D:§4"])
+m("M-DEL-02", K("DEL.run"), [{"type": "ADR", "key": "ADR-RUN", "title": "動かし方：{{DEL.run}}", "plain": "できあがったものは「{{DEL.run}}」", "origin": "customer", "confirm": True}], ["D:§4 #1"])
+m("M-DEL-03", {"slot": "DEL.save", "in": ["みんなの入力を1か所に集めたい", "今あるシートやサービスに入れたい"]}, [{"type": "ADR", "key": "ADR-DB", "title": "入力を1か所に保存する（データベースまたはスプレッドシートが必要）", "plain": "入力された内容は1か所に集めて残す", "origin": "rule", "confirm": True, "moscow": "Must"}], ["zip:04 K-06"])
+m("M-DEL-04", {"slot": "DEL.save", "in": ["保存しなくてよい", "使う人の端末に残ればよい"]}, [{"type": "ADR", "key": "ADR-NODB", "title": "サーバー側の保存は不要（{{DEL.save}}）", "plain": "入力内容をサーバーに集める必要はない", "origin": "rule", "confirm": True}], ["D:§2"])
+m("M-DEL-05", K("DEL.github"), [{"type": "CON", "key": "CON-GITHUB", "title": "GitHub：{{DEL.github}}", "origin": "customer"}], ["D:§4"])
+m("M-DEL-06", K("DEL.effort"), [{"type": "CON", "key": "CON-EFFORT", "title": "最初の版の期間（想定工数）：{{DEL.effort}}", "plain": "最初の版は「{{DEL.effort}}」で作る", "origin": "customer", "confirm": True}], ["B:§9.1 MVP"])
+m("M-DEL-07", K("DEL.refs"), [{"type": "CON", "key": "CON-REFS", "title": "参考資料：{{DEL.refs}}", "origin": "customer"}], ["D:§4 #7"])
+json.dump(M, open(os.path.join(ROOT, 'data/rules/mappings.json'), 'w'), ensure_ascii=False, indent=1)
+print(len(M), 'mappings')

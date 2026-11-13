@@ -205,7 +205,12 @@
 
   function sheets(db, state, session) {
     const reqs = state.reqOrder.map((k) => state.reqs[k]);
+    const rd = quality.readiness(db, state);
+    const oi = quality.openIssues(db, state);
     return {
+      cases: tsv([['案件ID', '案件名', '回答日時', '回答者', '回答数', '所要分', '判定', '要件数', '未決定数', '技術の第1候補', 'ルール版'],
+        [session.meta.id, session.meta.title || '', new Date().toISOString(), session.meta.respondents.map((r) => r.name).join('、'), state.answers.length, Math.round(state.elapsedSec / 60), rd.verdict, reqs.length, oi.length,
+          (state.tech.ranked.find((a) => a.status !== 'excluded') || {}).label || '', db.params.ruleVersion]]),
       requirements: tsv([['案件ID', '要件ID', '種類', '内容', '顧客向けの文', '状態', '出どころ', '親', '優先', '受け入れ条件', '根拠の回答#', '変換ルール', '根拠資料']]
         .concat(reqs.map((r) => [session.meta.id, r.key, TYPE[r.type] || r.type, r.title, r.plain || '', STATUS[r.status], ORIGIN[r.origin], r.parent || '', r.moscow || '', r.ac || '', r.answerSeqs.join(','), r.rules.join(','), r.sources.join(',')]))),
       openIssues: tsv([['案件ID', 'ID', '種類', '内容', '実装を止める', '確認する人', '理由']]

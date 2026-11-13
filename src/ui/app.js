@@ -147,7 +147,8 @@
 
   function renderStart() {
     const saved = listSaved();
-    const title = h('input', { type: 'text', id: 'f-title', placeholder: '例：〇〇社 受付業務の見直し' });
+    const caseName = new URLSearchParams(location.search).get('case') || '';
+    const title = h('input', { type: 'text', id: 'f-title', placeholder: '例：〇〇社 受付業務の見直し', value: caseName, readonly: caseName ? true : null });
     const name = h('input', { type: 'text', id: 'f-name', placeholder: '例：山田（任意）' });
     const role = h('select', { id: 'f-role' }, ROLES.map((r) => h('option', { value: r }, r)));
     const budget = h('select', { id: 'f-budget' }, [30, 35, 45].map((m) => h('option', { value: m, selected: m === 35 }, m + '分')));
@@ -199,9 +200,11 @@
         h('button', { onclick: () => submit(c.iid, { kind: 'later' }) }, '後で確認'),
         h('button', { onclick: () => submit(c.iid, { kind: 'na' }) }, '該当しない')) : null,
       q.decides && q.decides.length ? h('div', { class: 'decides' }, 'この答えで決まること：' + q.decides.join('／')) : null);
-    const go = h('button', { class: 'go', onclick: () => widget.submit() }, isConfirm ? '保留にする' : '次へ');
-    if (isConfirm) go.onclick = () => submit(c.iid, { kind: 'later' });
-    const nav = widget.hideNav ? null : h('div', { class: 'nav' }, h('button', { onclick: back, disabled: !activeList().length }, '← 戻る'), go);
+    const go = h('button', { class: 'go', onclick: () => widget.submit() }, isConfirm ? '問題ない' : '次へ');
+    if (isConfirm) go.onclick = () => submit(c.iid, { kind: 'value', value: true });
+    const nav = isConfirm
+      ? h('div', { class: 'nav three' }, h('button', { onclick: () => widget.left() }, '修正する'), h('button', { onclick: () => submit(c.iid, { kind: 'later' }) }, '保留する'), go)
+      : widget.hideNav ? null : h('div', { class: 'nav' }, h('button', { onclick: back, disabled: !activeList().length }, '← 戻る'), go);
     if (widget.validate) { const upd = () => { go.disabled = !widget.validate(); }; widget.onChange = upd; upd(); }
     $app.append(h('div', { class: 'wrap' }, header(), card, nav,));
     const f = card.querySelector('textarea, input[type=text], input[type=number]');
@@ -283,7 +286,7 @@
       W.right = () => send(true); W.left = doNo; W.rightLabel = yes; W.leftLabel = no; W.upLabel = neither;
       W.up = () => submit(q.iid, { kind: q.type === 'confirm' ? 'later' : 'dontknow', note: neither });
       W.submit = () => {}; W.hideNav = q.type !== 'confirm' && !prev; W.noSpecial = q.type === 'confirm';
-      if (q.type === 'confirm') W.hideNav = false;
+      if (q.type === 'confirm') { W.hideNav = false; W.el = h('div', {}); }
       return W;
     }
 
@@ -385,18 +388,37 @@
 
     if (t === 'rank') {
       const order = Array.isArray(pv) ? pv.slice() : [];
-      const el = h('div', { class: 'opts rank' });
+      const el = h('div', { class: 'rank' });
+      const lab = (v) => (opts.find((o) => o.v === v) || {}).label || v;
+      let dragFrom = null;
+      const move = (i, j) => { if (j < 0 || j >= order.length) return; const [x] = order.splice(i, 1); order.splice(j, 0, x); draw(); };
       const draw = () => {
         el.innerHTML = '';
-        opts.forEach((o) => {
-          const k = order.indexOf(o.v);
-          el.append(h('button', { class: 'opt' + (k >= 0 ? ' sel' : ''), onclick: () => { if (k >= 0) order.splice(k, 1); else order.push(o.v); draw(); } },
-            h('span', { class: 'k' }, k >= 0 ? k + 1 : '・'), h('span', {}, o.label)));
+        const top = h('ol', { class: 'rank-list', 'aria-label': '選んだ順' });
+        order.forEach((v, i) => {
+          const li = h('li', { class: 'rank-item', draggable: 'true' },
+            h('span', { class: 'grip', 'aria-hidden': 'true' }, '⋮⋮'), h('span', { class: 'no' }, i + 1), h('span', { class: 'lab' }, lab(v)),
+            h('button', { class: 'mv', 'aria-label': '上へ', onclick: () => move(i, i - 1) }, '↑'),
+            h('button', { class: 'mv', 'aria-label': '下へ', onclick: () => move(i, i + 1) }, '↓'),
+            h('button', { class: 'mv', 'aria-label': '外す', onclick: () => { order.splice(i, 1); draw(); } }, '×'));
+          li.addEventListener('dragstart', () => { dragFrom = i; li.classList.add('dragging'); });
+          li.addEventListener('dragend', () => li.classList.remove('dragging'));
+          li.addEventListener('dragover', (e) => e.preventDefault());
+          li.addEventListener('drop', (e) => { e.preventDefault(); if (dragFrom != null) move(dragFrom, i); dragFrom = null; });
+          // タッチ：長押しせずにつまみを上下にドラッグ
+          li.querySelector('.grip').addEventListener('pointerdown', (e) => {
+            e.preventDefault(); const y0 = e.clientY; const hgt = li.offsetHeight + 8;
+            const up = (ev) => { window.removeEventListener('pointerup', up); move(i, Math.max(0, Math.min(order.length - 1, i + Math.round((ev.clientY - y0) / hgt)))); };
+            window.addEventListener('pointerup', up);
+          });
+          top.append(li);
         });
+        const rest = h('div', { class: 'chips' }, opts.filter((o) => !order.includes(o.v)).map((o) => h('button', { class: 'chip', onclick: () => { order.push(o.v); draw(); } }, '＋ ' + o.label)));
+        el.append(order.length ? top : h('p', { class: 'note' }, 'まだ選んでいません'), rest);
         W.onChange && W.onChange();
       };
       draw();
-      W.el = h('div', {}, h('p', { class: 'note' }, '大事な順にタップしてください（もう一度タップで外せます。全部でなくて大丈夫）'), el);
+      W.el = h('div', {}, h('p', { class: 'note' }, '大事なものから選ぶと上に並びます。ドラッグか ↑↓ で入れ替えられます'), el);
       W.validate = () => order.length > 0; W.submit = () => order.length && send(order.slice());
       return W;
     }
@@ -500,18 +522,42 @@
         h('button', { class: 'primary', onclick: () => download((session.meta.title || session.meta.id) + '_回答.json', json, 'application/json') }, '担当者に渡すファイルを保存'),
         h('button', { class: 'secondary', onclick: () => { view.reviewSeq = prevReview(); render(); } }, '答えを見直す'),
         h('button', { class: 'secondary', onclick: () => { F.engine.goConfirm(db, session); refresh(); } }, '内容の確認をもう一度'),
-        h('p', { class: 'note' }, '判定（担当者向け）：' + rd.verdict))));
+        h('p', { class: 'note' }, '判定（担当者向け）：' + rd.verdict)),
+      summaryView()));
+  }
+
+  /** 回答のまとめ：段階ごとのカード＋流れ図＋技術候補の棒（ひと目で確認する用） */
+  function summaryView() {
+    const groups = {};
+    for (const a of state.answers) {
+      const q = F.engine.resolveQuestion(db, state, a.iid);
+      if (!q || q.type === 'confirm') continue;
+      const g = q.generic ? '少しくわしく' : phaseName(q) || 'その他';
+      (groups[g] = groups[g] || []).push([q.text, F.report.answerText(db, state, a), a.kind !== 'value']);
+    }
+    const steps = F.derive.slotVal(state, 'ASIS.steps') || [];
+    const flow = steps.length ? h('div', { class: 'flow' }, steps.map((x, i) => [i ? h('span', { class: 'arrow' }, '→') : null, h('span', { class: 'step' }, x)])) : null;
+    const tech = state.tech.ranked.slice(0, 5);
+    const bars = h('div', { class: 'bars' }, tech.map((t) => h('div', { class: 'bar ' + t.status }, h('span', { class: 'bl' }, t.label), h('span', { class: 'bt' }, h('i', { style: 'width:' + Math.round(t.score / 5 * 100) + '%' })), h('span', { class: 'bv' }, t.status === 'excluded' ? '除外' : t.score))));
+    const reqN = {}; state.reqOrder.forEach((k) => { const t = F.report.TYPE[state.reqs[k].type] || state.reqs[k].type; reqN[t] = (reqN[t] || 0) + 1; });
+    return h('div', { class: 'panel summary' },
+      h('h2', {}, '回答のまとめ'),
+      h('div', { class: 'kpis' }, Object.entries(reqN).slice(0, 8).map(([k, n]) => h('div', { class: 'kpi' }, h('b', {}, n), h('span', {}, k)))),
+      flow ? [h('h3', {}, '今の仕事の流れ'), flow] : null,
+      h('h3', {}, '作り方の候補（点が高いほど合う）'), bars,
+      h('div', { class: 'sgrid' }, Object.entries(groups).map(([g, rows]) => h('section', { class: 'sbox' }, h('h3', {}, g),
+        h('dl', {}, rows.map(([qt, at, sp]) => [h('dt', {}, qt), h('dd', { class: sp ? 'sp' : '' }, at)]))))));
   }
 
   // ---------- FDE 画面 ----------
-  const TABS = [['now', '次の質問の理由'], ['reqs', '要件'], ['open', '未決定'], ['hyp', '仮説・矛盾'], ['tech', '技術候補'], ['quality', '品質'], ['review', '人間レビュー'], ['log', '回答・計測'], ['vision', '依頼者理解'], ['out', '書き出し']];
+  const TABS = [['sum', '回答のまとめ'], ['now', '次の質問の理由'], ['reqs', '要件'], ['open', '未決定'], ['hyp', '仮説・矛盾'], ['tech', '技術候補'], ['quality', '品質'], ['review', '人間レビュー'], ['log', '回答・計測'], ['vision', '依頼者理解'], ['out', '書き出し']];
   function renderFde() {
     const tabs = h('div', { class: 'tabs', role: 'tablist' }, TABS.map(([k, l]) => h('button', { role: 'tab', 'aria-selected': view.fdeTab === k, onclick: () => { view.fdeTab = k; render(); } }, l)));
     const body = h('div', { class: 'panel scroll' });
     const T = (head, rows) => h('table', { class: 'tbl' }, h('thead', {}, h('tr', {}, head.map((x) => h('th', {}, x)))), h('tbody', {}, rows.map((r) => h('tr', {}, r.map((c) => h('td', {}, c))))));
     const st = (s) => h('span', { class: 'badge ' + (s === 'confirmed' ? 'ok' : s === 'rejected' ? 'ng' : 'w') }, F.report.STATUS[s] || s);
     const tab = view.fdeTab;
-    if (tab === 'now') {
+    if (tab === 'sum') { body.append(summaryView()); } else if (tab === 'now') {
       const n = F.select.next(db, state);
       const cands = F.select.candidates(db, state).slice(0, 15);
       body.append(h('h2', {}, '段階：' + state.stage + '　次：' + (n.iid || '完了')), h('p', {}, '理由：' + (n.why || '')),
