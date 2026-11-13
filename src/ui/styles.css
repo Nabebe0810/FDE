@@ -219,3 +219,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--a
 .panel { border-radius: var(--radius); padding: 28px 24px; box-shadow: var(--shadow); border: 1px solid #edf0f7; }
 .panel h1 { font-size: 24px; }
 @media (max-width: 480px) { .tiles { grid-template-columns: 1fr; } .tile { min-height: 0; } .card { padding: 22px 18px; } .card h1 { font-size: 20px; } .wrap { padding-left: 14px; padding-right: 14px; } }
+/* 改行：文節で折り返し、行の長さをそろえる（対応ブラウザのみ。非対応でも崩れない） */
+.card h1, .card .help, .opt, .tile-t, .tile-h, .chip, .panel p, .decides { word-break: auto-phrase; text-wrap: pretty; line-break: strict; }
+.card h1 { text-wrap: balance; }
+@media (max-width: 480px) { .card h1 { font-size: 19px; line-height: 1.55; } .card .help { font-size: 13px; } .opt { font-size: 15px; min-height: 52px; padding: 12px 16px; } }
