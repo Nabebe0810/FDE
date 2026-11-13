@@ -142,15 +142,12 @@
     $app.append(h('div', { class: 'wrap' },
       h('div', { class: 'panel' },
         h('h1', {}, '要件ヒアリング'),
-        h('p', {}, '1画面に1つの質問です。ふだんの言葉で答えてください。わからないことは「わからない」で大丈夫です。'),
+        h('p', {}, '1画面に1つの質問です。選ぶだけの質問がほとんどです。わからないことは「わからない」で大丈夫です。'),
         h('p', { class: 'note' }, '答えはこの端末の中だけに保存します。外部には送りません。最後に、担当者に渡すファイルを保存できます。'),
         h('div', { class: 'field' }, h('label', { for: 'f-title' }, '案件の名前'), title),
-        h('div', { class: 'field' }, h('label', { for: 'f-role' }, 'あなたの立場'), role),
         h('div', { class: 'field' }, h('label', { for: 'f-name' }, 'お名前'), name),
-        h('div', { class: 'field' }, h('label', { for: 'f-budget' }, '目安の時間'), budget),
         h('button', { class: 'primary', onclick: () => {
-          session = F.engine.createSession(db, { title: title.value.trim(), role: role.value, respondentName: name.value.trim() || '回答者1', budgetMin: Number(budget.value) });
-          db.params.time.targetMin = Number(budget.value);
+          session = F.engine.createSession(db, { title: title.value.trim(), role: '経営者', respondentName: name.value.trim() || '回答者1' });
           view.mode = 'card'; view.reviewSeq = null; refresh();
         } }, '始める'),
         h('button', { class: 'secondary', onclick: () => file.click() }, '保存したファイルから続ける'), file),
@@ -180,9 +177,6 @@
     const stageLabel = isConfirm ? '最後の確認：内容が合っているか教えてください' : prev ? '前の回答を見直し中（変えると訂正として記録）' : (c.tier === 0 ? '確認' : c.tier === 1 ? '少しくわしく' : phaseName(q));
     const widget = buildWidget(q, prev);
     const card = h('section', { class: 'card', 'aria-label': '質問' },
-      h('span', { class: 'swipe-hint r' }, widget.rightLabel || '次へ'),
-      h('span', { class: 'swipe-hint l' }, widget.leftLabel || '戻る'),
-      h('span', { class: 'swipe-hint u' }, widget.upLabel || 'わからない'),
       h('div', { class: 'stage' }, stageLabel),
       h('h1', { id: 'qtext' }, q.text),
       q.help ? h('p', { class: 'help' }, q.help) : null,
@@ -196,9 +190,7 @@
     if (isConfirm) go.onclick = () => submit(c.iid, { kind: 'later' });
     const nav = widget.hideNav ? null : h('div', { class: 'nav' }, h('button', { onclick: back, disabled: !activeList().length }, '← 戻る'), go);
     if (widget.validate) { const upd = () => { go.disabled = !widget.validate(); }; widget.onChange = upd; upd(); }
-    $app.append(h('div', { class: 'wrap' }, header(), card, nav,
-      h('div', { class: 'kbd' }, 'キーボード：→ ' + (widget.rightLabel || '次へ') + '　← ' + (widget.leftLabel || '戻る') + '　↑ ' + (widget.upLabel || 'わからない') + '　↓ 後で確認' + (widget.digits ? '　数字キー：選ぶ' : ''))));
-    attachSwipe(card, widget, c);
+    $app.append(h('div', { class: 'wrap' }, header(), card, nav,));
     const f = card.querySelector('textarea, input[type=text], input[type=number]');
     if (f && window.matchMedia('(pointer:fine)').matches) f.focus(); else document.getElementById('qtext').setAttribute('tabindex', '-1');
     view.keyHandler = (ev) => onKey(ev, widget, c);
