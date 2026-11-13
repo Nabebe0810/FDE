@@ -41,7 +41,6 @@ async function kindOf(page) {
   page.on('request', (r) => { if (!r.url().startsWith('file:') && !r.url().startsWith('blob:') && !r.url().startsWith('data:')) requests.push(r.url()); });
   await page.goto('file://' + path.join(__dirname, '..', 'dist', 'fde-hearing.html'));
   await page.fill('#f-title', 'E2E 架空案件');
-  await page.selectOption('#f-role', '経営者');
   await page.click('text=始める');
   const seen = {};
   const shots = new Set();

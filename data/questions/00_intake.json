@@ -58,7 +58,7 @@
    "intent": "論点候補を本人に仕分けてもらい、聞く範囲を絞る（全質問を出さない）", "technique": "契約の問い",
    "decides": ["どの論点の質問を出すか"], "slot": "ISS.topics",
    "input": {"type": "cards", "optionsFrom": "topics", "labels": {"yes": "関係ある", "no": "関係ない", "unknown": "わからない"}},
-   "outputs": ["ISS.topics"], "importance": 4, "mandatory": true, "costSec": 40, "sources": ["C:VS2", "C:§3.1 契約の問い", "D:self-understand 2段階選択"]},
+   "outputs": ["ISS.topics"], "importance": 4, "mandatory": true, "costSec": 40, "sources": ["C:VS2", "C:§3.1 契約の問い", "D:参考ツール（自己理解） 2段階選択"]},
   {"id": "Q-HYP-001", "order": 8, "phase": "00_受付", "step": 4, "topic": "problem", "persona": "全員",
    "trigger": {"slot": "BR.problem_type", "known": true},
    "text": "困りごとの原因として、当てはまりそうかカードを仕分けてください。",
