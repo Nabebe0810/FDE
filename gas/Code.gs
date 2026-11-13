@@ -152,16 +152,40 @@ function render_(id) {
     if (!body[n].length) { out.push(['', '（回答なし・要確認）']); fmt.push('td'); }
     body[n].forEach(function (r) { out.push([r[0], r[1]]); fmt.push('td'); });
   });
-  var start = 3;
+  var start = 3, F = 'Noto Sans JP', INK = '#1c2033', SUB = '#5b6178', BRAND = '#3f4ac2';
   if (sh.getMaxRows() < start + out.length) sh.insertRowsAfter(sh.getMaxRows(), start + out.length - sh.getMaxRows());
-  sh.getRange(start, 1, out.length, 2).setValues(out).setWrap(true).setVerticalAlignment('top').setFontSize(10).setFontColor('#1c2033').setFontFamily('Noto Sans JP');
+  sh.getRange(start, 1, out.length, 2).setValues(out).setWrap(true).setVerticalAlignment('middle')
+    .setFontSize(10).setFontColor(INK).setFontFamily(F).setBorder(false, false, false, false, false, false);
+  var zebra = false;
   fmt.forEach(function (k, i) {
-    var row = start + i, r = sh.getRange(row, 1, 1, 2);
-    if (k === 'h') r.merge().setFontSize(12).setFontWeight('bold').setFontColor('#4f5bd5').setBorder(null, null, true, null, null, null, '#4f5bd5', SpreadsheetApp.BorderStyle.SOLID_MEDIUM);
-    else if (k === 'lead') r.merge().setFontColor('#5b6178').setFontSize(9);
-    else if (k === 'td') { r.setBorder(null, null, true, null, null, null, '#e4e7f0', SpreadsheetApp.BorderStyle.SOLID); sh.getRange(row, 1).setFontColor('#5b6178'); }
-    else if (k === 'note') { r.setFontColor('#5b6178').setFontSize(9); }
+    var row = start + i, r = sh.getRange(row, 1, 1, 2), a = sh.getRange(row, 1), b = sh.getRange(row, 2);
+    if (k === 'gap') { sh.setRowHeight(row, 14); return; }
+    if (k === 'h') {
+      r.merge().setBackground(BRAND).setFontColor('#ffffff').setFontSize(12).setFontWeight('bold');
+      sh.setRowHeight(row, 32); zebra = false; return;
+    }
+    if (k === 'lead') { r.merge().setFontColor(SUB).setFontSize(9).setFontStyle('italic').setBackground('#f5f6fb'); sh.setRowHeight(row, 24); return; }
+    if (k === 'note') {
+      a.setFontWeight('bold').setFontColor(BRAND).setFontSize(9); b.setFontColor(SUB).setFontSize(9);
+      r.setBackground('#eef0ff'); sh.setRowHeight(row, 30); return;
+    }
+    // 本文の行：左は項目（灰色・小さめ）、右は内容。1行おきに薄い地色
+    a.setFontColor(SUB).setFontSize(9).setFontWeight('bold');
+    b.setFontSize(10);
+    r.setBackground(zebra ? '#fafbfe' : '#ffffff')
+      .setBorder(null, null, true, null, null, null, '#e4e7f0', SpreadsheetApp.BorderStyle.SOLID);
+    sh.setRowHeight(row, 26);
+    zebra = !zebra;
   });
+  // 表題まわり
+  var t = sh.getRange('A1:B1');
+  t.setFontFamily(F).setFontSize(20).setFontWeight('bold').setFontColor(INK).setVerticalAlignment('bottom');
+  sh.setRowHeight(1, 44);
+  sh.getRange('A2').setFontFamily(F).setFontSize(9).setFontColor(BRAND).setFontWeight('bold').setVerticalAlignment('middle');
+  sh.getRange('B2').setFontFamily(F).setFontSize(11).setFontWeight('bold').setBackground('#eef0ff').setVerticalAlignment('middle')
+    .setBorder(true, true, true, true, null, null, '#c7ccf6', SpreadsheetApp.BorderStyle.SOLID);
+  sh.setRowHeight(2, 30);
+  sh.getRange('A1:B1').setBorder(null, null, true, null, null, null, BRAND, SpreadsheetApp.BorderStyle.SOLID_THICK);
 }
 
 // ---------- PDF ----------
@@ -172,7 +196,7 @@ function downloadPdf() {
   var name = (sh.getRange('B2').getValue() || '要件定義書') + '_要件定義書.pdf';
   var url = 'https://docs.google.com/spreadsheets/d/' + ss.getId() + '/export?format=pdf&gid=' + sh.getSheetId() +
     '&size=A4&portrait=true&fitw=true&gridlines=false&printtitle=false&sheetnames=false&pagenum=CENTER' +
-    '&top_margin=0.6&bottom_margin=0.6&left_margin=0.6&right_margin=0.6';
+    '&top_margin=0.7&bottom_margin=0.7&left_margin=0.7&right_margin=0.7&horizontal_alignment=CENTER';
   var html = HtmlService.createHtmlOutput('<p style="font-family:sans-serif">A4縦のPDFを作りました。</p><p><a href="' + url +
     '" target="_blank" download="' + name + '" style="font-family:sans-serif;font-size:16px">' + name + ' をダウンロード</a></p>').setWidth(360).setHeight(140);
   SpreadsheetApp.getUi().showModalDialog(html, 'PDFをダウンロード');
