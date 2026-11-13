@@ -10,7 +10,8 @@
 <body>
 <div id="app" aria-live="polite"></div>
 <noscript>このツールは JavaScript を使います。</noscript>
-<!-- 外部への通信は一切しない。データはこの端末の中（ブラウザ保存）と、書き出したファイルだけ。 -->
+<!-- 外部通信は config.js の gasUrl（依頼者側のスプレッドシート）への送信だけ。空なら一切送らない。 -->
+<script src="config.js"></script>
 <script src="src/generated/db.js"></script>
 <script src="src/engine/util.js"></script>
 <script src="src/engine/cond.js"></script>
